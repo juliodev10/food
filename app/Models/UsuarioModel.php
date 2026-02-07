@@ -20,10 +20,12 @@ class UsuarioModel extends Model
 
     public function procurar($term)
     {
-        if ($term === null) {
+        if ($term === null || trim($term) === '') {
             return [];
         }
 
-        return $this->like('nome', $term)->findAll();
+        return $this->select('id, nome')
+            ->like('nome', $term)
+            ->findAll();
     }
 }

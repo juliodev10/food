@@ -9,6 +9,11 @@
 <!-- Aqui enviamos para o template principal os estilos -->
 
 <link rel="stylesheet" href="<?php echo site_url('admin/vendors/auto-complete/jquery-ui.css'); ?>" />
+<style>
+    .ui-autocomplete {
+        z-index: 2000;
+    }
+</style>
 
 <?= $this->endSection() ?>
 
@@ -23,7 +28,7 @@
 
                 <div class="ui-widget">
                     <input id="query" name="query" class="form-control bg-light mb-4"
-                        placeholder="Digite o nome do usuário para buscar..." />
+                        placeholder="Digite o nome do usuário para buscar..." autocomplete="off" />
                 </div>
 
                 <div class="table-responsive">
@@ -63,39 +68,44 @@
 <script src="<?php echo site_url('admin/vendors/auto-complete/jquery-ui.js'); ?>"></script>
 
 <script>
-    $(function () {
-        console.log("Autocomplete inicializado!");
-
+    jQuery(function ($) {
         $("#query").autocomplete({
+            appendTo: "body",
+            minLength: 1,
             source: function (request, response) {
-                console.log("Buscando por:", request.term);
-
                 $.ajax({
-                    url: "<?php echo site_url('admin/usuarios/procurar'); ?>",
+                    url: "<?= site_url('admin/usuarios/procurar') ?>",
                     dataType: "json",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
                     data: {
                         term: request.term
                     },
                     success: function (data) {
-                        console.log("Resposta recebida:", data);
+                        if (!data || data.length < 1) {
+                            response([{
+                                label: "Usuário não encontrado",
+                                value: -1
+                            }]);
+                            return;
+                        }
                         response(data);
                     },
                     error: function (xhr, status, error) {
-                        console.error("Erro na requisição:", error);
+                        console.error("Erro na requisição:", status, error);
+                        response([]);
                     }
-
-                });//fim ajax
+                });
             },
-            minLength: 1,
             select: function (event, ui) {
                 if (ui.item.value == -1) {
                     $(this).val("");
                     return false;
-                } else {
-                    window.location.href = '<?php echo site_url('admin/usuarios/show/'); ?>' + ui.item.id;
                 }
+                window.location.href = "<?= site_url('admin/usuarios/show/') ?>" + ui.item.id;
             }
-        });//fim autocomplete
+        });
     });
 </script>
 

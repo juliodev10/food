@@ -26,20 +26,14 @@ class Usuarios extends BaseController
 
     public function procurar()
     {
-        if (!$this->request->isAJAX()) {
-            exit('Página não encontrada');
-        }
-
         $usuarios = $this->usuarioModel->procurar($this->request->getGet('term'));
-
         $retorno = [];
 
         foreach ($usuarios as $usuario) {
             $retorno[] = [
                 'id' => $usuario->id,
-                'value' => $usuario->nome,
-                'email' => $usuario->email,
-                'cpf' => $usuario->cpf
+                'label' => $usuario->nome,
+                'value' => $usuario->nome
             ];
         }
 
