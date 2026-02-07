@@ -10,4 +10,11 @@ class UsuarioModel extends Model
     protected $returnType = 'object';
     protected $useSoftDeletes = true;
     protected $allowedFields = ['nome', 'email', 'telefone'];
+    protected $useTimestamps = true;
+
+    protected $createdField = 'criado_em'; // Nome da coluna no banco de dados
+
+    protected $updatedField = 'atualizado_em'; // Nome da coluna no banco de dados
+
+    protected $deletedField = 'deletado_em'; // Nome da coluna no banco de dados
 }
