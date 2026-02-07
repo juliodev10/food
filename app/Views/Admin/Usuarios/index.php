@@ -64,8 +64,12 @@
 
 <script>
     $(function () {
+        console.log("Autocomplete inicializado!");
+
         $("#query").autocomplete({
             source: function (request, response) {
+                console.log("Buscando por:", request.term);
+
                 $.ajax({
                     url: "<?php echo site_url('admin/usuarios/procurar'); ?>",
                     dataType: "json",
@@ -73,16 +77,12 @@
                         term: request.term
                     },
                     success: function (data) {
-                        if (data.lenght < 1) {
-                            var data = [
-                                {
-                                    label: "Usuário não encontrado",
-                                    value: -1
-                                }
-                            ];
-                        }
+                        console.log("Resposta recebida:", data);
                         response(data);
                     },
+                    error: function (xhr, status, error) {
+                        console.error("Erro na requisição:", error);
+                    }
 
                 });//fim ajax
             },
