@@ -7,6 +7,9 @@
 
 <?= $this->section('estilos'); ?>
 <!-- Aqui enviamos para o template principal os estilos -->
+
+<link rel="stylesheet" href="<?php echo site_url('admin/vendors/auto-complete/jquery-ui.css'); ?>" />
+
 <?= $this->endSection() ?>
 
 <?= $this->section('conteudo'); ?>
@@ -17,6 +20,11 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title"><?= ($titulo); ?></h4>
+
+                <div class="ui-widget">
+                    <input id="query" name="query" class="form-control bg-light mb-4"
+                        placeholder="Digite o nome do usuário para buscar..." />
+                </div>
 
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">
@@ -40,8 +48,6 @@
                                 </tr>
                             <?php endforeach; ?>
 
-                            </tr>
-
                         </tbody>
                     </table>
                 </div>
@@ -54,4 +60,43 @@
 
 <!-- Aqui enviamos para o template principal os scripts -->
 <?= $this->section('scripts'); ?>
+<script src="<?php echo site_url('admin/vendors/auto-complete/jquery-ui.js'); ?>"></script>
+
+<script>
+    $(function () {
+        $("#query").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "<?php echo site_url('admin/usuarios/procurar'); ?>",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        if (data.lenght < 1) {
+                            var data = [
+                                {
+                                    label: "Usuário não encontrado",
+                                    value: -1
+                                }
+                            ];
+                        }
+                        response(data);
+                    },
+
+                });//fim ajax
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                if (ui.item.value == -1) {
+                    $(this).val("");
+                    return false;
+                } else {
+                    window.location.href = '<?php echo site_url('admin/usuarios/show/'); ?>' + ui.item.id;
+                }
+            }
+        });//fim autocomplete
+    });
+</script>
+
 <?= $this->endSection() ?>
