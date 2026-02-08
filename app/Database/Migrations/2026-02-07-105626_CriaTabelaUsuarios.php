@@ -17,7 +17,7 @@ class CriaTabelaUsuarios extends Migration
             ],
             'nome' => [
                 'type' => 'VARCHAR',
-                'constraint' => '100'
+                'constraint' => '120'
             ],
             'email' => [
                 'type' => 'VARCHAR',

@@ -260,6 +260,35 @@
             <div class="main-panel">
                 <div class="content-wrapper">
 
+                    <?php if (session()->has('sucesso')): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Perfeito!</strong><?= session('sucesso'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif ?>
+                    <?php if ($mensagem = session()->has('info')): ?>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <strong>Informação!</strong>
+                            <?= $mensagem; ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <?php if ($mensagem = session()->has('atencao')): ?>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Atenção!</strong>
+                                <?= $mensagem; ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+
+                            <?php if ($mensagem = session()->has('error')): ?>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Erro!</strong>
+                                    <?= $mensagem; ?>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            <?php endif ?>
+                        <?php endif ?>
+                    <?php endif ?>
+
                     <!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
                     <?= $this->renderSection('conteudo') ?>
 
