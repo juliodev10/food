@@ -38,6 +38,15 @@ class Usuarios extends BaseController
         return $this->response->setJSON($retorno);
     }
 
+    public function atualizar($id = null)
+    {
+        if ($this->request->getMethod() === 'POST') {
+            $usuario = $this->buscaUsuarioOu404($id);
+        } else {
+            return redirect()->back()->with('info', 'Por favor envie um POST');
+        }
+    }
+
     public function show($id = null)
     {
         $usuario = $this->buscaUsuarioOu404($id);
