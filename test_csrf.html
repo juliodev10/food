@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Teste CSRF</title>
+</head>
+
+<body>
+    <h1>Teste de Erro CSRF</h1>
+    <p>Este formulário NÃO tem o token CSRF, então vai gerar erro ao enviar:</p>
+
+    <form action="http://localhost:8080/admin/usuarios/atualizar/1" method="POST">
+        <input type="text" name="nome" value="Teste" />
+        <button type="submit">Enviar sem CSRF Token</button>
+    </form>
+
+    <hr>
+
+    <h2>Como testar:</h2>
+    <ol>
+        <li>Abra este arquivo no navegador</li>
+        <li>Clique no botão "Enviar sem CSRF Token"</li>
+        <li>Você verá o erro de CSRF: "The action you requested is not allowed"</li>
+    </ol>
+</body>
+
+</html>

@@ -262,6 +262,7 @@
             <div class="main-panel">
                 <div class="content-wrapper">
 
+                    <!-- Captura os erros de CSRF - Ação não permitida -->
                     <?php if (session()->has('sucesso')): ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Perfeito!</strong> <?= session('sucesso'); ?>

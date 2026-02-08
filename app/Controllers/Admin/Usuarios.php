@@ -38,11 +38,15 @@ class Usuarios extends BaseController
 
     public function atualizar($id = null)
     {
-        if ($this->request->getMethod() === 'POST') {
-            $usuario = $this->buscaUsuarioOu404($id);
-        } else {
-            return redirect()->back()->with('info', 'Por favor envie um POST');
+        if (!$this->request->is('post')) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Método não permitido");
         }
+
+        $usuario = $this->buscaUsuarioOu404($id);
+        $post = $this->request->getPost();
+        $usuario->fill($post);
+
+        dd($usuario);
     }
 
     public function show($id = null)
@@ -67,6 +71,7 @@ class Usuarios extends BaseController
 
         return view('Admin/Usuarios/editar', $data);
     }
+
     private function buscaUsuarioOu404($id = null)
     {
         if (!$id || !$usuario = $this->usuarioModel->where('id', $id)->first()) {
