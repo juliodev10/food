@@ -30,13 +30,31 @@ class Usuarios extends BaseController
         $retorno = [];
 
         foreach ($usuarios as $usuario) {
-            $retorno[] = [
-                'id' => $usuario->id,
-                'label' => $usuario->nome,
-                'value' => $usuario->nome
-            ];
+            $data['id'] = $usuario->id;
+            $data['value'] = $usuario->nome;
+            $retorno[] = $data;
         }
 
         return $this->response->setJSON($retorno);
+    }
+
+    public function show($id = null)
+    {
+        $usuario = $this->buscaUsuarioOu404($id);
+        dd($usuario);
+
+        // $data = [
+        //     'titulo' => "Detalhes do Usuário $usuario->nome",
+        //     'usuario' => $usuario,
+        // ];
+
+        return view('Admin/Usuarios/show', $data);
+    }
+    private function buscaUsuarioOu404($id = null)
+    {
+        if (!$id || !$usuario = $this->usuarioModel->where('id', $id)->first()) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Não encontramos o usuário $id");
+        }
+        return $usuario;
     }
 }

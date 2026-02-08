@@ -6,6 +6,8 @@ use CodeIgniter\Config\BaseConfig;
 
 class App extends BaseConfig
 {
+    public $cookieSameSite = 'Lax'; // Tente 'Lax' ou 'None' (se usar HTTPS)
+
     /**
      * --------------------------------------------------------------------------
      * Base Site URL
@@ -93,7 +95,7 @@ class App extends BaseConfig
      * strings (like currency markers, numbers, etc), that your program
      * should run under for this request.
      */
-    public string $defaultLocale = 'en';
+    public string $defaultLocale = 'pt-BR';
 
     /**
      * --------------------------------------------------------------------------
@@ -199,4 +201,20 @@ class App extends BaseConfig
      * @see http://www.w3.org/TR/CSP/
      */
     public bool $CSPEnabled = false;
+
+    /**
+     * --------------------------------------------------------------------------
+     * Live Reload
+     * --------------------------------------------------------------------------
+     *
+     * Enables the live reload feature for the development server.
+     * When enabled, the browser will automatically reload the page when
+     * you make changes to your files.
+     *
+     * Note: This feature is only available when running the development server
+     * using the `php spark serve` command.
+     *
+     * Set to true to enable, false to disable.
+     */
+    public bool $liveReload = true;
 }

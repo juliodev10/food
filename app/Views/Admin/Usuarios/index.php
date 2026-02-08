@@ -21,14 +21,14 @@
 
 <div class="row">
 
-    <div class="col-lg-6 grid-margin stretch-card">
+    <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title"><?= ($titulo); ?></h4>
 
                 <div class="ui-widget">
                     <input id="query" name="query" class="form-control bg-light mb-4"
-                        placeholder="Digite o nome do usuário para buscar..." autocomplete="off" />
+                        placeholder="Pesquise por um usuário" />
                 </div>
 
                 <div class="table-responsive">
@@ -44,7 +44,10 @@
                         <tbody>
                             <?php foreach ($usuarios as $usuario): ?>
                                 <tr>
-                                    <td><?= $usuario->nome; ?></td>
+                                    <td>
+                                        <a
+                                            href="<?= site_url('admin/usuarios/show/' . $usuario->id); ?>"><?= $usuario->nome; ?></a>
+                                    </td>
                                     <td><?= $usuario->email; ?></td>
                                     <td><?= $usuario->cpf; ?></td>
 
