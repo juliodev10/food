@@ -23,4 +23,57 @@ class Usuarios extends BaseController
 
         return view('Admin/Usuarios/index', $data);
     }
+
+    public function procurar()
+    {
+        $usuarios = $this->usuarioModel->procurar($this->request->getGet('term'));
+        $retorno = [];
+
+        foreach ($usuarios as $usuario) {
+            $data['id'] = $usuario->id;
+            $data['value'] = $usuario->nome;
+            $retorno[] = $data;
+        }
+
+        return $this->response->setJSON($retorno);
+    }
+
+    public function atualizar($id = null)
+    {
+        if ($this->request->getMethod() === 'POST') {
+            $usuario = $this->buscaUsuarioOu404($id);
+        } else {
+            return redirect()->back()->with('info', 'Por favor envie um POST');
+        }
+    }
+
+    public function show($id = null)
+    {
+        $usuario = $this->buscaUsuarioOu404($id);
+
+        $data = [
+            'titulo' => "Detalhes do Usuário $usuario->nome",
+            'usuario' => $usuario,
+        ];
+
+        return view('Admin/Usuarios/show', $data);
+    }
+    public function editar($id = null)
+    {
+        $usuario = $this->buscaUsuarioOu404($id);
+
+        $data = [
+            'titulo' => "Editar Usuário $usuario->nome",
+            'usuario' => $usuario,
+        ];
+
+        return view('Admin/Usuarios/editar', $data);
+    }
+    private function buscaUsuarioOu404($id = null)
+    {
+        if (!$id || !$usuario = $this->usuarioModel->where('id', $id)->first()) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Não encontramos o usuário $id");
+        }
+        return $usuario;
+    }
 }

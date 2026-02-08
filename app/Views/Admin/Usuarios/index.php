@@ -9,6 +9,11 @@
 <!-- Aqui enviamos para o template principal os estilos -->
 
 <link rel="stylesheet" href="<?php echo site_url('admin/vendors/auto-complete/jquery-ui.css'); ?>" />
+<style>
+    .ui-autocomplete {
+        z-index: 2000;
+    }
+</style>
 
 <?= $this->endSection() ?>
 
@@ -16,14 +21,14 @@
 
 <div class="row">
 
-    <div class="col-lg-6 grid-margin stretch-card">
+    <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title"><?= ($titulo); ?></h4>
 
                 <div class="ui-widget">
                     <input id="query" name="query" class="form-control bg-light mb-4"
-                        placeholder="Digite o nome do usuário para buscar..." />
+                        placeholder="Pesquise por um usuário" />
                 </div>
 
                 <div class="table-responsive">
@@ -39,7 +44,10 @@
                         <tbody>
                             <?php foreach ($usuarios as $usuario): ?>
                                 <tr>
-                                    <td><?= $usuario->nome; ?></td>
+                                    <td>
+                                        <a
+                                            href="<?= site_url('admin/usuarios/show/' . $usuario->id); ?>"><?= $usuario->nome; ?></a>
+                                    </td>
                                     <td><?= $usuario->email; ?></td>
                                     <td><?= $usuario->cpf; ?></td>
 
@@ -63,39 +71,44 @@
 <script src="<?php echo site_url('admin/vendors/auto-complete/jquery-ui.js'); ?>"></script>
 
 <script>
-    $(function () {
+    jQuery(function ($) {
         $("#query").autocomplete({
+            appendTo: "body",
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
-                    url: "<?php echo site_url('admin/usuarios/procurar'); ?>",
+                    url: "<?= site_url('admin/usuarios/procurar') ?>",
                     dataType: "json",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
                     data: {
                         term: request.term
                     },
                     success: function (data) {
-                        if (data.lenght < 1) {
-                            var data = [
-                                {
-                                    label: "Usuário não encontrado",
-                                    value: -1
-                                }
-                            ];
+                        if (!data || data.length < 1) {
+                            response([{
+                                label: "Usuário não encontrado",
+                                value: -1
+                            }]);
+                            return;
                         }
                         response(data);
                     },
-
-                });//fim ajax
+                    error: function (xhr, status, error) {
+                        console.error("Erro na requisição:", status, error);
+                        response([]);
+                    }
+                });
             },
-            minLength: 1,
             select: function (event, ui) {
                 if (ui.item.value == -1) {
                     $(this).val("");
                     return false;
-                } else {
-                    window.location.href = '<?php echo site_url('admin/usuarios/show/'); ?>' + ui.item.id;
                 }
+                window.location.href = "<?= site_url('admin/usuarios/show/') ?>" + ui.item.id;
             }
-        });//fim autocomplete
+        });
     });
 </script>
 
