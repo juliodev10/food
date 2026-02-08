@@ -7,12 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Food Delivery | <?= $this->renderSection('titulo') ?>
     </title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- plugins:css -->
     <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>vendors/base/vendor.bundle.base.css">
     <!-- endinject -->
-    <!-- plugin css for this page -->
-    <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+    <!-- DataTables Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>css/style.css">
@@ -262,31 +264,27 @@
 
                     <?php if (session()->has('sucesso')): ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>Perfeito!</strong><?= session('sucesso'); ?>
+                            <strong>Perfeito!</strong> <?= session('sucesso'); ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     <?php endif ?>
-                    <?php if ($mensagem = session()->has('info')): ?>
+                    <?php if (session()->has('info')): ?>
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
-                            <strong>Informação!</strong>
-                            <?= $mensagem; ?>
+                            <strong>Informação!</strong> <?= session('info'); ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        <?php if ($mensagem = session()->has('atencao')): ?>
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Atenção!</strong>
-                                <?= $mensagem; ?>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-
-                            <?php if ($mensagem = session()->has('error')): ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Erro!</strong>
-                                    <?= $mensagem; ?>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            <?php endif ?>
-                        <?php endif ?>
+                    <?php endif ?>
+                    <?php if (session()->has('atencao')): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Atenção!</strong> <?= session('atencao'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif ?>
+                    <?php if (session()->has('error')): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Erro!</strong> <?= session('error'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     <?php endif ?>
 
                     <!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
@@ -314,11 +312,14 @@
 
     <!-- plugins:js -->
     <script src="<?php echo site_url('admin/') ?>vendors/base/vendor.bundle.base.js"></script>
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page-->
     <script src="<?php echo site_url('admin/') ?>vendors/chart.js/Chart.min.js"></script>
     <script src="<?php echo site_url('admin/') ?>vendors/datatables.net/jquery.dataTables.js"></script>
-    <script src="<?php echo site_url('admin/') ?>vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+    <!-- DataTables Bootstrap 5 -->
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
     <!-- End plugin js for this page-->
     <!-- inject:js -->
     <script src="<?php echo site_url('admin/') ?>js/off-canvas.js"></script>
@@ -329,7 +330,6 @@
     <script src="<?php echo site_url('admin/') ?>js/dashboard.js"></script>
     <script src="<?php echo site_url('admin/') ?>js/data-table.js"></script>
     <script src="<?php echo site_url('admin/') ?>js/jquery.dataTables.js"></script>
-    <script src="<?php echo site_url('admin/') ?>js/dataTables.bootstrap4.js"></script>
     <!-- End custom js for this page-->
     <script src="<?php echo site_url('admin/') ?>js/jquery.cookie.js" type="text/javascript"></script>
 

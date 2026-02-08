@@ -27,6 +27,15 @@
                 </h4>
             </div>
             <div class="card-body">
+                <?php if (session()->has('errors_model')): ?>
+                    <ul>
+                        <?php foreach (session('errors_model') as $error): ?>
+                            <li class="text-danger">
+                                <?= ($error) ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
                 <?php echo form_open("admin/usuarios/atualizar/$usuario->id"); ?>
                 <?= csrf_field() ?>
                 <?php echo $this->include('Admin/Usuarios/form'); ?>
