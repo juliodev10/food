@@ -44,9 +44,20 @@ class Usuarios extends BaseController
 
         $usuario = $this->buscaUsuarioOu404($id);
         $post = $this->request->getPost();
+        if (empty($post['password'])) {
+            $this->usuarioModel->desabilitaValidacaoSenha();
+            unset($post['password']);
+            unset($post['confirmation_password']);
+        }
+
         $usuario->fill($post);
 
-        dd($usuario);
+        if ($this->usuarioModel->protect(false)->save($usuario)) {
+            return redirect()->to(site_url("admin/usuarios/show/$usuario->id"))->with('success', "Usuário $usuario->nome atualizado com sucesso");
+        } else {
+            return redirect()->back()->with('errors_model', $this->usuarioModel->errors())
+                ->with('atencao', 'Por favor, verifique os erros abaixo!');
+        }
     }
 
     public function show($id = null)

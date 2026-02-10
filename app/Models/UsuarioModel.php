@@ -59,4 +59,10 @@ class UsuarioModel extends Model
             ->like('nome', $term)
             ->findAll();
     }
+
+    public function desabilitaValidacaoSenha()
+    {
+        unset($this->validationRules['password']);
+        unset($this->validationRules['confirmation_password']);
+    }
 }
