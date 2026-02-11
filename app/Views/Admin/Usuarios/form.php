@@ -2,22 +2,22 @@
     <div class="form-group col-md-4">
         <label for="nome">Nome</label>
         <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome"
-            value=" <?php echo esc($usuario->nome) ?>">
+            value="<?php echo old('nome', esc($usuario->nome)) ?>">
     </div>
     <div class="form-group col-md-2">
         <label for="cpf">CPF</label>
         <input type="text" class="form-control cpf" name="cpf" id="cpf" placeholder="CPF"
-            value=" <?php echo esc($usuario->cpf) ?>">
+            value="<?php echo old('cpf', esc($usuario->cpf)) ?>">
     </div>
     <div class="form-group col-md-3">
         <label for="telefone">Telefone</label>
         <input type="text" class="form-control sp_celphones" name="telefone" id="telefone" placeholder="Telefone"
-            value="<?php echo esc($usuario->telefone) ?>">
+            value="<?php echo old('telefone', esc($usuario->telefone)) ?>">
     </div>
     <div class="form-group col-md-3">
         <label for="email">Email</label>
         <input type="text" class="form-control" name="email" id="email" placeholder="Email"
-            value="<?php echo esc($usuario->email) ?>">
+            value="<?php echo old('email', esc($usuario->email)) ?>">
     </div>
 </div>
 
@@ -36,11 +36,13 @@
         <label for="email">Perfil de acesso</label>
         <select class="form-control" name="is_admin" id="is_admin">
             <?php if ($usuario->id): ?>
-                <option value="1" <?= ($usuario->is_admin ? 'selected' : ''); ?>>Administrador</option>
-                <option value="0" <?= (!$usuario->is_admin ? 'selected' : ''); ?>>Cliente</option>
+                <option value="1" <?= ($usuario->is_admin ? 'selected' : ''); ?><?= set_select('is_admin', '1') ?>>
+                    Administrador</option>
+                <option value="0" <?= (!$usuario->is_admin ? 'selected' : ''); ?><?= set_select('is_admin', '0') ?>>Cliente
+                </option>
             <?php else: ?>
-                <option value="1">Administrador</option>
-                <option value="0">Cliente</option>
+                <option value="1" <?= set_select('is_admin', '1') ?>>Administrador</option>
+                <option value="0" <?= set_select('is_admin', '0') ?>>Cliente</option>
             <?php endif; ?>
         </select>
     </div>
@@ -48,11 +50,11 @@
         <label for="email">Ativo</label>
         <select class="form-control" name="ativo" id="ativo">
             <?php if ($usuario->id): ?>
-                <option value="1" <?= ($usuario->ativo ? 'selected' : ''); ?>>Sim</option>
-                <option value="0" <?= (!$usuario->ativo ? 'selected' : ''); ?>>Não</option>
+                <option value="1" <?= ($usuario->ativo ? 'selected' : ''); ?><?= set_select('ativo', '1') ?>>Sim</option>
+                <option value="0" <?= (!$usuario->ativo ? 'selected' : ''); ?><?= set_select('ativo', '0') ?>>Não</option>
             <?php else: ?>
-                <option value="1">Sim</option>
-                <option value="0">Não</option>
+                <option value="1" <?= set_select('ativo', '1') ?>>Sim</option>
+                <option value="0" <?= set_select('ativo', '0') ?>>Não</option>
             <?php endif; ?>
         </select>
     </div>

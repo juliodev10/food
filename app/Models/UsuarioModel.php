@@ -9,7 +9,7 @@ class UsuarioModel extends Model
     protected $table = 'usuarios';
     protected $returnType = 'App\Entities\Usuario';
     protected $useSoftDeletes = true;
-    protected $allowedFields = ['nome', 'email', 'cpf'];
+    protected $allowedFields = ['nome', 'email', 'cpf', 'telefone', 'is_admin', 'ativo', 'password'];
     protected $useTimestamps = true;
 
     protected $createdField = 'criado_em'; // Nome da coluna no banco de dados
@@ -21,6 +21,7 @@ class UsuarioModel extends Model
         'nome' => 'required|min_length[3]|max_length[120]',
         'email' => 'required|valid_email|is_unique[usuarios.email]',
         'cpf' => 'required|exact_length[14]|is_unique[usuarios.cpf]',
+        'telefone' => 'required|exact_length[15]',
         'password' => 'required|min_length[6]',
         'confirmation_password' => 'required_with[password]|matches[password]',
     ];

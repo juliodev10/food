@@ -52,11 +52,15 @@ class Usuarios extends BaseController
 
         $usuario->fill($post);
 
-        if ($this->usuarioModel->protect(false)->save($usuario)) {
-            return redirect()->to(site_url("admin/usuarios/show/$usuario->id"))->with('success', "Usuário $usuario->nome atualizado com sucesso");
+        if (!$usuario->hasChanged()) {
+            return redirect()->back()->with('info', 'Nenhum dado foi modificado para atualizar.');
+        }
+
+        if ($this->usuarioModel->save($usuario)) {
+            return redirect()->to(site_url("admin/usuarios/show/$usuario->id"))->with('sucesso', "Usuário $usuario->nome atualizado com sucesso");
         } else {
             return redirect()->back()->with('errors_model', $this->usuarioModel->errors())
-                ->with('atencao', 'Por favor, verifique os erros abaixo!');
+                ->with('atencao', 'Por favor, verifique os erros abaixo!')->withInput();
         }
     }
 

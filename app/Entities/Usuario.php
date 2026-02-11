@@ -8,5 +8,9 @@ class Usuario extends Entity
 {
     protected $datamap = [];
     protected $dates = ['criado_em', 'atualizado_em', 'deletado_em'];
-    protected $casts = [];
+    protected $casts = [
+        'id' => 'integer',
+        'is_admin' => 'boolean',
+        'ativo' => 'boolean',
+    ];
 }
