@@ -61,8 +61,7 @@
                     <i class="mdi mdi-pencil btn-icon-prepend"></i> Editar
                 </a>
                 <a href="<?= site_url("admin/usuarios/excluir/$usuario->id"); ?>"
-                    class="btn btn-danger btn-sm btn-icon-text"
-                    onclick="return confirm('Tem certeza que deseja excluir este usuário?')">
+                    class="btn btn-danger btn-sm btn-icon-text">
                     <i class="mdi mdi-delete btn-icon-prepend"></i> Excluir
                 </a>
             </div>

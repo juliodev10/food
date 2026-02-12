@@ -36,10 +36,10 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-                <?php echo form_open("admin/usuarios/atualizar/$usuario->id"); ?>
+                <?php echo form_open("admin/usuarios/cadastrar"); ?>
                 <?= csrf_field() ?>
                 <?php echo $this->include('Admin/Usuarios/form'); ?>
-                <a href="<?= site_url("admin/usuarios/show/$usuario->id"); ?>" class="btn btn-light btn-sm
+                <a href="<?= site_url("admin/usuarios"); ?>" class="btn btn-light btn-sm
                     btn-icon-text">
                     <i class="mdi mdi-arrow-left btn-icon-prepend"></i> Voltar</a>
                 <?php echo form_close(); ?>

@@ -19,7 +19,7 @@
 
 <div class="row">
 
-    <div class="col-lg-12 grid-margin stretch-card">
+    <div class="col-lg-8 grid-margin stretch-card">
         <div class="card">
             <div class="card-header bg-primary pb-0 pt-4">
                 <h4 class="card-title text-white">
@@ -36,9 +36,19 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-                <?php echo form_open("admin/usuarios/atualizar/$usuario->id"); ?>
+                <?php echo form_open("admin/usuarios/excluir/$usuario->id"); ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Atenção!</strong> Tem certeza que deseja excluir o usuário
+                    <strong>
+                        <?= esc($usuario->nome); ?>
+                    </strong>?
+                </div>
+                <button type="submit" class="btn btn-danger btn-sm btn-icon-text mr-2">
+                    <i class="mdi mdi-trash-can btn-icon-prepend"></i>
+                    Excluir
+                </button>
+
                 <?= csrf_field() ?>
-                <?php echo $this->include('Admin/Usuarios/form'); ?>
                 <a href="<?= site_url("admin/usuarios/show/$usuario->id"); ?>" class="btn btn-light btn-sm
                     btn-icon-text">
                     <i class="mdi mdi-arrow-left btn-icon-prepend"></i> Voltar</a>

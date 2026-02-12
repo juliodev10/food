@@ -14,3 +14,4 @@ class Usuario extends Entity
         'ativo' => 'boolean',
     ];
 }
+

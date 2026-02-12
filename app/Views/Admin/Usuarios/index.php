@@ -31,6 +31,10 @@
                         placeholder="Pesquise por um usuário" />
                 </div>
 
+                <a href="<?= site_url("admin/usuarios/criar"); ?>" class="btn btn-success btn-sm
+                    btn-icon-text float-right mb-4">
+                    <i class="mdi mdi-plus btn-icon-prepend"></i> Cadastrar</a>
+
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">
                         <thead>
@@ -39,6 +43,7 @@
                                 <th>E-mail</th>
                                 <th>CPF</th>
                                 <th>Ativo</th>
+                                <th>Situação</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,7 +56,14 @@
                                     <td><?= $usuario->email; ?></td>
                                     <td><?= $usuario->cpf; ?></td>
 
-                                    <td><?= ($usuario->ativo ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
+                                    <td><?= ($usuario->ativo && $usuario->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
+                                    </td>
+                                    <td><?= ($usuario->deletado_em === null ? '<label class="badge badge-success">Disponível</label>' : '<label class="badge badge-danger">Excluído</label>'); ?>
+                                        <?php if ($usuario->deletado_em !== null): ?>
+                                            <a href="<?= site_url("admin/usuarios/desfazerExclusao/$usuario->id"); ?>"
+                                                class="btn btn-info btn-sm btn-icon-text ml-2">
+                                                <i class=" mdi mdi-undo btn-icon-prepend"></i> Desfazer</a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
