@@ -20,7 +20,8 @@ class Usuarios extends BaseController
     {
         $data = [
             'titulo' => 'Lista de Usuários',
-            'usuarios' => $this->usuarioModel->withDeleted(true)->findAll(),
+            'usuarios' => $this->usuarioModel->withDeleted(true)->paginate(2),
+            'pager' => $this->usuarioModel->pager,
         ];
         return view('Admin/Usuarios/index', $data);
     }
@@ -78,6 +79,10 @@ class Usuarios extends BaseController
     public function editar($id = null)
     {
         $usuario = $this->buscaUsuarioOu404($id);
+        if ($usuario->deletado_em != null) {
+            return redirect()->back()->with('info', 'Não é permitido editar um usuário excluído. Por favor, restaure o usuário para editá-lo.');
+
+        }
 
         $data = [
             'titulo' => "Editar Usuário $usuario->nome",
@@ -116,6 +121,10 @@ class Usuarios extends BaseController
     public function excluir($id = null)
     {
         $usuario = $this->buscaUsuarioOu404($id);
+        if ($usuario->deletado_em != null) {
+            return redirect()->back()->with('info', "O usuário $usuario->nome já está excluído. Por favor, restaure o usuário para excluí-lo novamente.");
+        }
+
         if ($usuario->is_admin) {
             return redirect()->back()->with('info', 'Não é permitido excluir um usuário <b>Administrador</b>.');
         }
