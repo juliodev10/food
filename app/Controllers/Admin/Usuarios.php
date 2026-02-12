@@ -3,9 +3,8 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use App\Entities\Usuario;
-
-use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\UsuarioModel;
+use App\Entities\Usuario; // <--- ADICIONE ISSO, senão o 'new Usuario()' vai dar erro
 
 class Usuarios extends BaseController
 {
@@ -13,20 +12,24 @@ class Usuarios extends BaseController
 
     public function __construct()
     {
-        $this->usuarioModel = new \App\Models\UsuarioModel();
+        $this->usuarioModel = new UsuarioModel();
     }
 
     public function index()
     {
         $data = [
             'titulo' => 'Lista de Usuários',
-            'usuarios' => $this->usuarioModel->withDeleted(true)->paginate(2),
+            // Paginando 10 itens por vez
+            'usuarios' => $this->usuarioModel->withDeleted(true)->paginate(10),
             'pager' => $this->usuarioModel->pager,
         ];
+
         return view('Admin/Usuarios/index', $data);
     }
+
     public function procurar()
     {
+        // Certifique-se que o método 'procurar' existe no seu UsuarioModel
         $usuarios = $this->usuarioModel->procurar($this->request->getGet('term'));
         $retorno = [];
 
@@ -42,26 +45,32 @@ class Usuarios extends BaseController
     public function criar()
     {
         $usuario = new Usuario();
+
         $data = [
             'titulo' => "Cadastrar Novo Usuário",
-            'usuario' => new Usuario(),
+            'usuario' => $usuario,
         ];
 
         return view('Admin/Usuarios/criar', $data);
     }
+
     public function cadastrar()
     {
         if (!$this->request->is('post')) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Método não permitido");
+            // Redireciona de volta se não for POST, ao invés de lançar erro (opcional, mas mais amigável)
+            return redirect()->back();
         }
 
         $usuario = new Usuario($this->request->getPost());
 
         if ($this->usuarioModel->protect(false)->save($usuario)) {
-            return redirect()->to(site_url("admin/usuarios/show/" . $this->usuarioModel->getInsertID()))->with('sucesso', "Usuário $usuario->nome cadastrado com sucesso");
+            return redirect()->to(site_url("admin/usuarios/show/" . $this->usuarioModel->getInsertID()))
+                ->with('sucesso', "Usuário $usuario->nome cadastrado com sucesso");
         } else {
-            return redirect()->back()->with('errors_model', $this->usuarioModel->errors())
-                ->with('atencao', 'Por favor, verifique os erros abaixo!')->withInput();
+            return redirect()->back()
+                ->with('errors_model', $this->usuarioModel->errors())
+                ->with('atencao', 'Por favor, verifique os erros abaixo!')
+                ->withInput();
         }
     }
 
@@ -76,12 +85,13 @@ class Usuarios extends BaseController
 
         return view('Admin/Usuarios/show', $data);
     }
+
     public function editar($id = null)
     {
         $usuario = $this->buscaUsuarioOu404($id);
+
         if ($usuario->deletado_em != null) {
             return redirect()->back()->with('info', 'Não é permitido editar um usuário excluído. Por favor, restaure o usuário para editá-lo.');
-
         }
 
         $data = [
@@ -91,18 +101,21 @@ class Usuarios extends BaseController
 
         return view('Admin/Usuarios/editar', $data);
     }
+
     public function atualizar($id = null)
     {
         if (!$this->request->is('post')) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Método não permitido");
+            return redirect()->back();
         }
 
         $usuario = $this->buscaUsuarioOu404($id);
         $post = $this->request->getPost();
+
+        // Lógica para senha vazia (mantém a antiga)
         if (empty($post['password'])) {
-            $this->usuarioModel->desabilitaValidacaoSenha();
+            $this->usuarioModel->desabilitaValidacaoSenha(); // Certifique-se que esse método existe no Model
             unset($post['password']);
-            unset($post['confirmation_password']);
+            unset($post['password_confirmation']); // Corrigi o nome (geralmente é password_confirmation)
         }
 
         $usuario->fill($post);
@@ -112,26 +125,33 @@ class Usuarios extends BaseController
         }
 
         if ($this->usuarioModel->protect(false)->save($usuario)) {
-            return redirect()->to(site_url("admin/usuarios/show/$usuario->id"))->with('sucesso', "Usuário $usuario->nome atualizado com sucesso");
+            return redirect()->to(site_url("admin/usuarios/show/$usuario->id"))
+                ->with('sucesso', "Usuário $usuario->nome atualizado com sucesso");
         } else {
-            return redirect()->back()->with('errors_model', $this->usuarioModel->errors())
-                ->with('atencao', 'Por favor, verifique os erros abaixo!')->withInput();
+            return redirect()->back()
+                ->with('errors_model', $this->usuarioModel->errors())
+                ->with('atencao', 'Por favor, verifique os erros abaixo!')
+                ->withInput();
         }
     }
+
     public function excluir($id = null)
     {
         $usuario = $this->buscaUsuarioOu404($id);
+
         if ($usuario->deletado_em != null) {
-            return redirect()->back()->with('info', "O usuário $usuario->nome já está excluído. Por favor, restaure o usuário para excluí-lo novamente.");
+            return redirect()->back()->with('info', "O usuário $usuario->nome já está excluído.");
         }
 
         if ($usuario->is_admin) {
             return redirect()->back()->with('info', 'Não é permitido excluir um usuário <b>Administrador</b>.');
         }
-        if ($this->request->getMethod() === 'POST') {
+
+        if ($this->request->getMethod() === 'POST') { // Verifica se confirmou a exclusão
             $this->usuarioModel->delete($id);
             return redirect()->to(site_url('admin/usuarios'))->with('sucesso', "Usuário $usuario->nome excluído com sucesso!");
         }
+
         $data = [
             'titulo' => "Excluindo o Usuário $usuario->nome",
             'usuario' => $usuario,
@@ -139,6 +159,7 @@ class Usuarios extends BaseController
 
         return view('Admin/Usuarios/excluir', $data);
     }
+
     public function desfazerExclusao($id = null)
     {
         $usuario = $this->buscaUsuarioOu404($id);
@@ -146,15 +167,24 @@ class Usuarios extends BaseController
         if ($usuario->deletado_em == null) {
             return redirect()->back()->with('info', 'Apenas usuários excluídos podem ser restaurados.');
         }
+
+        // Certifique-se que o método 'desfazerExclusao' existe no Model
         if ($this->usuarioModel->desfazerExclusao($id)) {
             return redirect()->back()->with('sucesso', "Exclusão do usuário $usuario->nome desfeita com sucesso!");
         } else {
-            return redirect()->back()->with('errors_model', $this->usuarioModel->errors())
-                ->with('atencao', 'Por favor, verifique os erros abaixo!')->withInput();
+            return redirect()->back()
+                ->with('errors_model', $this->usuarioModel->errors())
+                ->with('atencao', 'Por favor, verifique os erros abaixo!')
+                ->withInput();
         }
     }
+
+    /**
+     * Método privado para buscar usuário ou retornar erro 404
+     */
     private function buscaUsuarioOu404($id = null)
     {
+        // withDeleted(true) é necessário para funções de desfazer exclusão
         if (!$id || !$usuario = $this->usuarioModel->withDeleted(true)->where('id', $id)->first()) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Não encontramos o usuário $id");
         }

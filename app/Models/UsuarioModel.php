@@ -86,4 +86,9 @@ class UsuarioModel extends Model
     {
         return $this->protect(false)->where('id', $id)->set('deletado_em', null)->update();
     }
+
+    public function buscaUsuarioPorEmail(string $email)
+    {
+        return $this->where('email', $email)->first();
+    }
 }
