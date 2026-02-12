@@ -17,6 +17,7 @@ class Usuarios extends BaseController
 
     public function index()
     {
+        $usuario = service('autenticacao');
         $data = [
             'titulo' => 'Lista de Usuários',
             // Paginando 10 itens por vez
@@ -178,14 +179,14 @@ class Usuarios extends BaseController
                 ->withInput();
         }
     }
-
     /**
-     * Método privado para buscar usuário ou retornar erro 404
+     * Recupera o usuário ou lança um 404
+     * * @param int|null $id
+     * @return \App\Entities\Usuario
      */
-    private function buscaUsuarioOu404($id = null)
+    private function buscaUsuarioOu404(?int $id = null): object
     {
-        // withDeleted(true) é necessário para funções de desfazer exclusão
-        if (!$id || !$usuario = $this->usuarioModel->withDeleted(true)->where('id', $id)->first()) {
+        if (!$id || !$usuario = $this->usuarioModel->withDeleted(true)->find($id)) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Não encontramos o usuário $id");
         }
         return $usuario;

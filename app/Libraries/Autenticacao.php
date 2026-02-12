@@ -1,6 +1,6 @@
 <?php
 /*@descricao essa biblioteca / classe cuidará da autenticação de usuários */
-
+use App\Entities\Usuario;
 class Autenticacao
 {
     private $usuario;
@@ -30,6 +30,32 @@ class Autenticacao
     public function logout()
     {
         session()->destroy();
+    }
+
+    private function pegaUsuarioLogado()
+    {
+        if ($this->usuario === null) {
+            $this->usuario = $this->pegaUsuarioDaSessao();
+        }
+        return $this->usuario;
+    }
+
+    public function estaLogado()
+    {
+
+        return $this->pegaUsuarioLogado() !== null;
+    }
+    private function pegaUsuarioDaSessao()
+    {
+        if (!session()->has('usuario_id')) {
+            return null;
+        }
+        $usuarioModel = new App\Models\UsuarioModel();
+        $usuario = $usuarioModel->find(session()->get('usuario_id'));
+        if ($usuario instanceof Usuario && $usuario->ativo) {
+            return $usuario;
+
+        }
     }
     private function logaUsuario(object $usuario)
     {

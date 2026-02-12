@@ -15,11 +15,11 @@ class Usuario extends Entity
     // ];
     public function verificaPassword(string $password)
     {
-        return password_verify($password, $this->password_hash);
+        return password_verify($password, $this->password);
     }
 
 }
-;
+
 
 
 
