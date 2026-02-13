@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
+$routes->get('login', 'Login::novo');
 
 // Rotas Admin - Usuários
 $routes->get('admin/usuarios', 'Admin\Usuarios::index');

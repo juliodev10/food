@@ -1,6 +1,9 @@
 <?php
 /*@descricao essa biblioteca / classe cuidará da autenticação de usuários */
+namespace App\Libraries;
 use App\Entities\Usuario;
+use App\Models\UsuarioModel;
+
 class Autenticacao
 {
     private $usuario;
@@ -12,7 +15,7 @@ class Autenticacao
      */
     public function login(string $email, string $password)
     {
-        $usuarioModel = new App\Models\UsuarioModel();
+        $usuarioModel = new UsuarioModel();
         $usuario = $usuarioModel->buscaUsuarioPorEmail($email);
         if ($usuario === null) {
             return false;
@@ -50,7 +53,7 @@ class Autenticacao
         if (!session()->has('usuario_id')) {
             return null;
         }
-        $usuarioModel = new App\Models\UsuarioModel();
+        $usuarioModel = new UsuarioModel();
         $usuario = $usuarioModel->find(session()->get('usuario_id'));
         if ($usuario instanceof Usuario && $usuario->ativo) {
             return $usuario;
