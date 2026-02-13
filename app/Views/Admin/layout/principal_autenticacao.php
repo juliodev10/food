@@ -19,6 +19,20 @@
     <link rel="shortcut icon" href="<?php echo site_url('admin/'); ?>images/favicon.png" />
     <!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
     <?= $this->renderSection('estilos') ?>
+    <style>
+        :root {
+            --auth-footer-height: 140px;
+        }
+
+        .page-body-wrapper.full-page-wrapper {
+            min-height: calc(100vh - var(--auth-footer-height));
+        }
+
+        .content-wrapper.auth.auth-img-bg {
+            min-height: calc(100vh - var(--auth-footer-height));
+        }
+    </style>
+
 </head>
 
 <body>
@@ -30,7 +44,7 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="<?php echo site_url('admin/'); ?>vendors/base/vendor.bundle.base.js"></script>
+    <script src=" <?php echo site_url('admin/'); ?>vendors/base/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- inject:js -->
     <script src="<?php echo site_url('admin/'); ?>js/off-canvas.js"></script>

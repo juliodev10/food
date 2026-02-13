@@ -7,9 +7,29 @@
 
 <?= $this->section('estilos'); ?>
 <!-- Aqui enviamos para o template principal os estilos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="<?= base_url('admin/css/footer.css') ?>">
+<style>
+    .login-page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-page .page-body-wrapper.full-page-wrapper {
+        flex: 1 1 auto;
+        display: flex;
+    }
+
+    .login-page .content-wrapper.auth.auth-img-bg {
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+</style>
 <?= $this->endSection() ?>
 
 <?= $this->section('conteudo'); ?>
+<div class="login-page">
 <div class="container-fluid page-body-wrapper full-page-wrapper">
     <div class="content-wrapper d-flex align-items-stretch auth auth-img-bg">
         <div class="row flex-grow">
@@ -98,12 +118,12 @@
                 </div>
             </div>
             <div class="col-lg-6 login-half-bg d-flex flex-row">
-                <p class="text-white font-weight-medium text-center flex-grow align-self-end">Copyright &copy;
-                    2020 All rights reserved.</p>
             </div>
         </div>
     </div>
     <!-- content-wrapper ends -->
+</div>
+<?= view('footer') ?>
 </div>
 <?= $this->endSection() ?>
 
