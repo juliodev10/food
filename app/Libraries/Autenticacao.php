@@ -35,7 +35,7 @@ class Autenticacao
         session()->destroy();
     }
 
-    private function pegaUsuarioLogado()
+    public function pegaUsuarioLogado()
     {
         if ($this->usuario === null) {
             $this->usuario = $this->pegaUsuarioDaSessao();
