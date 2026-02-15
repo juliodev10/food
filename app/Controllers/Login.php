@@ -24,12 +24,21 @@ class Login extends BaseController
 
             if ($autenticacao->login($email, $password)) {
                 $usuario = $autenticacao->pegaUsuarioLogado();
-                dd($usuario);
+                return redirect()->to(site_url('admin/home'))->with('sucesso', "Bem-vindo(a) {$usuario->nome}.");
             } else {
                 return redirect()->back()->with('atencao', 'Não temos suas credenciais de acesso.');
             }
         } else {
             return redirect()->back();
         }
+    }
+    public function logout()
+    {
+        service('autenticacao')->logout();
+        return redirect()->to(site_url('login/mostraMensagemLogout'));
+    }
+    public function mostraMensagemLogout()
+    {
+        return redirect()->to(site_url('login'))->with('sucesso', 'Logout realizado com sucesso.');
     }
 }

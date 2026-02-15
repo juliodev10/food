@@ -34,6 +34,8 @@ class Filters extends BaseFilters
         'forcehttps' => ForceHTTPS::class,
         'pagecache' => PageCache::class,
         'performance' => PerformanceMetrics::class,
+        'login' => \App\Filters\LoginFilter::class,//filtro de login para proteger as rotas administrativas
+        'admin' => \App\Filters\AdminFilter::class,//filtro de admin para proteger as rotas administrativas
     ];
 
     /**
@@ -108,5 +110,8 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'login' => ['before' => ['admin/*',]],//Todos os controllers que estiverem dentro do namespase admin, só serão acessados após o login
+        'admin' => ['before' => ['admin/*',]],//Todos os controllers que estiverem dentro do namespase admin, só serão acessados por administrador
+    ];
 }
