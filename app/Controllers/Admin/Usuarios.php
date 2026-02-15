@@ -116,7 +116,7 @@ class Usuarios extends BaseController
         if (empty($post['password'])) {
             $this->usuarioModel->desabilitaValidacaoSenha(); // Certifique-se que esse método existe no Model
             unset($post['password']);
-            unset($post['password_confirmation']); // Corrigi o nome (geralmente é password_confirmation)
+            unset($post['confirmation_password']);
         }
 
         $usuario->fill($post);

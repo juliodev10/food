@@ -35,6 +35,16 @@
             <div class="row flex-grow">
                 <div class="col-lg-6 d-flex align-items-center justify-content-center">
                     <div class="auth-form-transparent text-left p-3">
+                        <?php if (session()->has('errors_model')): ?>
+                            <ul>
+                                <?php foreach (session('errors_model') as $error): ?>
+                                    <li class="text-danger">
+                                        <?= ($error) ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+
                         <?php if (session()->has('sucesso')): ?>
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <strong>Perfeito!</strong>
@@ -69,19 +79,32 @@
                         </div>
                         <h4>Recuperando a sua senha!</h4>
                         <h6 class="font-weight-light"><?php echo $titulo; ?></h6>
-                        <?= form_open('password/processaesqueci'); ?>
+                        <?= form_open('password/processareset/' . $token); ?>
                         <?= csrf_field() ?>
                         <div class="form-group">
-                            <label for="exampleInputEmail">Usuário(a)</label>
+                            <label for="password">Nova senha</label>
                             <div class="input-group">
                                 <div class="input-group-prepend bg-transparent">
                                     <span class="input-group-text bg-transparent border-right-0">
-                                        <i class="mdi mdi-account-outline text-primary"></i>
+                                        <i class="mdi mdi-lock-outline text-primary"></i>
                                     </span>
                                 </div>
-                                <input type="email" name="email" value="<?php echo old('email'); ?> "
-                                    class="form-control form-control-lg border-left-0" id="exampleInputEmail"
-                                    placeholder="Digite seu email:">
+                                <input type="password" class="form-control form-control-lg border-left-0"
+                                    name="password" id="password" placeholder="Digite a nova senha">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmation_password">Confirmar da nova senha</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend bg-transparent">
+                                    <span class="input-group-text bg-transparent border-right-0">
+                                        <i class="mdi mdi-lock-check text-primary"></i>
+                                    </span>
+                                </div>
+                                <input type="password" class="form-control form-control-lg border-left-0"
+                                    name="confirmation_password" id="confirmation_password"
+                                    placeholder="Confirme a nova senha">
                             </div>
                         </div>
 
@@ -90,10 +113,10 @@
                                 senha</a>
                         </div>
                         <div class="my-3">
-                            <input id="btn-reset-senha" type="submit" class="btn btn-primary btn-lg font-weight-medium"
-                                value="REDEFINIR SENHA"></input>
+                            <input type="submit" class="btn btn-primary btn-lg font-weight-medium"
+                                value="RECUPERAR SENHA"></input>
                         </div>
-                        </form>
+                        <?php echo form_close(); ?>
                     </div>
                 </div>
                 <div class="col-lg-6 login-half-bg d-flex flex-row">
@@ -108,9 +131,4 @@
 
 <!-- Aqui enviamos para o template principal os scripts -->
 <?= $this->section('scripts'); ?>
-
-<script>$("form").submit(function () {
-        $(this).find(":submit").attr("disabled", "disabled");
-        $('#btn-reset-senha').val('AGUARDE...');
-    });
-    <?= $this->endSection() ?>
+<?= $this->endSection() ?>

@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Libraries\Token;
 
 class UsuarioModel extends Model
 {
     protected $table = 'usuarios';
     protected $returnType = 'App\Entities\Usuario';
-    protected $allowedFields = ['nome', 'email', 'telefone'];
+    protected $allowedFields = ['nome', 'email', 'cpf', 'telefone', 'reset_hash', 'reset_expira_em'];
     //Datas
     protected $useTimestamps = true;
     protected $createdField = 'criado_em'; // Nome da coluna no banco de dados
@@ -86,9 +87,20 @@ class UsuarioModel extends Model
     {
         return $this->protect(false)->where('id', $id)->set('deletado_em', null)->update();
     }
-
     public function buscaUsuarioPorEmail(string $email)
     {
         return $this->where('email', $email)->first();
+    }
+    public function buscaUsuarioParaResetarSenha(string $token)
+    {
+        $token = new Token($token);
+        $token_hash = $token->getHash();
+        $usuario = $this->where('reset_hash', $token_hash)->first();
+        if ($usuario != null) {
+            if ($usuario->reset_expira_em < date('Y-m-d H:i:s')) {
+                $usuario = null;
+            }
+            return $usuario;
+        }
     }
 }

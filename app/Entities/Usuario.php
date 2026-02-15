@@ -7,9 +7,6 @@ use App\Libraries\Token;
 
 class Usuario extends Entity
 {
-    protected $datamap = [
-        'password' => 'password_hash',
-    ];
     protected $dates = ['criado_em', 'atualizado_em', 'deletado_em'];
     protected $casts = [
         'id' => 'integer',
