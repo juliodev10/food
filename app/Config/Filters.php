@@ -36,6 +36,8 @@ class Filters extends BaseFilters
         'performance' => PerformanceMetrics::class,
         'login' => \App\Filters\LoginFilter::class,//filtro de login para proteger as rotas administrativas
         'admin' => \App\Filters\AdminFilter::class,//filtro de admin para proteger as rotas administrativas
+        'visitante' => \App\Filters\VisitanteFilter::class,//filtro de visitante para proteger as rotas administrativas
+        'throttle' => \App\Filters\ThrottleFilter::class,//filtro que ajuda a prevenir ataques de força bruta, limitando o número de tentativas de login 
     ];
 
     /**
@@ -81,6 +83,7 @@ class Filters extends BaseFilters
             // 'invalidchars',
         ],
         'after' => [
+            'toolbar',
             // 'honeypot',
             // 'secureheaders',
         ],
@@ -99,7 +102,9 @@ class Filters extends BaseFilters
      *
      * @var array<string, list<string>>
      */
-    public array $methods = [];
+    public array $methods = [
+        'POST' => ['throttle'],
+    ];
 
     /**
      * List of filter aliases that should run on any

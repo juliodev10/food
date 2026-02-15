@@ -24,7 +24,10 @@ class Login extends BaseController
 
             if ($autenticacao->login($email, $password)) {
                 $usuario = $autenticacao->pegaUsuarioLogado();
-                return redirect()->to(site_url('admin/home'))->with('sucesso', "Bem-vindo(a) {$usuario->nome}.");
+                if (!$usuario->is_admin) {
+                    return redirect()->to(site_url('/'));
+                }
+                return redirect()->to(site_url('admin/home'))->with('sucesso', "Seja bem-vindo $usuario->nome");
             } else {
                 return redirect()->back()->with('atencao', 'Não temos suas credenciais de acesso.');
             }

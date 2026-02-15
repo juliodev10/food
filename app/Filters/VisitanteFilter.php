@@ -6,7 +6,7 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class AdminFilter implements FilterInterface
+class VisitanteFilter implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -25,10 +25,13 @@ class AdminFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $usuario = service('autenticacao')->pegaUsuarioLogado();
-        if (!$usuario->is_admin) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("$usuario->nome, Não encontramos a página solicitada 
-            :(");
+        $autenticacao = service('autenticacao');
+        if ($autenticacao->estaLogado()) {
+            $usuario = $autenticacao->pegaUsuarioLogado();
+            if ($usuario->is_admin) {
+                return redirect()->to(site_url('admin/home'));
+            }
+            return redirect()->to(site_url('/'));
         }
     }
 

@@ -67,9 +67,9 @@
                         <div class="brand-logo">
                             <img src="<?php echo site_url('admin/'); ?>images/logo.svg" alt="logo">
                         </div>
-                        <h4>Olá, seja bem-vindo(a)!</h4>
-                        <h6 class="font-weight-light">Por favor, realize o Login:</h6>
-                        <?= form_open('login/criar'); ?>
+                        <h4>Recuperando a sua senha!</h4>
+                        <h6 class="font-weight-light"><?php echo $titulo; ?></h6>
+                        <?= form_open('password/processaesqueci'); ?>
                         <?= csrf_field() ?>
                         <div class="form-group">
                             <label for="exampleInputEmail">Usuário(a)</label>
@@ -85,37 +85,14 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="exampleInputPassword">Senha</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend bg-transparent">
-                                    <span class="input-group-text bg-transparent border-right-0">
-                                        <i class="mdi mdi-lock-outline text-primary"></i>
-                                    </span>
-                                </div>
-                                <input type="password" name="password"
-                                    class="form-control form-control-lg border-left-0" id="exampleInputPassword"
-                                    placeholder="Digite sua senha:">
-                            </div>
-                        </div>
                         <div class="my-2 d-flex justify-content-between align-items-center">
-                            <div class="form-check">
-                                <label class="form-check-label text-muted">
-                                    <input type="checkbox" class="form-check-input">
-                                    Manter-me conectado
-                                </label>
-                            </div>
-                            <a href="<?php echo site_url('password/esqueci'); ?>" class="auth-link text-black">Esqueceu
-                                a senha?</a>
+                            <a href="<?php echo site_url('login'); ?>" class="auth-link text-black">Lembrei minha
+                                senha</a>
                         </div>
                         <div class="my-3">
                             <button type="submit"
-                                class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">ENTRAR</button>
-                        </div>
-
-                        <div class="text-center mt-4 font-weight-light">
-                            Não tem uma conta? <a href="<?php echo site_url('registrar'); ?>  " class="text-primary">
-                                Criar uma</a>
+                                class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">RECUPERAR
+                                SENHA</button>
                         </div>
                         </form>
                     </div>

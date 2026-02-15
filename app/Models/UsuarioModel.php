@@ -8,7 +8,7 @@ class UsuarioModel extends Model
 {
     protected $table = 'usuarios';
     protected $returnType = 'App\Entities\Usuario';
-    protected $allowedFields = ['nome', 'email', 'telefone', 'cpf', 'password_hash', 'ativo'];
+    protected $allowedFields = ['nome', 'email', 'telefone'];
     //Datas
     protected $useTimestamps = true;
     protected $createdField = 'criado_em'; // Nome da coluna no banco de dados
