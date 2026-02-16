@@ -18,10 +18,35 @@
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>css/style.css">
+    <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>css/footer.css">
     <!-- endinject -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="shortcut icon" href="<?php echo site_url('admin/'); ?>images/favicon.png" />
     <!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
     <?= $this->renderSection('estilos') ?>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .container-scroller {
+            min-height: 100vh;
+        }
+
+        .page-body-wrapper {
+            min-height: 100vh;
+        }
+
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1 0 auto;
+        }
+    </style>
 
 </head>
 
@@ -183,9 +208,21 @@
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">
+                        <a class="nav-link" href="<?php echo site_url('admin/home') ?>">
                             <i class="mdi mdi-home menu-icon"></i>
-                            <span class="menu-title">Dashboard</span>
+                            <span class="menu-title">Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo site_url('admin/categorias') ?>">
+                            <i class="mdi mdi-box-shadow menu-icon"></i>
+                            <span class="menu-title">Categorias</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo site_url('admin/usuarios') ?>">
+                            <i class="mdi mdi-account-settings menu-icon"></i>
+                            <span class="menu-title">Usuários</span>
                         </a>
                     </li>
                     <li class="nav-item">

@@ -14,7 +14,6 @@ class Usuarios extends BaseController
     {
         $this->usuarioModel = new UsuarioModel();
     }
-
     public function index()
     {
         $usuario = service('autenticacao');
@@ -42,7 +41,6 @@ class Usuarios extends BaseController
 
         return $this->response->setJSON($retorno);
     }
-
     public function criar()
     {
         $usuario = new Usuario();
@@ -54,7 +52,6 @@ class Usuarios extends BaseController
 
         return view('Admin/Usuarios/criar', $data);
     }
-
     public function cadastrar()
     {
         if (!$this->request->is('post')) {
@@ -74,7 +71,6 @@ class Usuarios extends BaseController
                 ->withInput();
         }
     }
-
     public function show($id = null)
     {
         $usuario = $this->buscaUsuarioOu404($id);
@@ -86,7 +82,6 @@ class Usuarios extends BaseController
 
         return view('Admin/Usuarios/show', $data);
     }
-
     public function editar($id = null)
     {
         $usuario = $this->buscaUsuarioOu404($id);
@@ -102,7 +97,6 @@ class Usuarios extends BaseController
 
         return view('Admin/Usuarios/editar', $data);
     }
-
     public function atualizar($id = null)
     {
         if (!$this->request->is('post')) {
@@ -135,7 +129,6 @@ class Usuarios extends BaseController
                 ->withInput();
         }
     }
-
     public function excluir($id = null)
     {
         $usuario = $this->buscaUsuarioOu404($id);
@@ -160,7 +153,6 @@ class Usuarios extends BaseController
 
         return view('Admin/Usuarios/excluir', $data);
     }
-
     public function desfazerExclusao($id = null)
     {
         $usuario = $this->buscaUsuarioOu404($id);

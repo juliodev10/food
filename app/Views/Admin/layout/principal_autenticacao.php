@@ -15,21 +15,26 @@
     <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>vendors/base/vendor.bundle.base.css">
     <!-- endinject -->
     <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>css/style.css">
+    <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>css/footer.css">
     <!-- endinject -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="shortcut icon" href="<?php echo site_url('admin/'); ?>images/favicon.png" />
     <!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
     <?= $this->renderSection('estilos') ?>
     <style>
-        :root {
-            --auth-footer-height: 140px;
+        html,
+        body {
+            height: 100%;
         }
 
-        .page-body-wrapper.full-page-wrapper {
-            min-height: calc(100vh - var(--auth-footer-height));
+        .container-scroller {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .content-wrapper.auth.auth-img-bg {
-            min-height: calc(100vh - var(--auth-footer-height));
+        .auth-wrapper {
+            flex: 1 0 auto;
         }
     </style>
 
@@ -37,8 +42,12 @@
 
 <body>
     <div class="container-scroller">
-        <!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
-        <?= $this->renderSection('conteudo') ?>
+        <div class="auth-wrapper">
+            <!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
+            <?= $this->renderSection('conteudo') ?>
+        </div>
+
+        <?= view('footer') ?>
 
         <!-- page-body-wrapper ends -->
     </div>

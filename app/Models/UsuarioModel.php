@@ -65,7 +65,6 @@ class UsuarioModel extends Model
         return $data;
     }
 
-
     public function procurar($term)
     {
         if ($term === null || trim($term) === '') {
@@ -74,7 +73,9 @@ class UsuarioModel extends Model
 
         return $this->select('id, nome')
             ->like('nome', $term)
-            ->findAll();
+            ->withDeleted(true)
+            ->get()
+            ->getResult();
     }
 
     public function desabilitaValidacaoSenha()
