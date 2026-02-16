@@ -35,15 +35,7 @@
             <div class="row flex-grow">
                 <div class="col-lg-6 d-flex align-items-center justify-content-center">
                     <div class="auth-form-transparent text-left p-3">
-                        <?php if (session()->has('errors_model')): ?>
-                            <ul>
-                                <?php foreach (session('errors_model') as $error): ?>
-                                    <li class="text-danger">
-                                        <?= ($error) ?>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
+
 
                         <?php if (session()->has('sucesso')): ?>
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -79,6 +71,16 @@
                         </div>
                         <h4>Recuperando a sua senha!</h4>
                         <h6 class="font-weight-light"><?php echo $titulo; ?></h6>
+
+                        <?php if (session()->has('errors_model')): ?>
+                            <ul>
+                                <?php foreach (session('errors_model') as $error): ?>
+                                    <li class="text-danger">
+                                        <?= ($error) ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
                         <?= form_open('password/processareset/' . $token); ?>
                         <?= csrf_field() ?>
                         <div class="form-group">

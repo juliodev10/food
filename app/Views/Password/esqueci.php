@@ -109,8 +109,19 @@
 <!-- Aqui enviamos para o template principal os scripts -->
 <?= $this->section('scripts'); ?>
 
-<script>$("form").submit(function () {
-        $(this).find(":submit").attr("disabled", "disabled");
-        $('#btn-reset-senha').val('AGUARDE...');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const botao = document.getElementById('btn-reset-senha');
+
+        if (!form || !botao) {
+            return;
+        }
+
+        form.addEventListener('submit', function () {
+            botao.disabled = true;
+            botao.value = 'AGUARDE...';
+        });
     });
-    <?= $this->endSection() ?>
+</script>
+<?= $this->endSection() ?>
