@@ -11,10 +11,14 @@ class Produtos extends BaseController
 {
     private $produtoModel;
     private $categoriaModel;
+    private $ExtraModel;
+    private $produtoExtraModel;
     public function __construct()
     {
         $this->produtoModel = new \App\Models\ProdutoModel();
         $this->categoriaModel = new \App\Models\CategoriaModel();
+        $this->ExtraModel = new \App\Models\ExtraModel();
+        $this->produtoExtraModel = new \App\Models\ProdutoExtraModel();
     }
     public function index()
     {
@@ -230,5 +234,19 @@ class Produtos extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Não encontramos o produto $id");
         }
         return $produto;
+    }
+    public function extras($id = null)
+    {
+        $produto = $this->buscaprodutoOu404($id);
+        $data = [
+            'titulo' => "Gerenciar os extras do produto $produto->nome",
+            'produto' => $produto,
+            'extras' => $this->ExtraModel->where('ativo', true)->findAll(),
+            'produtosExtras' => $this->produtoExtraModel->buscaExtrasDoProduto($produto->id),
+        ];
+
+        dd($data['produtosExtras']);
+
+        return view('Admin/Produtos/show', $data);
     }
 }

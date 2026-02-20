@@ -16,7 +16,14 @@ class ProdutoExtraModel extends Model
     protected $validationMessages = [
         'extra_id' => [
             'required' => 'O campo Extra é obrigatório.',
-            'integer' => 'O campo Extra deve ser um número inteiro.',
         ],
     ];
+    public function buscaExtrasDoProduto(?int $produto_id = null): array
+    {
+        return $this->select('extras.nome AS extra, produtos_extras.*')
+            ->join('extras', 'extras.id = produtos_extras.extra_id')
+            ->join('produtos', 'produtos.id = produtos_extras.produto_id')
+            ->where('produtos_extras.produto_id', $produto_id)
+            ->findAll();
+    }
 }
