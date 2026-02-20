@@ -4,18 +4,19 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CategoriaModel extends Model
+class ProdutoModel extends Model
 {
-    protected $table = 'categorias';
-    protected $returnType = 'App\Entities\Categoria';
+    protected $table = 'produtos';
+    protected $returnType = 'App\Entities\Produto';
     protected $useSoftDeletes = true;
-    protected $allowedFields = ['nome', 'ativo', 'slug'];
-
-    protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
-
-    protected array $casts = [];
-    protected array $castHandlers = [];
+    protected $allowedFields = [
+        'categoria_id',
+        'nome',
+        'slug',
+        'ingredientes',
+        'ativo',
+        'imagem'
+    ];
 
     // Dates
     protected $useTimestamps = true;
@@ -23,15 +24,25 @@ class CategoriaModel extends Model
     protected $createdField = 'criado_em';
     protected $updatedField = 'atualizado_em';
     protected $deletedField = 'deletado_em';
-    // Validation
+
     protected $validationRules = [
-        'nome' => 'required|min_length[2]|is_unique[categorias.nome]|max_length[120]',
+        'nome' => 'required|min_length[2]|is_unique[produtos.nome]|max_length[120]',
+        'categoria_id' => 'required|integer',
+        'ingredientes' => 'required|min_length[10]|max_length[1000]',
     ];
     protected $validationMessages = [
         'nome' => [
             'required' => 'O campo Nome é obrigatório.',
             'max_length' => 'O campo nome deve conter no máximo 120 caracteres.',
-            'is_unique' => 'Essa categoria já existe.',
+            'is_unique' => 'Esse produto já existe.',
+        ],
+        'categoria_id' => [
+            'required' => 'O campo Categoria é obrigatório.',
+        ],
+        'ingredientes' => [
+            'required' => 'O campo Ingredientes é obrigatório.',
+            'max_length' => 'O campo ingredientes deve conter no máximo 1000 caracteres.',
+            'is_unique' => 'Esse produto já existe.',
         ],
     ];
     //Eventos callbacks

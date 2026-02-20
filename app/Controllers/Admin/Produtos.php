@@ -1,0 +1,158 @@
+<?php
+
+namespace App\Controllers\Admin;
+
+use App\Controllers\BaseController;
+use App\Entities\Produto;
+use CodeIgniter\Files\FileSizeUnit;
+helper("number");
+
+class Produtos extends BaseController
+{
+    private $produtoModel;
+    private $categoriaModel;
+    public function __construct()
+    {
+        $this->produtoModel = new \App\Models\ProdutoModel();
+        $this->categoriaModel = new \App\Models\CategoriaModel();
+    }
+    public function index()
+    {
+        $data = [
+            'titulo' => 'Listando os produtos',
+            'produtos' => $this->produtoModel->select('produtos.*, categorias.nome AS categoria')
+                ->join('categorias', 'categorias.id = produtos.categoria_id')
+                ->withDeleted(true)
+                ->paginate(10),
+            'pager' => $this->produtoModel->pager,
+        ];
+        return view('Admin/Produtos/index', $data);
+    }
+    public function procurar()
+    {
+        // Certifique-se que o método 'procurar' existe no seu produtoModel
+        $produtos = $this->produtoModel->procurar($this->request->getGet('term'));
+        $retorno = [];
+
+        foreach ($produtos as $produto) {
+            $data['id'] = $produto->id;
+            $data['value'] = $produto->nome;
+            $retorno[] = $data;
+        }
+        return $this->response->setJSON($retorno);
+    }
+    public function criar($id = null)
+    {
+        $produto = new Produto();
+        $data = [
+            'titulo' => "Criando novo produto",
+            'produto' => $produto,
+            'categorias' => $this->categoriaModel->where('ativo', true)->findAll(),
+        ];
+
+        return view('Admin/Produtos/criar', $data);
+    }
+    public function cadastrar()
+    {
+        if ($this->request->getMethod() === 'POST') {
+            $produto = new Produto($this->request->getPost());
+            if ($this->produtoModel->save($produto)) {
+                return redirect()->to(site_url("admin/produtos/show/" . $this->produtoModel->getInsertID()))->with('sucesso', "Produto $produto->nome cadastrado com sucesso!");
+            } else {
+                return redirect()->back()
+                    ->with('errors_model', $this->produtoModel->errors())
+                    ->with('atencao', 'Por favor, verifique os erros abaixo!')
+                    ->withInput();
+            }
+        } else {
+            return redirect()->back();
+        }
+    }
+    public function show($id = null)
+    {
+        $produto = $this->buscaprodutoOu404($id);
+        $data = [
+            'titulo' => "Detalhes do produto $produto->nome",
+            'produto' => $produto,
+        ];
+
+        return view('Admin/Produtos/show', $data);
+    }
+    public function editar($id = null)
+    {
+        $produto = $this->buscaprodutoOu404($id);
+        $data = [
+            'titulo' => "Editando o produto $produto->nome",
+            'produto' => $produto,
+            'categorias' => $this->categoriaModel->where('ativo', true)->findAll(),
+        ];
+
+        return view('Admin/Produtos/editar', $data);
+    }
+    public function atualizar($id = null)
+    {
+        if ($this->request->getMethod() === 'POST') {
+            $produto = $this->buscaProdutoOu404($id);
+            $produto->fill($this->request->getPost());
+            if (!$produto->hasChanged()) {
+                return redirect()->back()->with('info', 'Não há dados para atualizar');
+            }
+            if ($this->produtoModel->save($produto)) {
+                return redirect()->to(site_url("admin/produtos/show/$id"))->with('sucesso', 'Produto atualizado com sucesso!');
+            } else {
+                return redirect()->back()
+                    ->with('errors_model', $this->produtoModel->errors())
+                    ->with('atencao', 'Por favor, verifique os erros abaixo!')
+                    ->withInput();
+            }
+        } else {
+            return redirect()->back();
+        }
+    }
+    public function editarImagem($id = null)
+    {
+        $produto = $this->buscaprodutoOu404($id);
+        $data = [
+            'titulo' => "Editando imagem do produto $produto->nome",
+            'produto' => $produto,
+        ];
+
+        return view('Admin/Produtos/editar_imagem', $data);
+    }
+    public function upload($id = null)
+    {
+        $produto = $this->buscaprodutoOu404($id);
+        $imagem = $this->request->getFile('foto_produto');
+
+        if (!$imagem || $imagem->getError() === UPLOAD_ERR_NO_FILE) {
+            return redirect()->back()->with('atencao', 'Nenhuma imagem foi selecionada para upload');
+        }
+
+        if (in_array($imagem->getError(), [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
+            return redirect()->back()->with('info', 'O arquivo selecionado é muito grande. Máximo permitido é :2MB.');
+        }
+
+        if (!$imagem->isValid()) {
+            return redirect()->back()->with('atencao', 'Não foi possível processar o upload da imagem.');
+        }
+
+        $tamanhoImagem = $imagem->getSizeByMetricUnit(FileSizeUnit::MB, 2);
+        if ($tamanhoImagem > 2) {
+            return redirect()->back()->with('info', 'O arquivo selecionado é muito grande. Máximo permitido é :2MB.');
+        }
+
+        dd($imagem);
+    }
+    private function buscaProdutoOu404(?int $id = null): object
+    {
+        if (
+            !$id || !$produto = $this->produtoModel->select('produtos.*, categorias.nome AS categoria')
+                ->join('categorias', 'categorias.id = produtos.categoria_id')
+                ->where('produtos.id', $id)
+                ->withDeleted(true)->first()
+        ) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Não encontramos o produto $id");
+        }
+        return $produto;
+    }
+}

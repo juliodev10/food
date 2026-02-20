@@ -4,18 +4,12 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CategoriaModel extends Model
+class MedidaModel extends Model
 {
-    protected $table = 'categorias';
-    protected $returnType = 'App\Entities\Categoria';
+    protected $table = 'medidas';
+    protected $returnType = 'App\Entities\Medida';
     protected $useSoftDeletes = true;
-    protected $allowedFields = ['nome', 'ativo', 'slug'];
-
-    protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
-
-    protected array $casts = [];
-    protected array $castHandlers = [];
+    protected $allowedFields = ['nome', 'descricao', 'ativo'];
 
     // Dates
     protected $useTimestamps = true;
@@ -23,27 +17,17 @@ class CategoriaModel extends Model
     protected $createdField = 'criado_em';
     protected $updatedField = 'atualizado_em';
     protected $deletedField = 'deletado_em';
-    // Validation
+    //Validações
     protected $validationRules = [
-        'nome' => 'required|min_length[2]|is_unique[categorias.nome]|max_length[120]',
+        'nome' => 'required|min_length[2]|is_unique[medidas.nome]|max_length[120]',
     ];
     protected $validationMessages = [
         'nome' => [
             'required' => 'O campo Nome é obrigatório.',
             'max_length' => 'O campo nome deve conter no máximo 120 caracteres.',
-            'is_unique' => 'Essa categoria já existe.',
+            'is_unique' => 'Essa medida já existe.',
         ],
     ];
-    //Eventos callbacks
-    protected $beforeInsert = ['criaSlug'];
-    protected $beforeUpdate = ['criaSlug'];
-    protected function criaSlug(array $data)
-    {
-        if (isset($data['data']['nome'])) {
-            $data['data']['slug'] = mb_url_title($data['data']['nome'], '-', true);
-        }
-        return $data;
-    }
     public function procurar($term)
     {
         if ($term === null || trim($term) === '') {
