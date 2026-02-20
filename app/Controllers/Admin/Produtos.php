@@ -122,27 +122,70 @@ class Produtos extends BaseController
     public function upload($id = null)
     {
         $produto = $this->buscaprodutoOu404($id);
-        $imagem = $this->request->getFile('foto_produto');
 
-        if (!$imagem || $imagem->getError() === UPLOAD_ERR_NO_FILE) {
+        // Lê o erro diretamente do PHP antes de qualquer abstração do CI4,
+        // pois quando upload_max_filesize é excedido o CI4 pode retornar null.
+        $uploadError = $_FILES['foto_produto']['error'] ?? UPLOAD_ERR_NO_FILE;
+
+        // POST body maior que post_max_size: PHP zera $_FILES e $_POST
+        $contentLength = (int) ($this->request->getServer('CONTENT_LENGTH') ?? 0);
+        $postMaxSize = $this->converteIniSizeParaBytes((string) ini_get('post_max_size'));
+
+        if ($uploadError === UPLOAD_ERR_NO_FILE) {
             return redirect()->back()->with('atencao', 'Nenhuma imagem foi selecionada para upload');
         }
 
-        if (in_array($imagem->getError(), [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
-            return redirect()->back()->with('info', 'O arquivo selecionado é muito grande. Máximo permitido é :2MB.');
-        }
+        $imagem = $this->request->getFile('foto_produto');
 
         if (!$imagem->isValid()) {
-            return redirect()->back()->with('atencao', 'Não foi possível processar o upload da imagem.');
+            $codigoErro = $imagem->getError();
+            if ($codigoErro === UPLOAD_ERR_NO_FILE) {
+                return redirect()->back()->with('atencao', 'Nenhum arquivo foi selecionado');
+            }
         }
 
         $tamanhoImagem = $imagem->getSizeByMetricUnit(FileSizeUnit::MB, 2);
         if ($tamanhoImagem > 2) {
-            return redirect()->back()->with('info', 'O arquivo selecionado é muito grande. Máximo permitido é :2MB.');
+            return redirect()->back()->with('atencao', 'O arquivo selecionado é muito grande. Máximo permitido é 2MB.');
         }
+        $tipoImagem = $imagem->getMimeType();
 
+        $tipoImagemLimpo = explode('/', $tipoImagem);
+        $tipoPermitidos = [
+            'jpeg',
+            'png',
+            'gif',
+            'webp',
+        ];
+
+        if (!in_array($tipoImagemLimpo[1], $tipoPermitidos, true)) {
+            return redirect()->back()->with('atencao', 'Tipo de imagem não permitido. Apenas: ' . implode(', ', $tipoPermitidos));
+        }
+        list($largura, $altura) = getimagesize($imagem->getPathname());
+        if ($largura < "400" || $altura < "400") {
+            return redirect()->back()->with('atencao', 'A imagem selecionada é muito pequena. Mínimo permitido é 400x400 pixels.');
+        }
         dd($imagem);
     }
+    private function converteIniSizeParaBytes(string $valor): int
+    {
+        $valor = trim($valor);
+
+        if ($valor === '') {
+            return 0;
+        }
+
+        $numero = (int) $valor;
+        $unidade = strtolower(substr($valor, -1));
+
+        return match ($unidade) {
+            'g' => $numero * 1024 * 1024 * 1024,
+            'm' => $numero * 1024 * 1024,
+            'k' => $numero * 1024,
+            default => (int) $valor,
+        };
+    }
+
     private function buscaProdutoOu404(?int $id = null): object
     {
         if (

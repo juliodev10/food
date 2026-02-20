@@ -39,7 +39,7 @@
                 <form method="POST" action="<?= site_url("admin/produtos/upload/$produto->id"); ?>" enctype="multipart/form-data">
                 <div class="form-group mb-3">
                     <label>Upload de imagem</label>
-                    <input type="file" id="foto_produto" name="foto_produto" class="file-upload-default" required>
+                    <input type="file" id="foto_produto" name="foto_produto" class="file-upload-default">
                     <div class="input-group col-xs-12">
                         <input type="text" class="form-control file-upload-info" disabled
                             placeholder="Escolha uma imagem">
