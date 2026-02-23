@@ -69,6 +69,9 @@ $routes->group('admin', ['filter' => 'login'], static function ($routes) {
         $routes->get('produtos/editarimagem/(:num)', 'Admin\\Produtos::editarImagem/$1');
         $routes->post('produtos/upload/(:num)', 'Admin\\Produtos::upload/$1');
         $routes->get('produtos/imagem/(:any)', 'Admin\\Produtos::imagem/$1');
+        $routes->get('produtos/extras/(:num)', 'Admin\\Produtos::extras/$1');
+        $routes->post('produtos/cadastrarextras/(:num)', 'Admin\\Produtos::cadastrarExtras/$1');
+        $routes->post('produtos/excluirextra/(:num)/(:num)', 'Admin\\Produtos::excluirExtra/$1/$2');
 
         $routes->get('usuarios', 'Admin\\Usuarios::index');
         $routes->get('usuarios/procurar', 'Admin\\Usuarios::procurar');

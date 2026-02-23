@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class ProdutoExtraModel extends Model
 {
-    protected $table = 'produto_extras';
+    protected $table = 'produtos_extras';
     protected $returnType = 'object';
     protected $allowedFields = ['produto_id', 'extra_id'];
 
@@ -18,12 +18,12 @@ class ProdutoExtraModel extends Model
             'required' => 'O campo Extra é obrigatório.',
         ],
     ];
-    public function buscaExtrasDoProduto(?int $produto_id = null): array
+    public function buscaExtrasDoProduto(?int $produto_id = null, int $quantidade_paginacao)
     {
-        return $this->select('extras.nome AS extra, produtos_extras.*')
+        return $this->select('extras.nome AS extra, extras.preco, produtos_extras.*')
             ->join('extras', 'extras.id = produtos_extras.extra_id')
             ->join('produtos', 'produtos.id = produtos_extras.produto_id')
             ->where('produtos_extras.produto_id', $produto_id)
-            ->findAll();
+            ->paginate($quantidade_paginacao);
     }
 }

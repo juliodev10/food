@@ -44,7 +44,7 @@
                     <?php endif; ?>
 
                     <div class="p-2">
-                        <a href="<?= site_url("admin/produtos/editarimagem/$produto->id"); ?>"
+                        <a href="<?= site_url("admin/produtos/editarimagem/{$produto->id}"); ?>"
                             class="btn btn-light btn-sm btn-icon-text">
                             <i class="mdi mdi-image btn-icon-prepend"></i> Editar
                         </a>
@@ -92,11 +92,11 @@
                                 class="btn btn-secondary btn-sm btn-icon-text mr-2">
                                 <i class="mdi mdi-plus-circle-outline btn-icon-prepend"></i> Extras
                             </a>
-                            <a href="<?= site_url("admin/produtos/editar/$produto->id"); ?>"
+                            <a href="<?= site_url("admin/produtos/editar/{$produto->id}"); ?>"
                                 class="btn btn-warning btn-sm btn-icon-text mr-2">
                                 <i class="mdi mdi-pencil btn-icon-prepend"></i> Editar
                             </a>
-                            <a href="<?= site_url("admin/produtos/excluir/$produto->id"); ?>"
+                            <a href="<?= site_url("admin/produtos/excluir/{$produto->id}"); ?>"
                                 class="btn btn-danger btn-sm btn-icon-text">
                                 <i class="mdi mdi-delete btn-icon-prepend"></i> Excluir
                             </a>
@@ -104,7 +104,7 @@
                             <a href="<?= site_url("admin/produtos"); ?>" class="btn btn-light btn-sm btn-icon-text mr-2">
                                 <i class="mdi mdi-arrow-left btn-icon-prepend"></i> Voltar
                             </a>
-                            <a href="<?= site_url("admin/produtos/desfazerExclusao/$produto->id"); ?>" class="btn btn-info
+                            <a href="<?= site_url("admin/produtos/desfazerExclusao/{$produto->id}"); ?>" class="btn btn-info
                             btn-sm btn-icon-text ml-2" data-bs-toggle="tooltip" data-bs-placement="top"
                                 data-bs-title="Desfazer alteração">
                                 <i class="mdi mdi-undo btn-icon-prepend"></i> Desfazer
