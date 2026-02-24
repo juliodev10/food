@@ -72,6 +72,14 @@ $routes->group('admin', ['filter' => 'login'], static function ($routes) {
         $routes->get('produtos/extras/(:num)', 'Admin\\Produtos::extras/$1');
         $routes->post('produtos/cadastrarextras/(:num)', 'Admin\\Produtos::cadastrarExtras/$1');
         $routes->post('produtos/excluirextra/(:num)/(:num)', 'Admin\\Produtos::excluirExtra/$1/$2');
+        $routes->get('produtos/especificacoes/(:num)', 'Admin\\Produtos::especificacoes/$1');
+        $routes->post('produtos/cadastrarespecificacoes/(:num)', 'Admin\\Produtos::cadastrarEspecificacoes/$1');
+        $routes->get('produtos/excluirespecificacao/(:num)/(:num)', 'Admin\\Produtos::excluirEspecificacao/$1/$2');
+        $routes->post('produtos/excluirespecificacao/(:num)/(:num)', 'Admin\\Produtos::excluirEspecificacao/$1/$2');
+
+        // Compatibilidade para links antigos/incorrectos
+        $routes->get('s/especificacoes/(:num)', 'Admin\\Produtos::especificacoes/$1');
+        $routes->get('s/excluirespecificacao/(:num)/(:num)', 'Admin\\Produtos::excluirEspecificacao/$1/$2');
 
         $routes->get('usuarios', 'Admin\\Usuarios::index');
         $routes->get('usuarios/procurar', 'Admin\\Usuarios::procurar');

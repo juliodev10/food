@@ -35,7 +35,13 @@
             </div>
             <div class="card-body">
                 <div class="card mx-auto" style="width: 18rem;">
-                    <?php if ($produto->imagem): ?>
+                    <?php
+                    $caminhoImagemProduto = WRITEPATH . 'uploads/produtos/' . $produto->imagem;
+                    $temImagemValida = !empty($produto->imagem)
+                        && empty($produto->deletado_em)
+                        && is_file($caminhoImagemProduto);
+                    ?>
+                    <?php if ($temImagemValida): ?>
                         <img class="card-img-top" src="<?php echo site_url("admin/produtos/imagem/$produto->imagem"); ?>"
                             alt="<?= esc($produto->nome); ?>">
                     <?php else: ?>
@@ -43,14 +49,16 @@
                             src="<?php echo site_url('admin/images/Produto-sem-imagem.png'); ?>" alt="Produto sem imagem">
                     <?php endif; ?>
 
-                    <div class="p-2">
-                        <a href="<?= site_url("admin/produtos/editarimagem/{$produto->id}"); ?>"
-                            class="btn btn-light btn-sm btn-icon-text">
-                            <i class="mdi mdi-image btn-icon-prepend"></i> Editar
-                        </a>
-                    </div>
+                    <?php if ($produto->deletado_em == null): ?>
+                        <hr>
+                        <div class="p-2">
+                            <a href="<?= site_url("admin/produtos/editarimagem/{$produto->id}"); ?>"
+                                class="btn btn-light btn-sm btn-icon-text">
+                                <i class="mdi mdi-image btn-icon-prepend"></i> Editar
+                            </a>
+                        </div>
+                    <?php endif; ?>
                 </div>
-
                 <p class="card-text text-center">
                     <span class="font-weight-bold">Nome:</span>
                     <?= esc($produto->nome); ?>
@@ -91,6 +99,10 @@
                             <a href="<?= site_url("admin/produtos/extras/{$produto->id}"); ?>"
                                 class="btn btn-secondary btn-sm btn-icon-text mr-2">
                                 <i class="mdi mdi-plus-circle-outline btn-icon-prepend"></i> Extras
+                            </a>
+                            <a href="<?= site_url("admin/produtos/especificacoes/{$produto->id}"); ?>"
+                                class="btn btn-outline-warning btn-sm btn-icon-text mr-2">
+                                <i class="mdi mdi-clipboard-text-outline btn-icon-prepend"></i> Específicações
                             </a>
                             <a href="<?= site_url("admin/produtos/editar/{$produto->id}"); ?>"
                                 class="btn btn-warning btn-sm btn-icon-text mr-2">

@@ -13,11 +13,27 @@ class ProdutoEspecificacaoModel extends Model
     protected $validationRules = [
         'medida_id' => 'required|integer',
         'preco' => 'required|greater_than[0]',
-        'customizavel' => 'required|boolean',
+        'customizavel' => 'required|integer',
     ];
     protected $validationMessages = [
         'medida_id' => [
             'required' => 'O campo Medida é obrigatório.',
         ],
     ];
+
+    /**
+     * Summary of buscaEspecificacoesDoProduto
+     * @descrição retorna as especificações do produto em questão.
+     * @uso Admin/Produtos::especificacoes($id = null)
+     * @param int $produto_id
+     * @param int $quantidade_paginacao
+     * @return array<array<bool|float|int|object|string|null>|object>
+     */
+    public function buscaEspecificacoesDoProduto(int $produto_id, int $quantidade_paginacao)
+    {
+        return $this->select('medidas.nome AS medida, produtos_especificacoes.*')
+            ->join('medidas', 'medidas.id = produtos_especificacoes.medida_id')
+            ->where('produtos_especificacoes.produto_id', $produto_id)
+            ->paginate($quantidade_paginacao);
+    }
 }

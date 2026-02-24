@@ -62,7 +62,7 @@
                 <?php echo form_close(); ?>
                 <hr class="mt-3">
                 <div class="form-row mt-4">
-                    <?php if (empty($produtosExtras)): ?>
+                    <?php if (empty($produtoExtras)): ?>
                         <p>Esse produto não possui extras cadastrados.</p>
                     <?php else: ?>
                         <h4 class="card-title">EXTRAS DO PRODUTO</h4>
@@ -79,7 +79,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($produtosExtras as $extraProduto): ?>
+                                    <?php foreach ($produtoExtras as $extraProduto): ?>
                                         <tr>
                                             <td><?= esc($extraProduto->extra); ?></td>
                                             <td>R$
