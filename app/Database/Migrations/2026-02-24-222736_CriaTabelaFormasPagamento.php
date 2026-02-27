@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CriaTabelaCategorias extends Migration
+class CriaTabelaFormasPagamento extends Migration
 {
     public function up()
     {
@@ -16,10 +16,6 @@ class CriaTabelaCategorias extends Migration
                 'auto_increment' => true
             ],
             'nome' => [
-                'type' => 'VARCHAR',
-                'constraint' => '120'
-            ],
-            'slug' => [
                 'type' => 'VARCHAR',
                 'constraint' => '120'
             ],
@@ -47,11 +43,11 @@ class CriaTabelaCategorias extends Migration
             ]
         ]);
         $this->forge->addPrimaryKey('id')->addUniqueKey('nome');
-        $this->forge->createTable('categorias');
+        $this->forge->createTable('formas_pagamento');
     }
 
     public function down()
     {
-        $this->forge->dropTable('categorias');
+        $this->forge->dropTable('formas_pagamento');
     }
 }

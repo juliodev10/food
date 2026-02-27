@@ -27,6 +27,16 @@ $routes->group('admin', ['filter' => 'login'], static function ($routes) {
     $routes->group('', ['filter' => 'admin'], static function ($routes) {
         $routes->get('home', 'Admin\\Home::index');
 
+        $routes->get('formas', 'Admin\\FormasPagamento::index');
+        $routes->get('formas/procurar', 'Admin\\FormasPagamento::procurar');
+        $routes->get('formas/criar', 'Admin\\FormasPagamento::criar');
+        $routes->get('formas/show/(:num)', 'Admin\\FormasPagamento::show/$1');
+        $routes->get('formas/editar/(:num)', 'Admin\\FormasPagamento::editar/$1');
+        $routes->get('formas/desfazerExclusao/(:num)', 'Admin\\FormasPagamento::desfazerExclusao/$1');
+        $routes->post('formas/cadastrar', 'Admin\\FormasPagamento::cadastrar');
+        $routes->post('formas/atualizar/(:num)', 'Admin\\FormasPagamento::atualizar/$1');
+        $routes->match(['get', 'post'], 'formas/excluir/(:num)', 'Admin\\FormasPagamento::excluir/$1');
+
         $routes->get('categorias', 'Admin\\Categorias::index');
         $routes->get('categorias/procurar', 'Admin\\Categorias::procurar');
         $routes->get('categorias/criar', 'Admin\\Categorias::criar');
@@ -90,5 +100,6 @@ $routes->group('admin', ['filter' => 'login'], static function ($routes) {
         $routes->post('usuarios/atualizar/(:num)', 'Admin\\Usuarios::atualizar/$1');
         $routes->match(['get', 'post'], 'usuarios/excluir/(:num)', 'Admin\\Usuarios::excluir/$1');
         $routes->get('usuarios/desfazerExclusao/(:num)', 'Admin\\Usuarios::desfazerExclusao/$1');
+
     });
 });
