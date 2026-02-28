@@ -28,10 +28,10 @@
 
                 <div class="ui-widget">
                     <input id="query" name="query" class="form-control bg-light mb-4"
-                        placeholder="Pesquise por produto" />
+                        placeholder="Pesquise por um entregador" />
                 </div>
 
-                <a href="<?= site_url("admin/produtos/criar"); ?>" class="btn btn-success btn-sm
+                <a href="<?= site_url("admin/entregadores/criar"); ?>" class="btn btn-success btn-sm
                     btn-icon-text float-right mb-4">
                     <i class="mdi mdi-plus btn-icon-prepend"></i> Cadastrar</a>
 
@@ -41,40 +41,40 @@
                             <tr>
                                 <th>Imagem</th>
                                 <th>Nome</th>
-                                <th>Categoria</th>
-                                <th>Data de criação</th>
+                                <th>Telefone</th>
+                                <th>Placa</th>
                                 <th>Ativo</th>
                                 <th>Situação</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($produtos as $produto): ?>
+                            <?php foreach ($entregadores as $entregador): ?>
                                 <tr>
                                     <td class="py-1">
                                         <?php
-                                        $caminhoImagemProduto = WRITEPATH . 'uploads/produtos/' . $produto->imagem;
-                                        $temImagemValida = !empty($produto->imagem) && is_file($caminhoImagemProduto);
+                                        $caminhoImagemEntregador = WRITEPATH . 'uploads/entregadores/' . $entregador->imagem;
+                                        $temImagemValida = !empty($entregador->imagem) && is_file($caminhoImagemEntregador);
                                         ?>
-
                                         <?php if ($temImagemValida): ?>
-                                            <img src="<?php echo site_url("admin/produtos/imagem/$produto->imagem"); ?>"
-                                                alt="<?= esc($produto->nome) ?>" />
+                                            <img src="<?php echo site_url("admin/entregadores/imagem/$entregador->imagem"); ?>"
+                                                alt="<?= esc($entregador->nome) ?>" />
                                         <?php else: ?>
-                                            <img src="<?php echo site_url('admin/images/Produto-sem-imagem.png'); ?>"
-                                                alt="Produto sem imagem" />
+                                            <img src="<?php echo site_url('admin/images/entregador-sem-imagem.webp'); ?>"
+                                                alt="Entregador sem imagem" />
                                         <?php endif; ?>
                                     </td>
                                     <td>
                                         <a
-                                            href="<?= site_url('admin/produtos/show/' . $produto->id); ?>"><?= $produto->nome; ?></a>
+                                            href="<?= site_url('admin/entregadores/show/' . $entregador->id); ?>"><?= $entregador->nome; ?></a>
                                     </td>
-                                    <td><?= esc($produto->categoria); ?></td>
-                                    <td><?= esc($produto->criado_em->humanize()); ?></td>
-                                    <td><?= ($produto->ativo && $produto->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
+                                    <td><?= $entregador->telefone; ?></td>
+                                    <td><?= $entregador->placa; ?></td>
+
+                                    <td><?= ($entregador->ativo && $entregador->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
                                     </td>
-                                    <td><?= ($produto->deletado_em === null ? '<label class="badge badge-success">Disponível</label>' : '<label class="badge badge-danger">Excluído</label>'); ?>
-                                        <?php if ($produto->deletado_em !== null): ?>
-                                            <a href="<?= site_url("admin/produtos/desfazerExclusao/$produto->id"); ?>"
+                                    <td><?= ($entregador->deletado_em === null ? '<label class="badge badge-success">Disponível</label>' : '<label class="badge badge-danger">Excluído</label>'); ?>
+                                        <?php if ($entregador->deletado_em !== null): ?>
+                                            <a href="<?= site_url("admin/entregadores/desfazerExclusao/$entregador->id"); ?>"
                                                 class="btn btn-info btn-sm btn-icon-text ml-2">
                                                 <i class=" mdi mdi-undo btn-icon-prepend"></i> Desfazer</a>
                                         <?php endif; ?>
@@ -106,7 +106,7 @@
             minLength: 1,
             source: function (request, response) {
                 $.ajax({
-                    url: "<?= site_url('admin/produtos/procurar') ?>",
+                    url: "<?= site_url('admin/entregadores/procurar') ?>",
                     dataType: "json",
                     headers: {
                         "X-Requested-With": "XMLHttpRequest"
@@ -117,7 +117,7 @@
                     success: function (data) {
                         if (!data || data.length < 1) {
                             response([{
-                                label: "Produto não encontrado",
+                                label: "Entregador não encontrado",
                                 value: -1
                             }]);
                             return;
@@ -135,7 +135,7 @@
                     $(this).val("");
                     return false;
                 }
-                window.location.href = "<?= site_url('admin/produtos/show/') ?>" + ui.item.id;
+                window.location.href = "<?= site_url('admin/entregadores/show/') ?>" + ui.item.id;
             }
         });
     });

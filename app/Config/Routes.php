@@ -5,7 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->setAutoRoute(false);
+$routes->setAutoRoute(true);
 
 $routes->get('/', 'Home::index');
 
@@ -100,6 +100,9 @@ $routes->group('admin', ['filter' => 'login'], static function ($routes) {
         $routes->post('usuarios/atualizar/(:num)', 'Admin\\Usuarios::atualizar/$1');
         $routes->match(['get', 'post'], 'usuarios/excluir/(:num)', 'Admin\\Usuarios::excluir/$1');
         $routes->get('usuarios/desfazerExclusao/(:num)', 'Admin\\Usuarios::desfazerExclusao/$1');
+
+        $routes->get('entregadores', 'Admin\\Entregadores::index');
+        $routes->get('entregadores/procurar', 'Admin\\Entregadores::procurar');
 
     });
 });

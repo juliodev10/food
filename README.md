@@ -28,6 +28,19 @@ to your `app` folder. The affected files can be copied or merged from
 Copy `env` to `.env` and tailor for your app, specifically the baseURL
 and any database settings.
 
+## Upload de imagens (projeto)
+
+No painel administrativo, os uploads de imagem (produtos e entregadores) aceitam
+arquivos de até **9MB**.
+
+Para o limite funcionar corretamente no servidor, configure também o `php.ini`
+com valores iguais ou superiores, por exemplo:
+
+- `upload_max_filesize = 10M`
+- `post_max_size = 12M`
+
+Após alterar o `php.ini`, reinicie o serviço PHP/servidor web.
+
 ## Important Change with index.php
 
 `index.php` is no longer in the root of the project! It has been moved inside the *public* folder,

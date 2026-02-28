@@ -36,12 +36,12 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-                <form method="POST" action="<?= site_url("admin/produtos/upload/$produto->id"); ?>"
+                <form method="POST" action="<?= site_url("admin/entregadores/upload/$entregador->id"); ?>"
                     enctype="multipart/form-data">
                     <?= csrf_field(); ?>
                     <div class="form-group mb-3">
                         <label>Upload de imagem</label>
-                        <input type="file" id="foto_produto" name="foto_produto" class="file-upload-default"
+                        <input type="file" id="foto_entregador" name="foto_entregador" class="file-upload-default"
                             accept="image/*">
                         <div class="input-group col-xs-12">
                             <input type="text" class="form-control file-upload-info" disabled
@@ -58,7 +58,7 @@
                             <i class="mdi mdi-content-save btn-icon-prepend"></i>
                             Salvar
                         </button>
-                        <a href="<?= site_url("admin/produtos/show/$produto->id"); ?>"
+                        <a href="<?= site_url("admin/entregadores/show/$entregador->id"); ?>"
                             class="btn btn-light btn-sm btn-icon-text">
                             <i class="mdi mdi-arrow-left btn-icon-prepend"></i> Voltar</a>
                     </div>

@@ -142,6 +142,10 @@ class Produtos extends BaseController
         $contentLength = (int) ($this->request->getServer('CONTENT_LENGTH') ?? 0);
         $postMaxSize = $this->converteIniSizeParaBytes((string) ini_get('post_max_size'));
 
+        if ($contentLength > 0 && $postMaxSize > 0 && $contentLength > $postMaxSize) {
+            return redirect()->back()->with('atencao', 'O tamanho total do upload excede o limite permitido pelo servidor.');
+        }
+
         if ($uploadError === UPLOAD_ERR_NO_FILE) {
             return redirect()->back()->with('atencao', 'Nenhuma imagem foi selecionada para upload');
         }
@@ -156,8 +160,8 @@ class Produtos extends BaseController
         }
 
         $tamanhoImagem = $imagem->getSizeByMetricUnit(FileSizeUnit::MB, 2);
-        if ($tamanhoImagem > 2) {
-            return redirect()->back()->with('atencao', 'O arquivo selecionado é muito grande. Máximo permitido é 2MB.');
+        if ($tamanhoImagem > 9) {
+            return redirect()->back()->with('atencao', 'O arquivo selecionado é muito grande. Máximo permitido é 9MB.');
         }
         $tipoImagem = $imagem->getMimeType();
 
