@@ -24,6 +24,9 @@ class Extras extends BaseController
     }
     public function procurar()
     {
+        if (!$this->request->isAJAX()) {
+            exit('Página não encontrada');
+        }
         // Certifique-se que o método 'procurar' existe no seu extraModel
         $extras = $this->extraModel->procurar($this->request->getGet('term'));
         $retorno = [];

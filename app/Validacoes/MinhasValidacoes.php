@@ -1,6 +1,8 @@
 <?php
 namespace App\Validacoes;
 
+use Config\Database;
+
 class MinhasValidacoes
 {
     public function validaCpf(string $cpf, ?string &$error = null): bool
@@ -28,6 +30,36 @@ class MinhasValidacoes
                 $error = 'Por favor digite um CPF válido';
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    public function bairroCidadeUnico(string $nome, string $fields, array $data, ?string &$error = null): bool
+    {
+        [$campoCidade, $campoId] = array_pad(explode(',', $fields), 2, null);
+
+        if (!$campoCidade || empty($data[$campoCidade])) {
+            return true;
+        }
+
+        $cidade = (string) $data[$campoCidade];
+        $id = $campoId && isset($data[$campoId]) ? (int) $data[$campoId] : null;
+
+        $db = Database::connect();
+        $builder = $db->table('bairros')
+            ->select('id')
+            ->where('nome', $nome)
+            ->where('cidade', $cidade)
+            ->where('deletado_em', null);
+
+        if ($id) {
+            $builder->where('id !=', $id);
+        }
+
+        if ($builder->countAllResults() > 0) {
+            $error = 'Esse bairro já existe para essa cidade.';
+            return false;
         }
 
         return true;

@@ -29,10 +29,10 @@
             <div class="card-body">
                 <div class="ui-widget">
                     <input id="query" name="query" class="form-control bg-light mb-4"
-                        placeholder="Pesquise por produto" />
+                        placeholder="Pesquise por um bairro de Pratápolis" />
                 </div>
 
-                <a href="<?= site_url("admin/produtos/criar"); ?>" class="btn btn-success btn-sm
+                <a href="<?= site_url("admin/bairros/criar"); ?>" class="btn btn-success btn-sm
                     btn-icon-text float-right mb-4">
                     <i class="mdi mdi-plus btn-icon-prepend"></i> Cadastrar</a>
 
@@ -40,42 +40,27 @@
                     <table class="table table-hover table-striped">
                         <thead>
                             <tr>
-                                <th>Imagem</th>
                                 <th>Nome</th>
-                                <th>Categoria</th>
+                                <th>Valor de entrega</th>
                                 <th>Data de criação</th>
                                 <th>Ativo</th>
                                 <th>Situação</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($produtos as $produto): ?>
+                            <?php foreach ($bairros as $bairro): ?>
                                 <tr>
-                                    <td class="py-1">
-                                        <?php
-                                        $caminhoImagemProduto = WRITEPATH . 'uploads/produtos/' . $produto->imagem;
-                                        $temImagemValida = !empty($produto->imagem) && is_file($caminhoImagemProduto);
-                                        ?>
-
-                                        <?php if ($temImagemValida): ?>
-                                            <img src="<?php echo site_url("admin/produtos/imagem/$produto->imagem"); ?>"
-                                                alt="<?= esc($produto->nome) ?>" />
-                                        <?php else: ?>
-                                            <img src="<?php echo site_url('admin/images/Produto-sem-imagem.png'); ?>"
-                                                alt="Produto sem imagem" />
-                                        <?php endif; ?>
-                                    </td>
                                     <td>
                                         <a
-                                            href="<?= site_url('admin/produtos/show/' . $produto->id); ?>"><?= $produto->nome; ?></a>
+                                            href="<?= site_url('admin/bairros/show/' . $bairro->id); ?>"><?= $bairro->nome; ?></a>
                                     </td>
-                                    <td><?= esc($produto->categoria); ?></td>
-                                    <td><?= esc($produto->criado_em->humanize()); ?></td>
-                                    <td><?= ($produto->ativo && $produto->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
+                                    <td>R$&nbsp;<?= esc(number_format($bairro->valor_entrega, 2, ',', '.')); ?></td>
+                                    <td><?= esc($bairro->criado_em->humanize()); ?></td>
+                                    <td><?= ($bairro->ativo && $bairro->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
                                     </td>
-                                    <td><?= ($produto->deletado_em === null ? '<label class="badge badge-success">Disponível</label>' : '<label class="badge badge-danger">Excluído</label>'); ?>
-                                        <?php if ($produto->deletado_em !== null): ?>
-                                            <a href="<?= site_url("admin/produtos/desfazerExclusao/$produto->id"); ?>"
+                                    <td><?= ($bairro->deletado_em === null ? '<label class="badge badge-success">Disponível</label>' : '<label class="badge badge-danger">Excluído</label>'); ?>
+                                        <?php if ($bairro->deletado_em !== null): ?>
+                                            <a href="<?= site_url("admin/bairros/desfazerExclusao/$bairro->id"); ?>"
                                                 class="btn btn-info btn-sm btn-icon-text ml-2">
                                                 <i class=" mdi mdi-undo btn-icon-prepend"></i> Desfazer</a>
                                         <?php endif; ?>
@@ -107,7 +92,7 @@
             minLength: 1,
             source: function (request, response) {
                 $.ajax({
-                    url: "<?= site_url('admin/produtos/procurar') ?>",
+                    url: "<?= site_url('admin/bairros/procurar') ?>",
                     dataType: "json",
                     headers: {
                         "X-Requested-With": "XMLHttpRequest"
@@ -118,7 +103,7 @@
                     success: function (data) {
                         if (!data || data.length < 1) {
                             response([{
-                                label: "Produto não encontrado",
+                                label: "Bairro de Pratápolis não encontrado",
                                 value: -1
                             }]);
                             return;
@@ -136,7 +121,7 @@
                     $(this).val("");
                     return false;
                 }
-                window.location.href = "<?= site_url('admin/produtos/show/') ?>" + ui.item.id;
+                window.location.href = "<?= site_url('admin/bairros/show/') ?>" + ui.item.id;
             }
         });
     });
