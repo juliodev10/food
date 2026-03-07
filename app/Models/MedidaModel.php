@@ -19,7 +19,7 @@ class MedidaModel extends Model
     protected $deletedField = 'deletado_em';
     //Validações
     protected $validationRules = [
-        'nome' => 'required|min_length[2]|is_unique[medidas.nome]|max_length[120]',
+        'nome' => 'required|min_length[2]|is_unique[medidas.nome,id,{id}]|max_length[120]',
     ];
     protected $validationMessages = [
         'nome' => [

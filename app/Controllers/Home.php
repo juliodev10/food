@@ -4,11 +4,27 @@ namespace App\Controllers;
 
 class Home extends BaseController
 {
+    private $categoriaModel;
+    private $produtoModel;
+    public function __construct()
+    {
+        $this->categoriaModel = new \App\Models\CategoriaModel();
+        $this->produtoModel = new \App\Models\ProdutoModel();
+    }
     public function index(): string
     {
-        return view('welcome_message');
+        $this->categoriaModel = new \App\Models\CategoriaModel();
+        $this->produtoModel = new \App\Models\ProdutoModel();
+
+        $data = [
+            'titulo' => 'Seja muito bem vindo(a)!',
+            'categorias' => $this->categoriaModel->BuscaCategoriasWebHome(),
+        ];
+        return view('Home/index', $data);
     }
-    public function email()
+
+
+    /*public function email()
     {
         $email = service('email');
 
@@ -27,5 +43,5 @@ class Home extends BaseController
         } else {
             echo $email->printDebugger();
         }
-    }
+    }*/
 }

@@ -25,13 +25,14 @@ class CategoriaModel extends Model
     protected $deletedField = 'deletado_em';
     // Validation
     protected $validationRules = [
-        'nome' => 'required|min_length[2]|is_unique[categorias.nome]|max_length[120]',
+        'nome' => 'required|min_length[2]|max_length[120]|is_unique[categorias.nome,id,{id}]|categoriaUnica[id]',
     ];
     protected $validationMessages = [
         'nome' => [
             'required' => 'O campo Nome é obrigatório.',
             'max_length' => 'O campo nome deve conter no máximo 120 caracteres.',
             'is_unique' => 'Essa categoria já existe.',
+            'categoriaUnica' => 'Essa categoria já existe.',
         ],
     ];
     //Eventos callbacks
@@ -59,5 +60,12 @@ class CategoriaModel extends Model
     public function desfazerExclusao(int $id)
     {
         return $this->protect(false)->where('id', $id)->set('deletado_em', null)->update();
+    }
+    public function BuscaCategoriasWebHome()
+    {
+        return $this->select('categorias.id, categorias.nome, categorias.slug')
+            ->join('produtos', 'produtos.categoria_id = categorias.id')
+            ->groupBy('categorias.id')
+            ->findAll();
     }
 }

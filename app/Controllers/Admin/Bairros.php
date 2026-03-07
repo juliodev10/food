@@ -86,16 +86,15 @@ class Bairros extends BaseController
     }
     public function atualizar($id = null)
     {
-        $bairro = $this->buscaBairroOu404($id);
-
         if ($this->request->getMethod() === 'POST') {
             $bairro = $this->buscaBairroOu404($id);
-            $bairro->fill($this->request->getPost());
-            $bairro->valor_entrega = str_replace([',', 'R$'], ['', ''], $bairro->valor_entrega);
-            $bairro = $this->buscaBairroOu404($id);
+
             if ($bairro->deletado_em != null) {
                 return redirect()->back()->with('info', 'Não é permitido atualizar um bairro excluído. Por favor, restaure o bairro para atualizá-lo.');
             }
+
+            $bairro->fill($this->request->getPost());
+            $bairro->valor_entrega = str_replace([',', 'R$'], ['', ''], $bairro->valor_entrega);
 
             if (!$bairro->hasChanged()) {
                 return redirect()->back()->with('info', 'Não há dados para atualizar');

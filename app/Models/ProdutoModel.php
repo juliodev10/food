@@ -26,9 +26,9 @@ class ProdutoModel extends Model
     protected $deletedField = 'deletado_em';
 
     protected $validationRules = [
-        'nome' => 'required|min_length[2]|is_unique[produtos.nome]|max_length[120]',
+        'nome' => 'required|min_length[2]|is_unique[produtos.nome,id,{id}]',
         'categoria_id' => 'required|integer',
-        'ingredientes' => 'required|min_length[10]|max_length[1000]',
+        'ingredientes' => 'permit_empty|max_length[1000]',
     ];
     protected $validationMessages = [
         'nome' => [

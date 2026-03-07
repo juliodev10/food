@@ -1,4 +1,8 @@
 <div class="form-row">
+    <?php if ($categoria->id): ?>
+        <input type="hidden" name="id" value="<?= (int) $categoria->id; ?>">
+    <?php endif; ?>
+
     <div class="form-group col-md-4">
         <label for="nome">Nome</label>
         <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome"

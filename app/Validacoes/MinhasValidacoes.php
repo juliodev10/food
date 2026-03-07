@@ -37,14 +37,38 @@ class MinhasValidacoes
 
     public function bairroCidadeUnico(string $nome, string $fields, array $data, ?string &$error = null): bool
     {
-        [$campoCidade, $campoId] = array_pad(explode(',', $fields), 2, null);
+        [$campoCidade, $campoId, $valorId] = array_pad(explode(',', $fields), 3, null);
 
         if (!$campoCidade || empty($data[$campoCidade])) {
             return true;
         }
 
         $cidade = (string) $data[$campoCidade];
-        $id = $campoId && isset($data[$campoId]) ? (int) $data[$campoId] : null;
+        $id = null;
+
+        if ($campoId && isset($data[$campoId])) {
+            $id = (int) $data[$campoId];
+        }
+
+        if (!$id && $valorId !== null && $valorId !== '') {
+            $valorId = trim((string) $valorId);
+
+            if (preg_match('/^\{(.+)\}$/', $valorId, $matches) === 1) {
+                $campoPlaceholder = $matches[1];
+                if (isset($data[$campoPlaceholder])) {
+                    $id = (int) $data[$campoPlaceholder];
+                }
+            } else {
+                $id = (int) $valorId;
+            }
+        }
+
+        if (!$id) {
+            $uriId = (int) service('request')->getUri()->getSegment(4);
+            if ($uriId > 0) {
+                $id = $uriId;
+            }
+        }
 
         $db = Database::connect();
         $builder = $db->table('bairros')
@@ -60,6 +84,45 @@ class MinhasValidacoes
         if ($builder->countAllResults() > 0) {
             $error = 'Esse bairro já existe para essa cidade.';
             return false;
+        }
+
+        return true;
+    }
+
+    public function categoriaUnica(string $nome, string $fields, array $data, ?string &$error = null): bool
+    {
+        $campoId = trim($fields);
+        $id = null;
+
+        if ($campoId !== '' && isset($data[$campoId])) {
+            $id = (int) $data[$campoId];
+        }
+
+        if (!$id) {
+            $uriId = (int) service('request')->getUri()->getSegment(4);
+            if ($uriId > 0) {
+                $id = $uriId;
+            }
+        }
+
+        $nomeNormalizado = mb_strtolower(trim($nome), 'UTF-8');
+
+        $db = Database::connect();
+        $builder = $db->table('categorias')
+            ->select('id, nome')
+            ->where('deletado_em', null);
+
+        if ($id) {
+            $builder->where('id !=', $id);
+        }
+
+        $categorias = $builder->get()->getResult();
+
+        foreach ($categorias as $categoria) {
+            if (mb_strtolower(trim((string) $categoria->nome), 'UTF-8') === $nomeNormalizado) {
+                $error = 'Essa categoria já existe.';
+                return false;
+            }
         }
 
         return true;

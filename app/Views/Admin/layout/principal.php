@@ -12,6 +12,11 @@
     <!-- plugins:css -->
     <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>vendors/base/vendor.bundle.base.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+
+    <link rel="stylesheet" href="<?php echo site_url('admin/'); ?>vendors/base/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- DataTables Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
@@ -253,6 +258,12 @@
                         <a class="nav-link" href="<?php echo site_url('admin/bairros') ?>">
                             <i class="mdi mdi-home-city menu-icon"></i>
                             <span class="menu-title">Bairros</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo site_url('admin/expedientes') ?>">
+                            <i class="mdi mdi-tray-full menu-icon"></i>
+                            <span class="menu-title">Expedientes</span>
                         </a>
                     </li>
                     <li class="nav-item">

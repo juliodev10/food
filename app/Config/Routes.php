@@ -87,6 +87,9 @@ $routes->group('admin', ['filter' => 'login'], static function ($routes) {
         $routes->get('produtos/excluirespecificacao/(:num)/(:num)', 'Admin\\Produtos::excluirEspecificacao/$1/$2');
         $routes->post('produtos/excluirespecificacao/(:num)/(:num)', 'Admin\\Produtos::excluirEspecificacao/$1/$2');
 
+        $routes->match(['get', 'post'], 'expedientes', 'Admin\Expedientes::expedientes');
+
+
         // Compatibilidade para links antigos/incorrectos
         $routes->get('s/especificacoes/(:num)', 'Admin\\Produtos::especificacoes/$1');
         $routes->get('s/excluirespecificacao/(:num)/(:num)', 'Admin\\Produtos::excluirEspecificacao/$1/$2');

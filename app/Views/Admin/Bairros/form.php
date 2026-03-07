@@ -1,4 +1,13 @@
 <div class="form-row">
+    <?php if ($bairro->id): ?>
+        <input type="hidden" name="id" value="<?= (int) $bairro->id; ?>">
+    <?php endif; ?>
+
+    <?php
+    $colunaNome = $bairro->id ? 'col-md-6' : 'col-md-3';
+    $colunaCidade = $bairro->id ? 'col-md-6' : 'col-md-3';
+    ?>
+
     <?php if (!$bairro->id): ?>
         <div class="form-group col-md-3">
             <label for="cep-input">CEP</label>
@@ -8,12 +17,12 @@
         </div>
     <?php endif; ?>
 
-    <div class="form-group col-md-3">
+    <div class="form-group <?= $colunaNome; ?>">
         <label for="nome">Nome</label>
         <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome"
             value="<?php echo old('nome', esc($bairro->nome)) ?>">
     </div>
-    <div class="form-group col-md-3">
+    <div class="form-group <?= $colunaCidade; ?>">
         <label for="cidade">Cidade</label>
         <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade"
             value="<?php echo old('cidade', esc($bairro->cidade)) ?>" readonly="">

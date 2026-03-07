@@ -18,7 +18,7 @@ class BairroModel extends Model
     protected $deletedField = 'deletado_em';
     // Validation
     protected $validationRules = [
-        'nome' => 'required|min_length[2]|max_length[120]|bairroCidadeUnico[cidade,id]',
+        'nome' => 'required|min_length[2]|max_length[120]|bairroCidadeUnico[cidade,id,{id}]',
         'cidade' => 'required|min_length[2]|max_length[20]',
         'estado' => 'equals[MG]',
         'valor_entrega' => 'required',
