@@ -53,7 +53,6 @@
                                         <a
                                             href="<?= site_url('admin/medidas/show/' . $medida->id); ?>"><?= $medida->nome; ?></a>
                                     </td>
-                                    <td>R$&nbsp;<?= esc(number_format($medida->preco, 2, ',', '.')); ?></td>
                                     <td><?= esc($medida->criado_em->humanize()); ?></td>
                                     <td><?= ($medida->ativo && $medida->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
                                     </td>

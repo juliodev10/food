@@ -7,11 +7,19 @@
 
 <?= $this->section('estilos'); ?>
 <!-- Aqui enviamos para o template principal os estilos -->
+<style>
+    .menu-pagination {
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .menu-pagination .pagination {
+        margin: 0;
+    }
+</style>
 <?= $this->endSection() ?>
 
 <?= $this->section('conteudo'); ?>
-
-<!-- Begin Sections-->
 
 <!--    About Us    -->
 <div class="container section" id="sobre-nos" style="margin-top: 1em">
@@ -20,7 +28,7 @@
             <div class="content">
                 <h1 class="section-title title_sty1">Sobre Nós</h1>
                 <p class="short"><strong>Nossa História:</strong> O sabor que atravessa gerações
-                    Em 2001, a nossa chapa esquentou pela primeira vez. O que começou como um modesto balcão de esquina,
+                    Em 1999, a nossa chapa esquentou pela primeira vez. O que começou como um modesto balcão de esquina,
                     acabou se tornando parte da história da nossa cidade.
 
                     Na Gula Lanches, nós acreditamos que algumas coisas não devem mudar. O nosso segredo sempre
@@ -76,31 +84,43 @@
 
     <!--    Menus items     -->
     <div id="menu_items">
-        <?php foreach ($produtos as $produto): ?>
-            <div class="row">
+        <div class="row">
+            <?php foreach ($produtos as $produto): ?>
+                <?php
+                $caminhoImagemProduto = WRITEPATH . 'uploads/produtos/' . $produto->imagem;
+                $temImagemValida = !empty($produto->imagem) && is_file($caminhoImagemProduto);
+                $imagemProduto = $temImagemValida
+                    ? site_url("produto/imagem/{$produto->id}")
+                    : site_url('admin/images/Produto-sem-imagem.png');
+                $urlDetalhesProduto = site_url("produto/detalhes/{$produto->slug}");
+                ?>
                 <div class="col-sm-6 filtr-item image filter active <?= $produto->categoria_slug; ?>">
-                    <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/food-6.jpg" class="block fancybox"
-                        data-fancybox-group="fancybox">
-                        <div class="content">
+                    <div class="content" style="cursor: pointer;"
+                        onclick="window.location.href='<?= $urlDetalhesProduto; ?>';">
+                        <a href="<?= $imagemProduto; ?>" class="block fancybox" data-fancybox-group="fancybox"
+                            onclick="event.stopPropagation();">
                             <div class="filter_item_img">
                                 <i class="fa fa-search-plus"></i>
-                                <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/food-6.jpg" alt="sample" />
+                                <img src="<?= $imagemProduto; ?>" alt="<?= esc($produto->nome); ?>" />
                             </div>
-                            <div class="info">
-                                <div class="name">
-                                    <?= esc($produto->nome) ?>
-                                </div>
-                                <div class="short">
-                                    <?= esc($produto->descricao) ?>
-                                </div>
-                                <span class="filter_item_price">
-                                    <?= esc($produto->preco) ?>
-                                </span>
+                        </a>
+                        <div class="info">
+                            <div class="name">
+                                <?= esc($produto->nome) ?>
                             </div>
+                            <div class="short">
+                                <?= word_limiter($produto->ingredientes, 5) ?>
+                            </div>
+                            <span class="filter_item_price">A partir de R$
+                                <?= esc(number_format($produto->preco, 2, ',', '.')) ?></span>
+                            </span>
                         </div>
-                    </a>
+                    </div>
                 </div>
             <?php endforeach; ?>
+        </div>
+        <div class="text-center menu-pagination">
+            <?= $pager->links('produtos', 'default_full'); ?>
         </div>
 
     </div>
@@ -249,10 +269,9 @@
     </div>
 </div>
 
-<!-- End Sections -->
-
 <?= $this->endSection() ?>
 
 <!-- Aqui enviamos para o template principal os scripts -->
 <?= $this->section('scripts'); ?>
 <?= $this->endSection() ?>
+<!-- Begin Sections-->

@@ -34,6 +34,8 @@
     <link href="<?php echo site_url('web/'); ?>src/assets/css/jquery.fancybox.css" type="text/css" rel="stylesheet" />
     <link href="<?php echo site_url('web/'); ?>src/assets/css/main.css" type="text/css" rel="stylesheet" />
     <link href="<?php echo site_url('web/'); ?>src/assets/css/responsive.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="<?php echo site_url('admin/'); ?>css/footer.css" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
@@ -54,6 +56,25 @@
         color="#5bbad5" />
     <meta name="msapplication-TileColor" content="#990100" />
     <meta name="theme-color" content="#ffffff" />
+    <style>
+        body.pagina-detalhes-produto .navigation {
+            position: relative;
+            top: auto;
+            background-color: rgba(153, 1, 0, .92);
+        }
+
+        body.pagina-detalhes-produto .navbar-container {
+            top: 0;
+        }
+
+        body.pagina-detalhes-produto .navbar {
+            margin: 0;
+        }
+
+        body.pagina-detalhes-produto #header {
+            margin-bottom: 1.5rem;
+        }
+    </style>
     <!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
     <?= $this->renderSection('estilos') ?>
 
@@ -62,7 +83,13 @@
 
 <!-- BEGIN body -->
 
-<body data-spy="scroll" data-target=".navbar" data-offset="50">
+<?php
+$uri = service('uri');
+$isPaginaDetalhesProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment(2) === 'detalhes';
+?>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="50"
+    class="<?= $isPaginaDetalhesProduto ? 'pagina-detalhes-produto' : ''; ?>">
 
     <!-- BEGIN  Loading Section -->
     <div class="loading-overlay">
@@ -83,145 +110,147 @@
         <header id="header">
 
             <!-- BEGIN carousel -->
-            <div id="main-carousel" class="carousel slide" data-ride="carousel">
-                <div class="container pos_rel" style="min-height: 1vh !important;">
+            <?php if (!$isPaginaDetalhesProduto): ?>
+                <div id="main-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="container pos_rel" style="min-height: 1vh !important;">
 
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators">
-                        <li data-target="#main-carousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#main-carousel" data-slide-to="1"></li>
-                        <li data-target="#main-carousel" data-slide-to="2"></li>
-                        <li data-target="#main-carousel" data-slide-to="3"></li>
-                        <li data-target="#main-carousel" data-slide-to="4"></li>
-                    </ol>
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#main-carousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#main-carousel" data-slide-to="1"></li>
+                            <li data-target="#main-carousel" data-slide-to="2"></li>
+                            <li data-target="#main-carousel" data-slide-to="3"></li>
+                            <li data-target="#main-carousel" data-slide-to="4"></li>
+                        </ol>
 
-                    <!-- Controls -->
-                    <a class="left carousel-control" href="#main-carousel" role="button" data-slide="prev">
-                        <i class="fa fa-angle-left" aria-hidden="true"></i>
-                    </a>
-                    <a class="right carousel-control" href="#main-carousel" role="button" data-slide="next">
-                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                    </a>
+                        <!-- Controls -->
+                        <a class="left carousel-control" href="#main-carousel" role="button" data-slide="prev">
+                            <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        </a>
+                        <a class="right carousel-control" href="#main-carousel" role="button" data-slide="next">
+                            <i class="fa fa-angle-right" aria-hidden="true"></i>
+                        </a>
 
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner" role="listbox">
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner" role="listbox">
 
-                        <!-- Carousel items   -->
-                        <div class="item active">
-                            <div class="carousel-caption">
-                                <div class="fadeUp item_img">
-                                    <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/pizza.png"
-                                        alt="sample" />
-                                    <div class="item_badge">
-                                        <span class="badge_btext">20%</span>
-                                        <span class="badge_stext">OFF</span>
+                            <!-- Carousel items   -->
+                            <div class="item active">
+                                <div class="carousel-caption">
+                                    <div class="fadeUp item_img">
+                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/pizza.png"
+                                            alt="sample" />
+                                        <div class="item_badge">
+                                            <span class="badge_btext">20%</span>
+                                            <span class="badge_stext">OFF</span>
+                                        </div>
+                                    </div>
+                                    <div class="fadeUp fade-slow item_details">
+                                        <h4 class="item_name">Delicious Food</h4>
+                                        <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                        <div class="item_link_box">
+                                            <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="fadeUp fade-slow item_details">
-                                    <h4 class="item_name">Delicious Food</h4>
-                                    <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    <div class="item_link_box">
-                                        <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
+                            </div>
+
+                            <div class="item">
+                                <div class="carousel-caption">
+                                    <div class="fadeUp item_img">
+                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/tortilla.png"
+                                            alt="sample" />
+                                        <div class="item_badge">
+                                            <span class="badge_btext">20%</span>
+                                            <span class="badge_stext">OFF</span>
+                                        </div>
+                                    </div>
+                                    <div class="fadeUp fade-slow item_details">
+                                        <h4 class="item_name">Delicious Food</h4>
+                                        <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                        <div class="item_link_box">
+                                            <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <div class="carousel-caption">
+                                    <div class="fadeUp item_img">
+                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/burger.png"
+                                            alt="sample" />
+                                        <div class="item_badge">
+                                            <span class="badge_btext">20%</span>
+                                            <span class="badge_stext">OFF</span>
+                                        </div>
+                                    </div>
+                                    <div class="fadeUp fade-slow item_details">
+                                        <h4 class="item_name">Delicious Food</h4>
+                                        <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                        <div class="item_link_box">
+                                            <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <div class="carousel-caption">
+                                    <div class="fadeUp item_img">
+                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/pizza.png"
+                                            alt="sample" />
+                                        <div class="item_badge">
+                                            <span class="badge_btext">20%</span>
+                                            <span class="badge_stext">OFF</span>
+                                        </div>
+                                    </div>
+                                    <div class="fadeUp fade-slow item_details">
+                                        <h4 class="item_name">Delicious Food</h4>
+                                        <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                        <div class="item_link_box">
+                                            <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <div class="carousel-caption">
+                                    <div class="fadeUp item_img">
+                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/burger.png"
+                                            alt="sample" />
+                                        <div class="item_badge">
+                                            <span class="badge_btext">20%</span>
+                                            <span class="badge_stext">OFF</span>
+                                        </div>
+                                    </div>
+                                    <div class="fadeUp fade-slow item_details">
+                                        <h4 class="item_name">Delicious Food</h4>
+                                        <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                        <div class="item_link_box">
+                                            <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="item">
-                            <div class="carousel-caption">
-                                <div class="fadeUp item_img">
-                                    <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/tortilla.png"
-                                        alt="sample" />
-                                    <div class="item_badge">
-                                        <span class="badge_btext">20%</span>
-                                        <span class="badge_stext">OFF</span>
-                                    </div>
-                                </div>
-                                <div class="fadeUp fade-slow item_details">
-                                    <h4 class="item_name">Delicious Food</h4>
-                                    <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    <div class="item_link_box">
-                                        <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="item">
-                            <div class="carousel-caption">
-                                <div class="fadeUp item_img">
-                                    <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/burger.png"
-                                        alt="sample" />
-                                    <div class="item_badge">
-                                        <span class="badge_btext">20%</span>
-                                        <span class="badge_stext">OFF</span>
-                                    </div>
-                                </div>
-                                <div class="fadeUp fade-slow item_details">
-                                    <h4 class="item_name">Delicious Food</h4>
-                                    <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    <div class="item_link_box">
-                                        <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="item">
-                            <div class="carousel-caption">
-                                <div class="fadeUp item_img">
-                                    <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/pizza.png"
-                                        alt="sample" />
-                                    <div class="item_badge">
-                                        <span class="badge_btext">20%</span>
-                                        <span class="badge_stext">OFF</span>
-                                    </div>
-                                </div>
-                                <div class="fadeUp fade-slow item_details">
-                                    <h4 class="item_name">Delicious Food</h4>
-                                    <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    <div class="item_link_box">
-                                        <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="item">
-                            <div class="carousel-caption">
-                                <div class="fadeUp item_img">
-                                    <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/burger.png"
-                                        alt="sample" />
-                                    <div class="item_badge">
-                                        <span class="badge_btext">20%</span>
-                                        <span class="badge_stext">OFF</span>
-                                    </div>
-                                </div>
-                                <div class="fadeUp fade-slow item_details">
-                                    <h4 class="item_name">Delicious Food</h4>
-                                    <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    <div class="item_link_box">
-                                        <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-
+                    <!-- /.container -->
                 </div>
-                <!-- /.container -->
-            </div>
+            <?php endif; ?>
             <!-- END carousel -->
 
             <!-- BEGIN navigation -->
             <div class="navigation">
 
-                <div class="navbar-container" data-spy="affix" data-offset-top="400">
+                <div class="navbar-container" <?= $isPaginaDetalhesProduto ? '' : 'data-spy="affix" data-offset-top="400"'; ?>>
                     <div class="container">
 
                         <div class="navbar_top hidden-xs">
@@ -386,37 +415,39 @@
                 </div>
                 <div class="copyright">
                     <div class="container">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="copy_text">
-                                    <a target="_blank" href="https://www.templateshub.net">Templates Hub</a>
+                        <div class="site-footer">
+                            <div class="footer-content">
+                                <span class="dev-credits">
+                                    Code by
+                                    <i class="fa-solid fa-star star-icon"></i>
+                                    <a href="https://github.com/JulioDev10" target="_blank" class="dev-link"
+                                        title="Visitar GitHub">
+                                        JulioDev10
+                                    </a>
+                                </span>
+
+                                <span class="separator">|</span>
+
+                                <div class="footer-right">
+                                    <a href="https://wa.me/5535998407525" target="_blank" class="social-link whatsapp"
+                                        title="WhatsApp">
+                                        <i class="fa-brands fa-whatsapp"></i>
+                                    </a>
+
+                                    <a href="https://github.com/JulioDev10" target="_blank" class="social-link github"
+                                        title="GitHub">
+                                        <i class="fa-brands fa-github"></i>
+                                    </a>
+
+                                    <a href="https://discord.com/users/1375261099724640306" target="_blank"
+                                        class="social-link discord" title="Discord">
+                                        <i class="fa-brands fa-discord"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="social-links">
-                                    <ul class="list-inline">
-                                        <li class="list-inline-item">
-                                            <a href="javascript:;" title="">
-                                                <i class="fa fa-facebook" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <a href="javascript:;" title="">
-                                                <i class="fa fa-instagram" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <a href="javascript:;" title="">
-                                                <i class="fa fa-pinterest-p" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <a href="javascript:;" title="">
-                                                <i class="fa fa-linkedin" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+
+                            <div class="footer-copyright">
+                                &copy; <?= date('Y') ?> Todos os direitos reservados.
                             </div>
                         </div>
                     </div>
