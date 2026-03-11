@@ -81,7 +81,6 @@
             <?php endforeach; ?>
         </ul>
     </div>
-
     <!--    Menus items     -->
     <div id="menu_items">
         <div class="row">

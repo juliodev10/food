@@ -37,201 +37,122 @@
     <!-- product -->
     <div class="product-content product-wrap clearfix product-deatil">
         <div class="row">
-            <div class="col-md-5 col-sm-12 col-xs-12">
+
+            <div class="col-md-4 col-sm-12 col-xs-12">
                 <div class="product-image">
-                    <div id="myCarousel-2" class="carousel slide">
-                        <ol class="carousel-indicators">
-                            <li data-target="#myCarousel-2" data-slide-to="0" class=""></li>
-                            <li data-target="#myCarousel-2" data-slide-to="1" class="active"></li>
-                            <li data-target="#myCarousel-2" data-slide-to="2" class=""></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <!-- Slide 1 -->
-                            <div class="item active">
-                                <img src="<?= $imagemProduto; ?>" class="img-responsive"
-                                    alt="<?= esc($produto->nome); ?>" />
-                            </div>
-                            <!-- Slide 2 -->
-                            <div class="item">
-                                <img src="<?= $imagemProduto; ?>" class="img-responsive"
-                                    alt="<?= esc($produto->nome); ?>" />
-                            </div>
-                            <!-- Slide 3 -->
-                            <div class="item">
-                                <img src="<?= $imagemProduto; ?>" class="img-responsive"
-                                    alt="<?= esc($produto->nome); ?>" />
-                            </div>
-                        </div>
-                        <a class="left carousel-control" href="#myCarousel-2" data-slide="prev"> <span
-                                class="glyphicon glyphicon-chevron-left"></span> </a>
-                        <a class="right carousel-control" href="#myCarousel-2" data-slide="next"> <span
-                                class="glyphicon glyphicon-chevron-right"></span> </a>
-                    </div>
+                    <img src="<?= $imagemProduto; ?>" alt="<?= esc($produto->nome); ?>" class="img-responsive" />
                 </div>
             </div>
 
-            <div class="col-md-6 col-md-offset-1 col-sm-12 col-xs-12">
+            <?php if (session()->has('errors_model')): ?>
+                <div class="col-xs-12">
+                    <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                        <strong>Erro na validação!</strong>
+                        <ul>
+                            <?php foreach (session('errors_model') as $error): ?>
+                                <li><?= ($error) ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php echo form_open('carrinho/adicionar'); ?>
+            <div class="col-md-7 col-md-offset-1 col-sm-12 col-xs-12">
                 <h2 class="name">
                     <?= esc($produto->nome); ?>
-                    <small>Produto</small>
-                    <i class="fa fa-star fa-2x text-primary"></i>
-                    <i class="fa fa-star fa-2x text-primary"></i>
-                    <i class="fa fa-star fa-2x text-primary"></i>
-                    <i class="fa fa-star fa-2x text-primary"></i>
-                    <i class="fa fa-star fa-2x text-muted"></i>
-                    <span class="fa fa-2x">
-                        <h5>(0) Avaliações</h5>
-                    </span>
-                    <a href="javascript:void(0);">Sem avaliações no momento</a>
                 </h2>
                 <hr />
                 <h3 class="price-container">
-                    Consulte as opções
-                    <small>*valor varia conforme tamanho</small>
+                    <p class="small">Escolha o valor</p>
+
+                    <?php foreach ($especificacoes as $especificacao): ?>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" class="especificacao"
+                                    data-especificacao="<?php echo $especificacao->especificacao_id; ?>"
+                                    name="produto[preco]" value="<?php echo $especificacao->preco; ?>">
+                                <?php echo esc($especificacao->nome); ?>
+                                <?php echo esc(number_format($especificacao->preco, 2)); ?>
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <?php if (isset($extras) && !empty($extras)): ?>
+                        <hr>
+                        <p class="small">Extras do produto</p>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" class="extra" name="extra" checked="">Sem extra
+                            </label>
+                        </div>
+                        <?php foreach ($extras as $extra): ?>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" class="extra" data-extra="<?php echo $extra->id_principal; ?>"
+                                        name="extra" value="<?php echo $extra->preco; ?>">
+                                    <?php echo esc($extra->nome); ?>
+                                    <?php echo esc(number_format($extra->preco, 2)); ?>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </h3>
-                <div class="certified">
-                    <ul>
-                        <li>
-                            <a href="javascript:void(0);">Delivery time<span>7 Working Days</span></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">Certified<span>Quality Assured</span></a>
-                        </li>
-                    </ul>
+
+                <div class="row" style="margin-top: 4rem">
+                    <div class="col-md-4">
+                        <label>Quantidade</label>
+                        <input type="number" class="form-control" name="produto[quantidade]" placeholder="Quantidade"
+                            value="1" min="1" max="10" step="1" required="">
+                    </div>
                 </div>
+
                 <hr />
-                <div class="description description-tabs">
-                    <ul id="myTab" class="nav nav-pills">
-                        <li class="active"><a href="#more-information" data-toggle="tab" class="no-margin">Product
-                                Description </a></li>
-                        <li class=""><a href="#specifications" data-toggle="tab">Specifications</a></li>
-                        <li class=""><a href="#reviews" data-toggle="tab">Reviews</a></li>
-                    </ul>
+                <div class=" description description-tabs">
+
                     <div id="myTabContent" class="tab-content">
                         <div class="tab-pane fade active in" id="more-information">
                             <br />
-                            <strong>Descrição</strong>
+                            <strong>É uma delícia</strong>
                             <p>
                                 <?= esc($produto->ingredientes ?: 'Ingredientes não informados.'); ?>
                             </p>
                         </div>
-                        <div class="tab-pane fade" id="specifications">
-                            <br />
-                            <dl class="">
-                                <dt>Gravina</dt>
-                                <dd>Etiam porta sem malesuada magna mollis euismod.</dd>
-                                <dd>Donec id elit non mi porta gravida at eget metus.</dd>
-                                <dd>Eget lacinia odio sem nec elit.</dd>
-                                <br />
-
-                                <dt>Test lists</dt>
-                                <dd>A description list is perfect for defining terms.</dd>
-                                <br />
-
-                                <dt>Altra porta</dt>
-                                <dd>Vestibulum id ligula porta felis euismod semper</dd>
-                            </dl>
-                        </div>
-                        <div class="tab-pane fade" id="reviews">
-                            <br />
-                            <form method="post" class="well padding-bottom-10" onsubmit="return false;">
-                                <textarea rows="2" class="form-control" placeholder="Write a review"></textarea>
-                                <div class="margin-top-10">
-                                    <button type="submit" class="btn btn-sm btn-primary pull-right">
-                                        Submit Review
-                                    </button>
-                                    <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip"
-                                        data-placement="bottom" title="" data-original-title="Add Location"><i
-                                            class="fa fa-location-arrow"></i></a>
-                                    <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip"
-                                        data-placement="bottom" title="" data-original-title="Add Voice"><i
-                                            class="fa fa-microphone"></i></a>
-                                    <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip"
-                                        data-placement="bottom" title="" data-original-title="Add Photo"><i
-                                            class="fa fa-camera"></i></a>
-                                    <a href="javascript:void(0);" class="btn btn-link profile-link-btn" rel="tooltip"
-                                        data-placement="bottom" title="" data-original-title="Add File"><i
-                                            class="fa fa-file"></i></a>
-                                </div>
-                            </form>
-
-                            <div class="chat-body no-padding profile-message">
-                                <ul>
-                                    <li class="message">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="online" />
-                                        <span class="message-text">
-                                            <a href="javascript:void(0);" class="username">
-                                                Alisha Molly
-                                                <span class="badge">Purchase Verified</span>
-                                                <span class="pull-right">
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-muted"></i>
-                                                </span>
-                                            </a>
-                                            Can't divide were divide fish forth fish to. Was can't form the, living life
-                                            grass darkness very image let unto fowl isn't in blessed fill life yielding
-                                            above all moved
-                                        </span>
-                                        <ul class="list-inline font-xs">
-                                            <li>
-                                                <a href="javascript:void(0);" class="text-info"><i
-                                                        class="fa fa-thumbs-up"></i> This was helpful (22)</a>
-                                            </li>
-                                            <li class="pull-right">
-                                                <small class="text-muted pull-right ultra-light"> Posted 1 year ago
-                                                </small>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="message">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="online" />
-                                        <span class="message-text">
-                                            <a href="javascript:void(0);" class="username">
-                                                Aragon Zarko
-                                                <span class="badge">Purchase Verified</span>
-                                                <span class="pull-right">
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                </span>
-                                            </a>
-                                            Excellent product, love it!
-                                        </span>
-                                        <ul class="list-inline font-xs">
-                                            <li>
-                                                <a href="javascript:void(0);" class="text-info"><i
-                                                        class="fa fa-thumbs-up"></i> This was helpful (22)</a>
-                                            </li>
-                                            <li class="pull-right">
-                                                <small class="text-muted pull-right ultra-light"> Posted 1 year ago
-                                                </small>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <hr />
+                <div>
+                    <!--Campos hidden que usaremos no controller do carrinho-->
+                    <input type="text" name="produto[slug]" placeholder="produto[slug]"
+                        value="<?= esc($produto->slug); ?>">
+                    <input type="text" id="especificacao_id" name="produto[especificacao_id]"
+                        placeholder="Especificação ID">
+                    <input type="text" id="extra_id" name="produto[extra_id]" placeholder="produto[extra_id]">
+                </div>
+
                 <div class="row">
-                    <div class="col-sm-12 col-md-6 col-lg-6">
-                        <a href="<?= site_url('/#menu'); ?>" class="btn btn-success btn-lg">Voltar ao cardápio</a>
+                    <div class="col-sm-4">
+                        <input id="btn-adiciona" type="submit" class="btn btn-success btn-block" value="Adicionar">
                     </div>
-                    <div class="col-sm-12 col-md-6 col-lg-6">
-                        <div class="btn-group pull-right">
-                            <button class="btn btn-white btn-default"><i class="fa fa-star"></i> Favoritar</button>
-                            <button class="btn btn-white btn-default"><i class="fa fa-envelope"></i> Falar com a
-                                loja</button>
-                        </div>
+
+                    <?php foreach ($especificacoes as $especificacao): ?>
+                        <?php if ($especificacao->customizavel): ?>
+                            <div class="col-sm-4">
+                                <a href="<?php echo site_url('produto/customizar/' . $produto->slug); ?>"
+                                    class="btn btn-primary btn-block">Customizar</a>
+                            </div>
+                            <?php break; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <div class="col-sm-4">
+                        <a href="<?php echo site_url('/'); ?>" class="btn btn-info btn-block">Mais delícias</a>
                     </div>
                 </div>
             </div>
+            <?php echo form_close(); ?>
         </div>
     </div>
     <!-- end product -->
@@ -241,5 +162,27 @@
 
 <!-- Aqui enviamos para o template principal os scripts -->
 <?= $this->section('scripts'); ?>
+<script>
+    $(document).ready(function () {
+        var especificacao_id;
+        if (!especificacao_id) {
+            $('#btn-adiciona').prop('disabled', true);
+            $('#btn-adiciona').prop('value', 'Selecione um valor');
+        }
+        $(".especificacao").on('click', function () {
+            especificacao_id = $(this).attr('data-especificacao');
+            $("#especificacao_id").val(especificacao_id);
+
+            $('#btn-adiciona').prop('disabled', false);
+            $('#btn-adiciona').prop('value', 'Adicionar');
+        });
+
+        $(".extra").on('click', function () {
+            var extra_id = $(this).attr('data-extra');
+            $("#extra_id").val(extra_id);
+        });
+    });
+</script>
+
 <?= $this->endSection() ?>
 <!-- Begin Sections-->

@@ -185,7 +185,7 @@ function initContactMap() {
 
     L.marker(pratapolis)
         .addTo(map)
-        .bindPopup('Pratápolis - MG')
+        .bindPopup('Gula Lanches do Ailton<br>Tv. Lemos, 86 - Pratápolis')
         .openPopup();
 }
 

@@ -313,6 +313,54 @@ $isPaginaDetalhesProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment
         </header>
         <!-- End header -->
 
+        <div class="container">
+            <?php if (session()->has('sucesso')): ?>
+                <div class="alert alert-success alert-dismissible fade in" role="alert">
+                    <strong>Perfeito!</strong>
+                    <?= session('sucesso'); ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php endif ?>
+            <?php if (session()->has('info')): ?>
+                <div class="alert alert-info alert-dismissible fade in" role="alert">
+                    <strong>Informação!</strong>
+                    <?= session('info'); ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php endif ?>
+            <?php if (session()->has('atencao')): ?>
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <strong>Atenção!</strong>
+                    <?= session('atencao'); ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php endif ?>
+            <?php if (session()->has(key: 'fraude')): ?>
+                <div class="alert alert-warning alert-dismissible fade in" role="alert">
+                    <strong>Atenção!</strong>
+                    <?= session('fraude'); ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php endif ?>
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <strong>Erro!</strong>
+                    <?= session('error'); ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php endif ?>
+        </div>
+
         <?= $this->renderSection('conteudo') ?>
 
         <!--    Contact    -->
