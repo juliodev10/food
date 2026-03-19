@@ -27,6 +27,7 @@
     </div>
 
     <div class="footer-copyright">
-        &copy; <?= date('Y') ?> Todos os direitos reservados.
+        &copy;
+        <?= date('Y') ?> Todos os direitos reservados.
     </div>
 </footer>

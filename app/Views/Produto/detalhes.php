@@ -92,8 +92,8 @@
                         <?php foreach ($extras as $extra): ?>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" class="extra" data-extra="<?php echo $extra->id_principal; ?>"
-                                        name="extra" value="<?php echo $extra->preco; ?>">
+                                    <input type="radio" class="extra" data-extra="<?php echo $extra->id; ?>" name="extra"
+                                        value="<?php echo $extra->preco; ?>">
                                     <?php echo esc($extra->nome); ?>
                                     <?php echo esc(number_format($extra->preco, 2)); ?>
                                 </label>
@@ -126,11 +126,11 @@
                 <hr />
                 <div>
                     <!--Campos hidden que usaremos no controller do carrinho-->
-                    <input type="text" name="produto[slug]" placeholder="produto[slug]"
+                    <input type="hidden" name="produto[slug]" placeholder="produto[slug]"
                         value="<?= esc($produto->slug); ?>">
-                    <input type="text" id="especificacao_id" name="produto[especificacao_id]"
+                    <input type="hidden" id="especificacao_id" name="produto[especificacao_id]"
                         placeholder="Especificação ID">
-                    <input type="text" id="extra_id" name="produto[extra_id]" placeholder="produto[extra_id]">
+                    <input type="hidden" id="extra_id" name="produto[extra_id]" placeholder="produto[extra_id]">
                 </div>
 
                 <div class="row">

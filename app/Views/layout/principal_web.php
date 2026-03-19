@@ -86,6 +86,8 @@
 <?php
 $uri = service('uri');
 $isPaginaDetalhesProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment(2) === 'detalhes';
+$isPaginaCustomizarProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment(2) === 'customizar';
+$isPaginaPrincipal = $uri->getTotalSegments() === 0;
 ?>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="50"
@@ -363,145 +365,156 @@ $isPaginaDetalhesProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment
 
         <?= $this->renderSection('conteudo') ?>
 
-        <!--    Contact    -->
-        <div class="section" id="contact">
-            <div id="googleMap"></div>
-        </div>
-
-        <!--  Begin Footer  -->
-        <footer id="footer">
-            <div class="footer_pos">
-                <div class="container">
-                    <div class="footer_content">
-                        <div class="row">
-                            <div class="col-sm-6 col-md-4">
-                                <h4 class="footer_ttl footer_ttl_padd">about us</h4>
-                                <p class="footer_txt">Lorem Ipsum is simply dummy text of the printing and
-                                    typesetting industry. It has survived not only five centuries but also the leap
-                                    into electronic typesetting. </p>
-                            </div>
-                            <div class="col-sm-6 col-md-5">
-                                <h4 class="footer_ttl footer_ttl_padd">working hours</h4>
-                                <div class="footer_border">
-                                    <div class="week_row clearfix">
-                                        <div class="week_day">Monday</div>
-                                        <div class="week_time text-right">Closed</div>
-                                    </div>
-                                    <div class="week_row clearfix">
-                                        <div class="week_day">Tuesday</div>
-                                        <div class="week_time">
-                                            <span class="week_time_start">10 am</span>
-                                            <span class="week_time_node">-</span>
-                                            <span class="week_time_end">12 am</span>
-                                        </div>
-                                    </div>
-                                    <div class="week_row clearfix">
-                                        <div class="week_day">Wednsday</div>
-                                        <div class="week_time">
-                                            <span class="week_time_start">10 am</span>
-                                            <span class="week_time_node">-</span>
-                                            <span class="week_time_end">12 am</span>
-                                        </div>
-
-                                    </div>
-                                    <div class="week_row clearfix">
-                                        <div class="week_day">Thursday</div>
-                                        <div class="week_time">
-                                            <span class="week_time_start">10 am</span>
-                                            <span class="week_time_node">-</span>
-                                            <span class="week_time_end">12 am</span>
-                                        </div>
-
-                                    </div>
-                                    <div class="week_row clearfix">
-                                        <div class="week_day">Friday</div>
-                                        <div class="week_time">
-                                            <span class="week_time_start">10 am</span>
-                                            <span class="week_time_node">-</span>
-                                            <span class="week_time_end">12 am</span>
-                                        </div>
-
-                                    </div>
-                                    <div class="week_row clearfix">
-                                        <div class="week_day">Saturday</div>
-                                        <div class="week_time">
-                                            <span class="week_time_start">7 am</span>
-                                            <span class="week_time_node">-</span>
-                                            <span class="week_time_end">1 am</span>
-                                        </div>
-                                    </div>
-                                    <div class="week_row clearfix">
-                                        <div class="week_day">Sunday</div>
-                                        <div class="week_time">
-                                            <span class="week_time_start">7 am</span>
-                                            <span class="week_time_node">-</span>
-                                            <span class="week_time_end">1 am</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-3">
-                                <h4 class="footer_ttl footer_ttl_padd">contact us</h4>
-                                <div class="footer_border">
-                                    <div class="footer_cnt">
-                                        <i class="fa fa-map-marker"></i>
-                                        <span>Your City, Your streert, 18765, 100 Tenth Avenue, New York City, NY
-                                            1001</span>
-                                    </div>
-                                    <div class="footer_cnt">
-                                        <i class="fa fa-phone"></i>
-                                        <span>(457) 570 5682; (385) 620 756</span>
-                                    </div>
-                                    <div class="footer_cnt">
-                                        <i class="fa fa-envelope"></i>
-                                        <span>info@butazzopizza.net</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="copyright">
-                    <div class="container">
-                        <div class="site-footer">
-                            <div class="footer-content">
-                                <span class="dev-credits">
-                                    Code by
-                                    <i class="fa-solid fa-star star-icon"></i>
-                                    <a href="https://github.com/JulioDev10" target="_blank" class="dev-link"
-                                        title="Visitar GitHub">
-                                        JulioDev10
-                                    </a>
-                                </span>
-
-                                <span class="separator">|</span>
-
-                                <div class="footer-right">
-                                    <a href="https://wa.me/5535998407525" target="_blank" class="social-link whatsapp"
-                                        title="WhatsApp">
-                                        <i class="fa-brands fa-whatsapp"></i>
-                                    </a>
-
-                                    <a href="https://github.com/JulioDev10" target="_blank" class="social-link github"
-                                        title="GitHub">
-                                        <i class="fa-brands fa-github"></i>
-                                    </a>
-
-                                    <a href="https://discord.com/users/1375261099724640306" target="_blank"
-                                        class="social-link discord" title="Discord">
-                                        <i class="fa-brands fa-discord"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="footer-copyright">
-                                &copy; <?= date('Y') ?> Todos os direitos reservados.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <?php if ($isPaginaPrincipal): ?>
+            <!-- Contact -->
+            <div class="section" id="contact">
+                <div id="googleMap"></div>
             </div>
-        </footer>
+        <?php endif; ?>
+
+        <?php if ($isPaginaPrincipal): ?>
+            <!--  Begin Footer  -->
+            <footer id="footer">
+                <div class="footer_pos">
+                    <div class="container">
+                        <div class="footer_content">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-4">
+                                    <h4 class="footer_ttl footer_ttl_padd">about us</h4>
+                                    <p class="footer_txt">Lorem Ipsum is simply dummy text of the printing and
+                                        typesetting industry. It has survived not only five centuries but also the leap
+                                        into electronic typesetting. </p>
+                                </div>
+                                <div class="col-sm-6 col-md-5">
+                                    <h4 class="footer_ttl footer_ttl_padd">working hours</h4>
+                                    <div class="footer_border">
+                                        <div class="week_row clearfix">
+                                            <div class="week_day">Monday</div>
+                                            <div class="week_time text-right">Closed</div>
+                                        </div>
+                                        <div class="week_row clearfix">
+                                            <div class="week_day">Tuesday</div>
+                                            <div class="week_time">
+                                                <span class="week_time_start">10 am</span>
+                                                <span class="week_time_node">-</span>
+                                                <span class="week_time_end">12 am</span>
+                                            </div>
+                                        </div>
+                                        <div class="week_row clearfix">
+                                            <div class="week_day">Wednsday</div>
+                                            <div class="week_time">
+                                                <span class="week_time_start">10 am</span>
+                                                <span class="week_time_node">-</span>
+                                                <span class="week_time_end">12 am</span>
+                                            </div>
+
+                                        </div>
+                                        <div class="week_row clearfix">
+                                            <div class="week_day">Thursday</div>
+                                            <div class="week_time">
+                                                <span class="week_time_start">10 am</span>
+                                                <span class="week_time_node">-</span>
+                                                <span class="week_time_end">12 am</span>
+                                            </div>
+
+                                        </div>
+                                        <div class="week_row clearfix">
+                                            <div class="week_day">Friday</div>
+                                            <div class="week_time">
+                                                <span class="week_time_start">10 am</span>
+                                                <span class="week_time_node">-</span>
+                                                <span class="week_time_end">12 am</span>
+                                            </div>
+
+                                        </div>
+                                        <div class="week_row clearfix">
+                                            <div class="week_day">Saturday</div>
+                                            <div class="week_time">
+                                                <span class="week_time_start">7 am</span>
+                                                <span class="week_time_node">-</span>
+                                                <span class="week_time_end">1 am</span>
+                                            </div>
+                                        </div>
+                                        <div class="week_row clearfix">
+                                            <div class="week_day">Sunday</div>
+                                            <div class="week_time">
+                                                <span class="week_time_start">7 am</span>
+                                                <span class="week_time_node">-</span>
+                                                <span class="week_time_end">1 am</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-3">
+                                    <h4 class="footer_ttl footer_ttl_padd">contact us</h4>
+                                    <div class="footer_border">
+                                        <div class="footer_cnt">
+                                            <i class="fa fa-map-marker"></i>
+                                            <span>Your City, Your streert, 18765, 100 Tenth Avenue, New York City, NY
+                                                1001</span>
+                                        </div>
+                                        <div class="footer_cnt">
+                                            <i class="fa fa-phone"></i>
+                                            <span>(457) 570 5682; (385) 620 756</span>
+                                        </div>
+                                        <div class="footer_cnt">
+                                            <i class="fa fa-envelope"></i>
+                                            <span>info@butazzopizza.net</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="copyright">
+                        <div class="container">
+                            <div class="site-footer">
+                                <div class="footer-content">
+                                    <span class="dev-credits">
+                                        Code by
+                                        <i class="fa-solid fa-star star-icon"></i>
+                                        <a href="https://github.com/JulioDev10" target="_blank" class="dev-link"
+                                            title="Visitar GitHub">
+                                            JulioDev10
+                                        </a>
+                                    </span>
+
+                                    <span class="separator">|</span>
+
+                                    <div class="footer-right">
+                                        <a href="https://wa.me/5535998407525" target="_blank" class="social-link whatsapp"
+                                            title="WhatsApp">
+                                            <i class="fa-brands fa-whatsapp"></i>
+                                        </a>
+
+                                        <a href="https://github.com/JulioDev10" target="_blank" class="social-link github"
+                                            title="GitHub">
+                                            <i class="fa-brands fa-github"></i>
+                                        </a>
+
+                                        <a href="https://discord.com/users/1375261099724640306" target="_blank"
+                                            class="social-link discord" title="Discord">
+                                            <i class="fa-brands fa-discord"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="footer-copyright">
+                                    &copy; <?= date('Y') ?> Todos os direitos reservados.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        <?php elseif (!$isPaginaCustomizarProduto): ?>
+            <!--  Begin Footer  -->
+            <footer id="footer">
+                <div class="container">
+                    <?= view('footer') ?>
+                </div>
+            </footer>
+        <?php endif; ?>
 
         <!-- End Footer -->
 
