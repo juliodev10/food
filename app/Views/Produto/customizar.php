@@ -8,6 +8,32 @@
 <?= $this->section('estilos'); ?>
 <!-- Aqui enviamos para o template principal os estilos -->
 <link href="<?php echo site_url('web/'); ?>src/assets/css/produto.css" type="text/css" rel="stylesheet" />
+<style>
+    @media (max-width: 767px) {
+        .produto-footer-fullwidth {
+            width: 100vw;
+            max-width: 100vw;
+            margin-left: calc(50% - 50vw);
+            margin-right: calc(50% - 50vw);
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .produto-footer-fullwidth .site-footer {
+            width: 100%;
+            margin: 0;
+            padding-left: 16px;
+            padding-right: 16px;
+            box-sizing: border-box;
+        }
+
+        .produto-footer-fullwidth .footer-content {
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+</style>
 
 <?= $this->endSection() ?>
 
@@ -70,6 +96,10 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
+
+                <div class="form-group" style="margin-top: 10px;">
+                    <input type="hidden" id="extra_id" name="extra_id" class="form-control" placeholder="extra_id_hidden">
+                </div>
             </div>
 
             <div class="col-md-6">
@@ -82,6 +112,28 @@
                 <select id="segunda_metade" class="form-control" name="segunda_metade">
                     <option value="">Escolha a segunda metade...</option>
                 </select>
+            </div>
+
+            <div class="col-md-12">
+                <div id="valor_produto_customizado" style="font-size: 18px; color: #990100; font-family: 'Montserrat-Bold';">
+                    <div id="valor_metades_customizadas"></div>
+                    <div id="valor_total_metades"></div>
+                    <div id="valor_extra_customizado"></div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div id="boxInfoExtras" style="display: none;">
+                    <p class="small">Extras</p>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="extra" name="extra" checked="">Sem extra
+                        </label>
+                    </div>
+                    <div id="extras">
+
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-12" style="margin-top: 15px;">
@@ -98,7 +150,9 @@
             </div>
 
             <div class="col-md-12" style="margin-top: 20px;">
-                <?= view('footer') ?>
+                <div class="produto-footer-fullwidth">
+                    <?= view('footer') ?>
+                </div>
             </div>
 
             <?php echo form_close(); ?>
@@ -117,6 +171,50 @@
         var imagemPlaceholder = '<?= site_url('/web/src/assets/img/escolha_produto.png'); ?>';
         var baseImagemProduto = '<?= site_url('produto/imagem'); ?>';
         var categoria_id = '<?= $produto->categoria_id; ?>';
+        var totalMetadesAtual = 0;
+        var valorExtraAtual = 0;
+
+        function atualizarTotalComExtra() {
+            var totalComExtra = (totalMetadesAtual + valorExtraAtual).toFixed(2);
+            var labelTotal = valorExtraAtual > 0 ? 'Total com extra' : 'Total das metades';
+            $('#valor_total_metades').html('<p class="small"><strong>' + labelTotal + '</strong> - R$: ' + totalComExtra + '</p>');
+        }
+
+        function resetExtras() {
+            $('#extras').html('');
+            $('#boxInfoExtras').hide();
+            $('input.extra[name="extra"]').prop('checked', false);
+            $('input.extra[name="extra"]').first().prop('checked', true);
+            $('#extra_id').val('');
+            $('#valor_extra_customizado').html('');
+            valorExtraAtual = 0;
+            if (totalMetadesAtual > 0) {
+                atualizarTotalComExtra();
+            }
+        }
+
+        function renderExtras(extras) {
+            if (!Array.isArray(extras) || extras.length === 0) {
+                resetExtras();
+                return;
+            }
+
+            let extrasHtml = '';
+            extras.forEach(function(extra) {
+                extrasHtml += '<div class="radio">';
+                extrasHtml += '<label>';
+                extrasHtml += '<input type="radio" class="extra" name="extra" value="' + extra.preco + '" data-extra="' + extra.id + '">';
+                extrasHtml += extra.nome + ' - R$ ' + parseFloat(extra.preco).toFixed(2);
+                extrasHtml += '</label>';
+                extrasHtml += '</div>';
+            });
+
+            $('#extras').html(extrasHtml);
+            $('#boxInfoExtras').show();
+            $('input.extra[name="extra"]').first().prop('checked', true);
+            $('#extra_id').val('');
+            $('#valor_extra_customizado').html('');
+        }
 
         function preencherSegundaMetade(primeiraMetadeId) {
             $('#segunda_metade').html('<option value="">Escolha a segunda metade...</option>');
@@ -136,7 +234,7 @@
         }
 
         $('#btn-adiciona').prop('disabled', true);
-        $('#btn-adiciona').prop('value', 'Selecione um tamanho');
+        $('#btn-adiciona').prop('value', 'Selecione os produtos');
         $('#segunda_metade').html('<option value="">Escolha a segunda metade...</option>');
 
         $('#primeira_metade').on('change', function() {
@@ -144,6 +242,9 @@
             var primeira_metade = $(this).val();
 
             if (primeira_metade) {
+                $('#btn-adiciona').prop('disabled', true);
+                $('#btn-adiciona').prop('value', 'Selecione os produtos');
+                resetExtras();
                 preencherSegundaMetade(primeira_metade);
 
                 var primeiraImagem = baseImagemProduto + '/' + primeira_metade + '?v=' + Date.now();
@@ -158,8 +259,6 @@
                         primeira_metade: primeira_metade,
                         categoria_id: categoria_id
                     },
-                    beforeSend: function(data) {},
-
                     success: function(data) {
                         if (data && data.imagemPrimeiroProduto) {
                             $('#img-primeira-metade').attr('src', data.imagemPrimeiroProduto + '?v=' + Date.now());
@@ -167,10 +266,16 @@
                     },
                 });
             } else {
+                $('#btn-adiciona').prop('disabled', true);
+                $('#btn-adiciona').prop('value', 'Selecione os produtos');
                 $('#img-primeira-metade').attr('src', imagemPlaceholder);
                 $('#img-segunda-metade').attr('src', imagemPlaceholder);
                 $('#segunda_metade').html('<option value="">Escolha a segunda metade...</option>');
-
+                totalMetadesAtual = 0;
+                $('#valor_metades_customizadas').html('');
+                $('#valor_total_metades').html('');
+                $('#valor_extra_customizado').html('');
+                resetExtras();
             }
         });
 
@@ -184,7 +289,13 @@
             }
 
             if (!segundo_produto_id) {
+                $('#btn-adiciona').prop('disabled', true);
+                $('#btn-adiciona').prop('value', 'Selecione os produtos');
                 $('#img-segunda-metade').attr('src', imagemPlaceholder);
+                totalMetadesAtual = 0;
+                $('#valor_metades_customizadas').html('');
+                $('#valor_total_metades').html('');
+                resetExtras();
                 return;
             }
 
@@ -201,7 +312,6 @@
                         segundo_produto_id: segundo_produto_id,
                         categoria_id: categoria_id
                     },
-                    beforeSend: function(data) {},
 
                     success: function(data) {
                         if (data && data.imagemPrimeiroProduto) {
@@ -211,9 +321,79 @@
                         if (data && data.imagemSegundoProduto) {
                             $('#img-segunda-metade').attr('src', data.imagemSegundoProduto + '?v=' + Date.now());
                         }
+
+                        if (data && data.primeira_metade && data.segunda_metade) {
+                            var precoPrimeiraNumero = parseFloat(data.primeira_metade.preco);
+                            var precoSegundaNumero = parseFloat(data.segunda_metade.preco);
+                            var precoPrimeira = precoPrimeiraNumero.toFixed(2);
+                            var precoSegunda = precoSegundaNumero.toFixed(2);
+                            totalMetadesAtual = (precoPrimeiraNumero + precoSegundaNumero);
+                            var htmlValores = '';
+                            htmlValores += '<p class="small"><strong>' + data.primeira_metade.nome + '</strong> - R$: ' + precoPrimeira + '</p>';
+                            htmlValores += '<p class="small"><strong>' + data.segunda_metade.nome + '</strong> - R$: ' + precoSegunda + '</p>';
+                            $('#valor_metades_customizadas').html(htmlValores);
+                            atualizarTotalComExtra();
+
+                            $('#btn-adiciona').prop('disabled', false);
+                            $('#btn-adiciona').prop('value', 'Adicionar');
+                        }
+
+                        if (data && data.extras) {
+                            let extrasHtml = '';
+                            data.extras.forEach(function(extra) {
+                                extrasHtml += '<div class="radio">';
+                                extrasHtml += '<label>';
+                                extrasHtml += '<input type="radio" class="extra" name="extra" value="' + extra.preco + '" data-extra="' + extra.id + '">';
+                                extrasHtml += extra.nome + ' - R$ ' + parseFloat(extra.preco).toFixed(2);
+                                extrasHtml += '</label>';
+                                extrasHtml += '</div>';
+                            });
+                            $('#extras').html(extrasHtml);
+                            $('#boxInfoExtras').show();
+                        } else {
+                            $('#extras').html('');
+                            $('#boxInfoExtras').hide();
+                        }
                     },
                 });
             }
+        });
+
+        $(document).on('change', '.extra', function() {
+            var extra_id = $(this).attr('data-extra');
+
+            if (!extra_id) {
+                $("#extra_id").val('');
+                $("#valor_extra_customizado").html('');
+                valorExtraAtual = 0;
+                if (totalMetadesAtual > 0) {
+                    atualizarTotalComExtra();
+                }
+                return;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: '<?php echo site_url('produto/exibeValor'); ?>',
+                dataType: 'json',
+                data: {
+                    extra_id: extra_id
+                },
+                success: function(data) {
+                    if (!data || !data.extra) {
+                        $("#extra_id").val('');
+                        $("#valor_extra_customizado").html('');
+                        return;
+                    }
+
+                    $("#extra_id").val(data.extra.id);
+                    valorExtraAtual = parseFloat(data.extra.preco);
+                    $("#valor_extra_customizado").html('<p class="small">Extra selecionado: ' + data.extra.nome + ' - R$: ' + parseFloat(data.extra.preco).toFixed(2) + '</p>');
+                    if (totalMetadesAtual > 0) {
+                        atualizarTotalComExtra();
+                    }
+                }
+            });
         });
     });
 </script>

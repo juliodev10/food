@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Entities\Produto as ProdutoEntity;
+use App\Models\ExtraModel;
 use App\Models\ProdutoEspecificacaoModel;
 use App\Models\ProdutoModel;
 use App\Models\ProdutoExtraModel;
@@ -15,12 +16,14 @@ class Produto extends BaseController
     private ProdutoEspecificacaoModel $produtoEspecificacaoModel;
     private ProdutoExtraModel $produtoExtraModel;
     private MedidaModel $medidaModel;
+    private ExtraModel $extraModel;
     public function __construct()
     {
         $this->produtoModel = new ProdutoModel();
         $this->produtoEspecificacaoModel = new ProdutoEspecificacaoModel();
         $this->produtoExtraModel = new ProdutoExtraModel();
         $this->medidaModel = new MedidaModel();
+        $this->extraModel = new ExtraModel();
     }
     public function detalhes(?string $produto_slug = null)
     {
@@ -93,6 +96,11 @@ class Produto extends BaseController
             return $this->response->setJSON([]);
         }
         $especificacoesPrimeiroProduto = $this->produtoEspecificacaoModel->where('produto_id', $primeiroProduto->id)->where('customizavel', true)->findAll();
+        $precoPrimeiroProduto = $this->produtoEspecificacaoModel
+            ->selectMin('preco')
+            ->where('produto_id', $primeiroProduto->id)
+            ->where('customizavel', true)
+            ->first();
 
         if ($especificacoesPrimeiroProduto == null) {
             return $this->response->setJSON([]);
@@ -106,6 +114,11 @@ class Produto extends BaseController
             return $this->response->setJSON([]);
         }
         $especificacoesSegundoProduto = $this->produtoEspecificacaoModel->where('produto_id', $segundoProduto->id)->where('customizavel', true)->findAll();
+        $precoSegundoProduto = $this->produtoEspecificacaoModel
+            ->selectMin('preco')
+            ->where('produto_id', $segundoProduto->id)
+            ->where('customizavel', true)
+            ->first();
 
         if ($especificacoesSegundoProduto == null) {
             return $this->response->setJSON([]);
@@ -122,9 +135,49 @@ class Produto extends BaseController
         }
 
         $data['medidas'] = $medidas;
+        $data['primeira_metade'] = [
+            'id' => (int) $primeiroProduto->id,
+            'nome' => $primeiroProduto->nome,
+            'preco' => (float) ($precoPrimeiroProduto->preco ?? 0),
+        ];
+        $data['segunda_metade'] = [
+            'id' => (int) $segundoProduto->id,
+            'nome' => $segundoProduto->nome,
+            'preco' => (float) ($precoSegundoProduto->preco ?? 0),
+        ];
         $data['imagemPrimeiroProduto'] = site_url('produto/imagem/' . $primeiroProduto->id);
         $data['imagemSegundoProduto'] = site_url('produto/imagem/' . $segundoProduto->id);
         return $this->response->setJSON($data);
+    }
+    public function exibeValor()
+    {
+        if (!$this->request->isAJAX()) {
+            return redirect()->back();
+        }
+        $get = $this->request->getGet();
+
+        $extraId = (int) ($get['extra_id'] ?? 0);
+        if ($extraId <= 0) {
+            return $this->response->setJSON(['extra' => null]);
+        }
+
+        $extra = $this->extraModel
+            ->select(['id', 'nome', 'preco'])
+            ->where('id', $extraId)
+            ->where('ativo', true)
+            ->first();
+
+        if ($extra == null) {
+            return $this->response->setJSON(['extra' => null]);
+        }
+
+        return $this->response->setJSON([
+            'extra' => [
+                'id' => (int) $extra->id,
+                'nome' => $extra->nome,
+                'preco' => (float) $extra->preco,
+            ],
+        ]);
     }
     public function imagem(string $imagem)
     {

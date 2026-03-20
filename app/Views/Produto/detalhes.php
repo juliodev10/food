@@ -28,6 +28,12 @@
         font-size: 15px;
         line-height: 1.6;
     }
+
+    .preco-padrao {
+        font-size: 18px;
+        color: #990100;
+        font-family: 'Montserrat-Bold';
+    }
 </style>
 <?= $this->endSection() ?>
 
@@ -75,8 +81,9 @@
                                 <input type="radio" class="especificacao"
                                     data-especificacao="<?php echo $especificacao->especificacao_id; ?>"
                                     name="produto[preco]" value="<?php echo $especificacao->preco; ?>">
-                                <?php echo esc($especificacao->nome); ?>
-                                <?php echo esc(number_format($especificacao->preco, 2)); ?>
+                                <span class="preco-padrao">
+                                    R$ <?php echo esc(number_format($especificacao->preco, 2, ',', '.')); ?>
+                                </span>
                             </label>
                         </div>
                     <?php endforeach; ?>
@@ -163,13 +170,13 @@
 <!-- Aqui enviamos para o template principal os scripts -->
 <?= $this->section('scripts'); ?>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         var especificacao_id;
         if (!especificacao_id) {
             $('#btn-adiciona').prop('disabled', true);
             $('#btn-adiciona').prop('value', 'Selecione um valor');
         }
-        $(".especificacao").on('click', function () {
+        $(".especificacao").on('click', function() {
             especificacao_id = $(this).attr('data-especificacao');
             $("#especificacao_id").val(especificacao_id);
 
@@ -177,7 +184,7 @@
             $('#btn-adiciona').prop('value', 'Adicionar');
         });
 
-        $(".extra").on('click', function () {
+        $(".extra").on('click', function() {
             var extra_id = $(this).attr('data-extra');
             $("#extra_id").val(extra_id);
         });
