@@ -35,6 +35,12 @@
 
         .auth-wrapper {
             flex: 1 0 auto;
+            display: flex;
+            min-height: 0;
+        }
+
+        .auth-wrapper>* {
+            flex: 1 0 auto;
         }
     </style>
 

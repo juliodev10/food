@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="<?= base_url('admin/css/footer.css') ?>">
 <style>
     .login-page {
-        min-height: 100vh;
+        min-height: 100%;
         display: flex;
         flex-direction: column;
     }
@@ -110,7 +110,7 @@
 <?= $this->section('scripts'); ?>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const form = document.querySelector('form');
         const botao = document.getElementById('btn-reset-senha');
 
@@ -118,7 +118,7 @@
             return;
         }
 
-        form.addEventListener('submit', function () {
+        form.addEventListener('submit', function() {
             botao.disabled = true;
             botao.value = 'AGUARDE...';
         });

@@ -92,7 +92,7 @@
                     <option value="">Escolha seu produto...</option>
                     <?php foreach ($opcoes as $opcao): ?>
                         <option value="<?= $opcao->id; ?>">
-                            <?= esc($opcao->nome); ?>
+                            <?= esc($opcao->nome); ?> - R$ <?= esc(number_format((float) $opcao->preco_base, 2, ',', '.')); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -325,12 +325,14 @@
                         if (data && data.primeira_metade && data.segunda_metade) {
                             var precoPrimeiraNumero = parseFloat(data.primeira_metade.preco);
                             var precoSegundaNumero = parseFloat(data.segunda_metade.preco);
-                            var precoPrimeira = precoPrimeiraNumero.toFixed(2);
-                            var precoSegunda = precoSegundaNumero.toFixed(2);
-                            totalMetadesAtual = (precoPrimeiraNumero + precoSegundaNumero);
+                            var precoPrimeiraMetade = (precoPrimeiraNumero / 2);
+                            var precoSegundaMetade = (precoSegundaNumero / 2);
+                            var precoPrimeira = precoPrimeiraMetade.toFixed(2);
+                            var precoSegunda = precoSegundaMetade.toFixed(2);
+                            totalMetadesAtual = (precoPrimeiraMetade + precoSegundaMetade);
                             var htmlValores = '';
-                            htmlValores += '<p class="small"><strong>' + data.primeira_metade.nome + '</strong> - R$: ' + precoPrimeira + '</p>';
-                            htmlValores += '<p class="small"><strong>' + data.segunda_metade.nome + '</strong> - R$: ' + precoSegunda + '</p>';
+                            htmlValores += '<p class="small"><strong>' + data.primeira_metade.nome + ' (1/2)</strong> - R$: ' + precoPrimeira + '</p>';
+                            htmlValores += '<p class="small"><strong>' + data.segunda_metade.nome + ' (1/2)</strong> - R$: ' + precoSegunda + '</p>';
                             $('#valor_metades_customizadas').html(htmlValores);
                             atualizarTotalComExtra();
 

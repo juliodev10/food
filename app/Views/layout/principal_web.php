@@ -56,6 +56,7 @@
         color="#5bbad5" />
     <meta name="msapplication-TileColor" content="#990100" />
     <meta name="theme-color" content="#ffffff" />
+
     <style>
         body.pagina-detalhes-produto .navigation {
             position: relative;
@@ -73,6 +74,35 @@
 
         body.pagina-detalhes-produto #header {
             margin-bottom: 1.5rem;
+        }
+
+        .navbar-nav>li>a {
+            line-height: 30px;
+        }
+
+        .mobile-header-actions {
+            float: right;
+            margin-top: 10px;
+        }
+
+        .mobile-header-actions .mobile-cart-link,
+        .mobile-header-actions .right_menu_icon {
+            display: inline-block;
+            color: #fff;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+        .mobile-header-actions .mobile-cart-count {
+            font-size: 14px;
+            margin-left: 4px;
+            font-weight: 700;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-header-actions {
+                display: none;
+            }
         }
     </style>
     <!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
@@ -284,9 +314,17 @@ $isPaginaPrincipal = $uri->getTotalSegments() === 0;
                                     <a class="navbar-brand" href="#">
                                         <img src="<?php echo site_url('web/'); ?>src/assets/img/logo.png" alt="logo" />
                                     </a>
-                                    <a href="#cd-nav" class="cd-nav-trigger right_menu_icon">
-                                        <span><i class="fa fa-bars" aria-hidden="true"></i></span>
-                                    </a>
+                                    <div class="mobile-header-actions">
+                                        <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
+                                            <a href="<?php echo site_url('carrinho'); ?>" class="mobile-cart-link" aria-label="Carrinho">
+                                                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                                <span class="mobile-cart-count"><?php echo count(session()->get('carrinho')); ?></span>
+                                            </a>
+                                        <?php endif ?>
+                                        <a href="#cd-nav" class="cd-nav-trigger right_menu_icon" aria-label="Abrir menu">
+                                            <span><i class="fa fa-bars" aria-hidden="true"></i></span>
+                                        </a>
+                                    </div>
                                 </div>
 
                                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -299,6 +337,17 @@ $isPaginaPrincipal = $uri->getTotalSegments() === 0;
                                             <li><a class="page-scroll" href="#gallery">Gallery</a></li>
                                             <li><a class="page-scroll" href="#reservation">Reservation</a></li>
                                             <li><a class="page-scroll" href="#footer">Contact</a></li>
+
+                                            <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
+                                                <li><a class="page-scroll" href="<?php echo site_url('carrinho'); ?>">
+                                                        <i class="fa fa-shopping-cart fa fa-2x" aria-hidden="true"></i>
+                                                        <span style="font-size: 25px !important;">
+                                                            <?php echo count(session()->get('carrinho')); ?>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            <?php endif ?>
+
                                         </ul>
                                     </div>
                                 </div>
@@ -543,6 +592,16 @@ $isPaginaPrincipal = $uri->getTotalSegments() === 0;
             <li><a class="page-scroll" href="#gallery">Gallery</a></li>
             <li><a class="page-scroll" href="#reservation">Reservation</a></li>
             <li><a class="page-scroll" href="#footer">Contact</a></li>
+            <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
+                <li>
+                    <a href="<?php echo site_url('carrinho'); ?>">
+                        <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
+                        <span style="font-size: 18px; margin-left: 6px;">
+                            <?php echo count(session()->get('carrinho')); ?>
+                        </span>
+                    </a>
+                </li>
+            <?php endif ?>
         </ul>
         <div class="right_menu_addr top_addr">
             <span><i class="fa fa-map-marker" aria-hidden="true"></i> Your country, your city, 12345</span>

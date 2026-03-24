@@ -34,6 +34,46 @@
         color: #990100;
         font-family: 'Montserrat-Bold';
     }
+
+    .quantidade-input {
+        width: 80px;
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .quantidade-input[type=number] {
+        -moz-appearance: auto;
+        appearance: auto;
+    }
+
+    .quantidade-input[type=number]::-webkit-outer-spin-button,
+    .quantidade-input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: inner-spin-button;
+        opacity: 1;
+        margin: 0;
+    }
+
+    .quantidade-control {
+        display: flex;
+        align-items: stretch;
+        max-width: 125px;
+    }
+
+    .quantidade-acoes {
+        display: flex;
+        flex-direction: column;
+        margin-left: 4px;
+    }
+
+    .quantidade-acoes .btn {
+        padding: 2px 6px;
+        line-height: 1;
+        border-radius: 3px;
+    }
+
+    .quantidade-acoes .btn:first-child {
+        margin-bottom: 2px;
+    }
 </style>
 <?= $this->endSection() ?>
 
@@ -73,7 +113,7 @@
                 </h2>
                 <hr />
                 <h3 class="price-container">
-                    <p class="small">Escolha o valor</p>
+                    <p class="small">Escolha o tamanho</p>
 
                     <?php foreach ($especificacoes as $especificacao): ?>
                         <div class="radio">
@@ -81,6 +121,10 @@
                                 <input type="radio" class="especificacao"
                                     data-especificacao="<?php echo $especificacao->especificacao_id; ?>"
                                     name="produto[preco]" value="<?php echo $especificacao->preco; ?>">
+                                <span>
+                                    <?php echo esc($especificacao->nome); ?>
+                                </span>
+                                -
                                 <span class="preco-padrao">
                                     R$ <?php echo esc(number_format($especificacao->preco, 2, ',', '.')); ?>
                                 </span>
@@ -112,8 +156,18 @@
                 <div class="row" style="margin-top: 4rem">
                     <div class="col-md-4">
                         <label>Quantidade</label>
-                        <input type="number" class="form-control" name="produto[quantidade]" placeholder="Quantidade"
-                            value="1" min="1" max="10" step="1" required="">
+                        <div class="quantidade-control">
+                            <input id="quantidade" type="number" class="form-control input-sm quantidade-input" name="produto[quantidade]" placeholder="Quantidade"
+                                value="1" min="1" max="10" step="1" required="">
+                            <div class="quantidade-acoes">
+                                <button type="button" class="btn btn-default btn-xs quantidade-up" aria-label="Aumentar quantidade">
+                                    <i class="fa fa-chevron-up" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="btn btn-default btn-xs quantidade-down" aria-label="Diminuir quantidade">
+                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -171,10 +225,44 @@
 <?= $this->section('scripts'); ?>
 <script>
     $(document).ready(function() {
+        var $quantidade = $('#quantidade');
+
+        function ajustaQuantidade(delta) {
+            var atual = parseInt($quantidade.val(), 10);
+            var min = parseInt($quantidade.attr('min'), 10) || 1;
+            var max = parseInt($quantidade.attr('max'), 10) || 10;
+
+            if (isNaN(atual)) {
+                atual = min;
+            }
+
+            var proximo = atual + delta;
+            if (proximo < min) {
+                proximo = min;
+            }
+            if (proximo > max) {
+                proximo = max;
+            }
+
+            $quantidade.val(proximo);
+        }
+
+        $('.quantidade-up').on('click', function() {
+            ajustaQuantidade(1);
+        });
+
+        $('.quantidade-down').on('click', function() {
+            ajustaQuantidade(-1);
+        });
+
+        $quantidade.on('change blur', function() {
+            ajustaQuantidade(0);
+        });
+
         var especificacao_id;
         if (!especificacao_id) {
             $('#btn-adiciona').prop('disabled', true);
-            $('#btn-adiciona').prop('value', 'Selecione um valor');
+            $('#btn-adiciona').prop('value', 'Selecione um tamanho');
         }
         $(".especificacao").on('click', function() {
             especificacao_id = $(this).attr('data-especificacao');
