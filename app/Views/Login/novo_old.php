@@ -15,30 +15,6 @@
         flex-direction: column;
     }
 
-    .login-page .auth-form-transparent {
-        width: 100%;
-        max-width: 420px;
-        margin: 0 auto;
-    }
-
-    .login-page .card,
-    .login-page .auth-form-transparent,
-    .login-page p {
-        max-width: 100%;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-    }
-
-    .login-page .alert {
-        white-space: normal;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-    }
-
-    .login-page .alert strong {
-        margin-right: 4px;
-    }
-
     .login-page .page-body-wrapper.full-page-wrapper {
         flex: 1 1 auto;
         display: flex;
@@ -47,44 +23,6 @@
     .login-page .content-wrapper.auth.auth-img-bg {
         flex: 1 1 auto;
         min-height: 0;
-    }
-
-    @media (max-width: 767.98px) {
-        .login-page .row.flex-grow {
-            width: 100%;
-            margin: 0;
-        }
-
-        .login-page .col-lg-6 {
-            flex: 0 0 100%;
-            max-width: 100%;
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
-        }
-
-        .login-page .login-half-bg {
-            display: none;
-        }
-
-        .login-page .auth-form-transparent {
-            max-width: 320px;
-            padding: 0.75rem !important;
-        }
-
-        .login-page .alert,
-        .login-page .alert-danger,
-        .login-page p {
-            width: 100%;
-            max-width: 320px;
-            font-size: 0.92rem;
-            line-height: 1.35;
-            margin-left: auto;
-            margin-right: auto;
-            padding-right: 2.2rem;
-            white-space: normal;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
     }
 </style>
 <?= $this->endSection() ?>

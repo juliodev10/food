@@ -16,11 +16,19 @@ $routes->group('', ['filter' => 'visitante'], static function ($routes) {
     $routes->post('password/processaesqueci', 'Password::processaEsqueci');
     $routes->get('password/reset/(:alphanum)', 'Password::reset/$1');
     $routes->post('password/processareset/(:alphanum)', 'Password::processaReset/$1');
+    $routes->get('registrar', 'Registrar::novo', ['filter' => 'visitante']);
 });
 
 $routes->group('', ['filter' => 'login'], static function ($routes) {
     $routes->get('login/logout', 'Login::logout');
     $routes->get('login/mostraMensagemLogout', 'Login::mostraMensagemLogout');
+
+    // Rotas da conta com verbos explícitos
+    $routes->get('conta', 'Conta::index');
+    $routes->get('conta/show', 'Conta::show');
+    $routes->get('conta/autenticar', 'Conta::autenticar');
+    $routes->post('conta/processaautenticacao', 'Conta::processaAutenticacao');
+    $routes->get('conta/editar', 'Conta::editar');
 });
 
 $routes->group('admin', ['filter' => 'login'], static function ($routes) {
@@ -106,6 +114,5 @@ $routes->group('admin', ['filter' => 'login'], static function ($routes) {
 
         $routes->get('entregadores', 'Admin\\Entregadores::index');
         $routes->get('entregadores/procurar', 'Admin\\Entregadores::procurar');
-
     });
 });

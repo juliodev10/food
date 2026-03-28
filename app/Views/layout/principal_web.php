@@ -83,6 +83,21 @@
         .mobile-header-actions {
             float: right;
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .mobile-auth-opposite {
+            float: left;
+            margin-top: 12px;
+            margin-left: 12px;
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            max-width: calc(100vw - 190px);
         }
 
         .mobile-header-actions .mobile-cart-link,
@@ -99,7 +114,70 @@
             font-weight: 700;
         }
 
+        .mobile-auth-links {
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
+        .mobile-auth-link {
+            display: inline-block;
+            padding: 4px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 12px;
+            line-height: 1.2;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .mobile-auth-link:hover,
+        .mobile-auth-link:focus {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .mobile-auth-link--danger {
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .body-wrapper>.container .alert {
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        @media (max-width: 420px) {
+            .mobile-auth-link {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .body-wrapper>.container {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .body-wrapper>.container .alert {
+                width: 100%;
+                max-width: 100%;
+                font-size: 14px;
+                line-height: 1.35;
+                padding-right: 34px;
+            }
+        }
+
         @media (min-width: 768px) {
+            .mobile-auth-opposite {
+                display: none;
+            }
+
             .mobile-header-actions {
                 display: none;
             }
@@ -314,6 +392,17 @@ $isPaginaPrincipal = $uri->getTotalSegments() === 0;
                                     <a class="navbar-brand" href="#">
                                         <img src="<?php echo site_url('web/'); ?>src/assets/img/logo.png" alt="logo" />
                                     </a>
+                                    <?php if ($isPaginaPrincipal): ?>
+                                        <div class="mobile-auth-opposite">
+                                            <?php if (usuario_logado()): ?>
+                                                <a href="<?php echo site_url('conta'); ?>" class="mobile-auth-link">Minha conta</a>
+                                                <a href="<?php echo site_url('login/logout'); ?>" class="mobile-auth-link mobile-auth-link--danger">Sair</a>
+                                            <?php else: ?>
+                                                <a href="<?php echo site_url('login'); ?>" class="mobile-auth-link">Entrar</a>
+                                                <a href="<?php echo site_url('registrar'); ?>" class="mobile-auth-link">Registre-se</a>
+                                            <?php endif ?>
+                                        </div>
+                                    <?php endif; ?>
                                     <div class="mobile-header-actions">
                                         <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
                                             <a href="<?php echo site_url('carrinho'); ?>" class="mobile-cart-link" aria-label="Carrinho">
@@ -346,6 +435,14 @@ $isPaginaPrincipal = $uri->getTotalSegments() === 0;
                                                         </span>
                                                     </a>
                                                 </li>
+                                            <?php endif ?>
+                                            <?php if (usuario_logado()): ?>
+                                                <li><a class="page-scroll" href="<?php echo site_url('conta'); ?>">Minha conta</a></li>
+                                                <li><a class="page-scroll" href="<?php echo site_url('login/logout'); ?>">Sair</a></li>
+
+                                            <?php else: ?>
+                                                <li><a class="page-scroll" href="<?php echo site_url('login'); ?>">Entrar</a></li>
+                                                <li><a class="page-scroll" href="<?php echo site_url('registrar'); ?>">Registre-se</a></li>
                                             <?php endif ?>
 
                                         </ul>

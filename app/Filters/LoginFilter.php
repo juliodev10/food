@@ -26,7 +26,7 @@ class LoginFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if (service('autenticacao')->estaLogado() === false) {
-            return redirect()->to(site_url('login'))->with('atencao', 'Faça login para acessar a página solicitada.');
+            return redirect()->to(site_url('login'))->with('info', 'Por Favor, realize o login primeiramente.');
         }
     }
 

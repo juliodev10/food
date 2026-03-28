@@ -40,7 +40,7 @@ abstract class BaseController extends Controller
      */
     protected $response;
 
-    protected $helpers = ['form', 'text'];
+    protected $helpers = ['form', 'text', 'autenticacao'];
 
     /**
      * @return void

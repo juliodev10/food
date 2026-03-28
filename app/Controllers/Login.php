@@ -38,10 +38,10 @@ class Login extends BaseController
     public function logout()
     {
         service('autenticacao')->logout();
-        return redirect()->to(site_url('login/mostraMensagemLogout'));
+        return redirect()->to(site_url('login'))->with('info', 'Esperamos ver você novamente');
     }
     public function mostraMensagemLogout()
     {
-        return redirect()->to(site_url('login'))->with('sucesso', 'Logout realizado com sucesso.');
+        return redirect()->to(site_url('login'))->with('info', 'Esperamos ver você novamente');
     }
 }
