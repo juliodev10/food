@@ -82,7 +82,8 @@
 
         .mobile-header-actions {
             float: right;
-            margin-top: 10px;
+            margin-top: 8px;
+            margin-right: -16px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
@@ -91,13 +92,19 @@
 
         .mobile-auth-opposite {
             float: left;
-            margin-top: 12px;
+            margin-top: 10px;
             margin-left: 12px;
             display: inline-flex;
             align-items: center;
             flex-wrap: wrap;
             gap: 6px;
             max-width: calc(100vw - 190px);
+        }
+
+        .mobile-header-actions .right_menu_icon {
+            position: relative;
+            top: 0;
+            margin-left: 10px;
         }
 
         .mobile-header-actions .mobile-cart-link,
@@ -196,6 +203,7 @@ $uri = service('uri');
 $isPaginaDetalhesProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment(2) === 'detalhes';
 $isPaginaCustomizarProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment(2) === 'customizar';
 $isPaginaPrincipal = $uri->getTotalSegments() === 0;
+$isPaginaConta = $uri->getSegment(1) === 'conta';
 ?>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="50"
@@ -392,7 +400,7 @@ $isPaginaPrincipal = $uri->getTotalSegments() === 0;
                                     <a class="navbar-brand" href="#">
                                         <img src="<?php echo site_url('web/'); ?>src/assets/img/logo.png" alt="logo" />
                                     </a>
-                                    <?php if ($isPaginaPrincipal): ?>
+                                    <?php if ($isPaginaPrincipal || $isPaginaConta): ?>
                                         <div class="mobile-auth-opposite">
                                             <?php if (usuario_logado()): ?>
                                                 <a href="<?php echo site_url('conta'); ?>" class="mobile-auth-link">Minha conta</a>
