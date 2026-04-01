@@ -17,6 +17,8 @@ $routes->group('', ['filter' => 'visitante'], static function ($routes) {
     $routes->get('password/reset/(:alphanum)', 'Password::reset/$1');
     $routes->post('password/processareset/(:alphanum)', 'Password::processaReset/$1');
     $routes->get('registrar', 'Registrar::novo', ['filter' => 'visitante']);
+    $routes->get('registrar/ativar/(:any)', 'Registrar::ativar/$1');
+    $routes->get('registrar/ativacaoconcluida', 'Registrar::ativacaoConcluida');
 });
 
 $routes->group('', ['filter' => 'login'], static function ($routes) {

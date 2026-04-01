@@ -80,6 +80,37 @@
             line-height: 30px;
         }
 
+        .navbar-brand.site-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        .navbar-brand.site-brand img {
+            width: auto;
+            height: 52px;
+            max-height: 52px;
+        }
+
+        .site-brand-text {
+            font-family: 'Montserrat-Bold';
+            font-size: 24px;
+            line-height: 1;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            position: relative;
+            top: -2px;
+        }
+
+        .rmenu_logo img {
+            width: auto;
+            height: 40px;
+            max-height: 40px;
+        }
+
         .mobile-header-actions {
             float: right;
             margin-top: 8px;
@@ -163,12 +194,39 @@
                 font-size: 11px;
                 padding: 4px 8px;
             }
+
+            .navbar-brand.site-brand {
+                gap: 6px;
+            }
+
+            .navbar-brand.site-brand img {
+                height: 38px;
+                max-height: 38px;
+            }
+
+            .site-brand-text {
+                font-size: 18px;
+            }
         }
 
         @media (max-width: 767.98px) {
             .body-wrapper>.container {
                 padding-left: 12px;
                 padding-right: 12px;
+            }
+
+            .navbar-brand.site-brand {
+                position: relative;
+                top: -3px;
+            }
+
+            .navbar-brand.site-brand img {
+                position: relative;
+                top: -2px;
+            }
+
+            .site-brand-text {
+                top: -7px;
             }
 
             .body-wrapper>.container .alert {
@@ -187,6 +245,11 @@
 
             .mobile-header-actions {
                 display: none;
+            }
+
+            .navbar-brand.site-brand img {
+                height: 58px;
+                max-height: 58px;
             }
         }
     </style>
@@ -397,8 +460,9 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
                             <div id="navbar_content">
                                 <!-- Brand and toggle get grouped for better mobile display -->
                                 <div class="navbar-header">
-                                    <a class="navbar-brand" href="#">
+                                    <a class="navbar-brand site-brand" href="<?php echo site_url('/'); ?>" aria-label="Gula Lanches">
                                         <img src="<?php echo site_url('web/'); ?>src/assets/img/logo.png" alt="logo" />
+                                        <span class="site-brand-text">Gula Lanches</span>
                                     </a>
                                     <?php if ($isPaginaPrincipal || $isPaginaConta): ?>
                                         <div class="mobile-auth-opposite">

@@ -273,7 +273,7 @@ class Carrinho extends BaseController
         if ($this->request->getMethod() === 'POST') {
             $produtoPost = $this->request->getPost('produto') ?? [];
             $this->validacao->setRules([
-                'produto.slug' => ['label' => 'Produto', 'rules' => 'required|max_length[30]|string'],
+                'produto.slug' => ['label' => 'Produto', 'rules' => 'required|max_length[255]|string'],
                 'produto.quantidade' => ['label' => 'Quantidade', 'rules' => 'required|greater_than[0]'],
             ]);
             if (!$this->validacao->withRequest($this->request)->run()) {
@@ -303,7 +303,7 @@ class Carrinho extends BaseController
         if ($this->request->getMethod() === 'POST') {
             $produtoPost = $this->request->getPost('produto') ?? [];
             $this->validacao->setRules([
-                'produto.slug' => ['label' => 'Produto', 'rules' => 'required|max_length[30]|string'],
+                'produto.slug' => ['label' => 'Produto', 'rules' => 'required|max_length[255]|string'],
             ]);
             if (!$this->validacao->withRequest($this->request)->run()) {
                 return redirect()->back()
@@ -341,7 +341,10 @@ class Carrinho extends BaseController
 
         $retorno = [];
 
-        $bairroInformado = trim((string) $this->request->getGet('bairro'));
+        $bairroInformado = trim((string) $this->request->getGet('bairro_slug'));
+        if ($bairroInformado === '') {
+            $bairroInformado = trim((string) $this->request->getGet('bairro'));
+        }
         $bairroInformado = trim((string) preg_replace('/[^\p{L}\p{N}\s]/u', '', $bairroInformado));
 
         if ($bairroInformado === '') {
@@ -385,6 +388,7 @@ class Carrinho extends BaseController
             $nomeBairroExibicao = (string) $bairroMorroVerde->nome;
         }
 
+        $retorno['bairro_slug'] = mb_url_title((string) $nomeBairroExibicao, '-', true);
         $retorno['nome_bairro'] = (string) $nomeBairroExibicao;
         $retorno['valor_entrega'] = 'R$ ' . esc(number_format((float) $bairroSelecionado->valor_entrega, 2, ',', '.'));
         $retorno['bairro'] = '<span class="text-success small">Valor de entrega para o bairro ' . esc($nomeBairroExibicao) . ': ' . $retorno['valor_entrega'] . '</span>';

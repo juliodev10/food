@@ -50,9 +50,21 @@ class Registrar extends BaseController
         if ($token === null) {
             return redirect()->to(site_url('login'))->with('atencao', 'Link de ativação inválido');
         }
+
         $this->usuarioModel->desabilitaObrigatoriedadeCpf();
-        $this->usuarioModel->ativarContaPeloToken($token);
-        return redirect()->to(site_url('login'))->with('sucesso', 'Conta ativada com sucesso! Agora você pode fazer login.');
+
+        if (! $this->usuarioModel->ativarContaPeloToken($token)) {
+            return redirect()->to(site_url('login'))->with('atencao', 'Link de ativação inválido ou expirado');
+        }
+
+        return redirect()->to(site_url('registrar/ativacaoconcluida'))
+            ->with('sucesso', 'Conta ativada com sucesso! Agora você pode fazer login.');
+    }
+
+    public function ativacaoConcluida()
+    {
+        $data = ['titulo' => 'Conta ativada com sucesso'];
+        return view('Registrar/ativacao_concluida', $data);
     }
     private function enviaEmailParaAtivarConta(object $usuario)
     {

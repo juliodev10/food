@@ -10,10 +10,24 @@ class FormasSeeder extends Seeder
     public function run()
     {
         $formaModel = new FormaPagamentoModel();
-        $forma = [
-            'nome' => 'Dinheiro',
-            'ativo' => true
+
+        $formas = [
+            [
+                'nome' => 'Dinheiro',
+                'ativo' => true,
+            ],
+            [
+                'nome' => 'Pix',
+                'ativo' => true,
+            ],
         ];
-        $formaModel->skipValidation(true)->insert($forma);
+
+        foreach ($formas as $forma) {
+            $existente = $formaModel->where('nome', $forma['nome'])->first();
+
+            if ($existente === null) {
+                $formaModel->skipValidation(true)->insert($forma);
+            }
+        }
     }
 }

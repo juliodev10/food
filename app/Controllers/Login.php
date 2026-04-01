@@ -24,10 +24,14 @@ class Login extends BaseController
 
             if ($autenticacao->login($email, $password)) {
                 $usuario = $autenticacao->pegaUsuarioLogado();
+
                 if (!$usuario->is_admin) {
+                    if (session()->has('carrinho')) {
+                        return redirect()->to(site_url('checkout'))->with('sucesso', "Seja bem-vindo(a)! $usuario->nome");
+                    }
                     return redirect()->to(site_url('/'));
                 }
-                return redirect()->to(site_url('admin/home'))->with('sucesso', "Seja bem-vindo $usuario->nome");
+                return redirect()->to(site_url('admin/home'))->with('sucesso', "Seja bem-vindo(a)! $usuario->nome");
             } else {
                 return redirect()->back()->with('atencao', 'Não temos suas credenciais de acesso.');
             }
