@@ -9,14 +9,32 @@ class Conta extends BaseController
 {
     private $usuario;
     private $usuarioModel;
+    private $pedidoModel;
     public function __construct()
     {
         $this->usuario = service('autenticacao')->pegaUsuarioLogado();
         $this->usuarioModel = model('UsuarioModel');
+        $this->pedidoModel = model('PedidoModel');
     }
     public function index()
     {
-        dd($this->usuario);
+        $data = [
+            'titulo' => 'Meus pedidos',
+        ];
+        $pedidos = $this->pedidoModel->orderBy('criado_em', 'DESC')->where('usuario_id', $this->usuario->id)->findAll();
+        if ($pedidos != null) {
+            // Calcula o total para cada pedido
+            foreach ($pedidos as &$pedido) {
+                $produtos = unserialize($pedido->produtos);
+                $total = 0;
+                foreach ($produtos as $produto) {
+                    $total += $produto['preco'] * $produto['quantidade'];
+                }
+                $pedido->total = $total;
+            }
+            $data['pedidos'] = $pedidos;
+        }
+        return view('Conta/index', $data);
     }
     public function show()
     {

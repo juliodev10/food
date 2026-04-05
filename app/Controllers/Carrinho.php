@@ -13,6 +13,8 @@ class Carrinho extends BaseController
     private $medidaModel;
     private $bairroModel;
     private $acao;
+    private $horaAtual;
+    private $expedienteHoje;
     public function __construct()
     {
         $this->validacao = service('validation');
@@ -21,6 +23,8 @@ class Carrinho extends BaseController
         $this->produtoModel = new \App\Models\ProdutoModel();
         $this->medidaModel = new \App\Models\MedidaModel();
         $this->bairroModel = new \App\Models\BairroModel();
+        $this->horaAtual = date('H:i');
+        $this->expedienteHoje = $this->recuperaExpedientedeHoje();
 
         $this->acao = service('router')->methodName();
     }
@@ -76,7 +80,10 @@ class Carrinho extends BaseController
     {
         $validation = service('validation');
         if ($this->request->getMethod() === 'POST') {
-
+            if (!$this->empresaAbertaAgora()) {
+                return redirect()->back()
+                    ->with('atencao', 'Não é possível adicionar produtos ao carrinho fora do horário de funcionamento.');
+            }
             $valorProduto = $this->request->getPost('produto') ?? [];
 
             $validation->setRules([
@@ -169,6 +176,11 @@ class Carrinho extends BaseController
     public function especial()
     {
         if ($this->request->getMethod() === 'POST') {
+            if (!$this->empresaAbertaAgora()) {
+                return redirect()->back()
+                    ->with('atencao', 'Não é possível adicionar produtos ao carrinho fora do horário de funcionamento.');
+            }
+
             $valorProduto = $this->request->getPost();
             $this->validacao->setRules([
                 'primeira_metade' => ['label' => 'Primeiro_produto', 'rules' => 'required|greater_than[0]|integer'],
@@ -433,7 +445,6 @@ class Carrinho extends BaseController
 
         return str_contains(mb_strtolower($categoriaSlug), 'lanche');
     }
-
     private function cidadeEhPratapolis(string $cidade): bool
     {
         if ($cidade === '') {
@@ -442,7 +453,6 @@ class Carrinho extends BaseController
 
         return mb_url_title($cidade, '-', true) === 'pratapolis';
     }
-
     private function obterBairroPadraoCidade(string $cidade)
     {
         $bairroCentro = $this->bairroModel
@@ -465,5 +475,39 @@ class Carrinho extends BaseController
             ->where('cidade', $cidade)
             ->orderBy('valor_entrega', 'ASC')
             ->first();
+    }
+    private function recuperaExpedientedeHoje()
+    {
+        helper('empresa');
+        $expedienteHoje = expedienteHoje();
+        return $expedienteHoje;
+    }
+
+    private function empresaAbertaAgora(): bool
+    {
+        if ($this->expedienteHoje === null) {
+            return false;
+        }
+
+        if (!isset($this->expedienteHoje->situacao) || (int) $this->expedienteHoje->situacao !== 1) {
+            return false;
+        }
+
+        $abertura = $this->expedienteHoje->abertura ?? null;
+        $fechamento = $this->expedienteHoje->fechamento ?? null;
+
+        if (empty($abertura) || empty($fechamento)) {
+            return false;
+        }
+
+        $horaAtual = date('H:i:s');
+        $horaAbertura = date('H:i:s', strtotime((string) $abertura));
+        $horaFechamento = date('H:i:s', strtotime((string) $fechamento));
+
+        if ($horaAbertura <= $horaFechamento) {
+            return $horaAtual >= $horaAbertura && $horaAtual <= $horaFechamento;
+        }
+
+        return $horaAtual >= $horaAbertura || $horaAtual <= $horaFechamento;
     }
 }

@@ -150,6 +150,7 @@ class Checkout extends BaseController
                 'checkout.referencia' => ['label' => 'Ponto de Referência', 'rules' => 'max_length[50]'],
                 'checkout.forma_id' => ['label' => 'Forma de Pagamento', 'rules' => 'required|integer'],
                 'checkout.bairro_slug' => ['label' => 'Bairro de Entrega', 'rules' => 'required|string|max_length[50]'],
+                'checkout.canal_acompanhamento' => ['label' => 'Canal de acompanhamento', 'rules' => 'required|in_list[email,whatsapp]'],
             ]);
             if (!$validacao->run($dadosValidacao)) {
                 session()->remove('endereco_entrega');
@@ -187,6 +188,7 @@ class Checkout extends BaseController
             $pedido->valor_entrega = number_format($valorEntrega, 2, '.', '');
             $pedido->valor_pedido = number_format((float) ($pedido->valor_produtos + $pedido->valor_entrega), 2, '.', '');
             $pedido->endereco_entrega = $bairroDigitado . ' - Número ' . $checkoutPost['numero'];
+            $canalAcompanhamento = $checkoutPost['canal_acompanhamento'] ?? 'email';
 
             $observacoesBase = 'Ponto de referência: ' . $checkoutPost['referencia'] . ' - Número: ' . $checkoutPost['numero'];
             if ($forma->id == 1) {
@@ -218,11 +220,76 @@ class Checkout extends BaseController
                 $pedido->observacoes = $observacoesBase;
             }
             $this->pedidoModel->save($pedido);
+            session()->remove('carrinho');
+            session()->remove('endereco_entrega');
             $pedido->usuario = $this->usuario;
-            $this->enviaEmailPedidoRealizado($pedido);
+
+            $mensagemAcompanhamento = $this->montaMensagemAcompanhamento($pedido);
+            $whatsappLink = $this->geraLinkWhatsappAcompanhamento($mensagemAcompanhamento);
+
+            session()->setFlashdata('canal_acompanhamento', $canalAcompanhamento);
+            session()->setFlashdata('whatsapp_link', $whatsappLink);
+
+            if ($canalAcompanhamento === 'email') {
+                $this->enviaEmailPedidoRealizado($pedido);
+            }
+
+            return redirect()->to(site_url('checkout/concluido/' . $pedido->codigo)); // - /sucesso/ . $pedido->codigo);
         } else {
             return redirect()->back();
         }
+    }
+    public function concluido(?string $codigo = null)
+    {
+        if ($codigo === null) {
+            return redirect()->to(site_url('carrinho'));
+        }
+
+        $pedido = $this->pedidoModel
+            ->where('codigo', $codigo)
+            ->first();
+
+        $situacaoPedido = is_object($pedido) && isset($pedido->situacao)
+            ? (int) $pedido->situacao
+            : 0;
+
+        $data = [
+            'pedido' => $pedido,
+            'titulo' => 'Pedido realizado com sucesso',
+            'codigo_pedido' => $codigo,
+            'situacao_pedido' => $situacaoPedido,
+            'canal_acompanhamento' => session()->getFlashdata('canal_acompanhamento') ?? 'email',
+            'whatsapp_link' => session()->getFlashdata('whatsapp_link') ?? $this->geraLinkWhatsappAcompanhamento($this->montaMensagemAcompanhamentoCodigo($codigo)),
+            'mensagem_acompanhamento' => $this->montaMensagemAcompanhamentoCodigo($codigo),
+        ];
+
+        return view('Checkout/concluido', $data);
+    }
+
+    private function montaMensagemAcompanhamento(object|string $pedido): string
+    {
+        $codigo = is_object($pedido) ? (string) $pedido->codigo : (string) $pedido;
+        $nome = is_object($pedido) && isset($pedido->usuario) ? (string) $pedido->usuario->nome : (string) ($this->usuario->nome ?? '');
+
+        return 'Pedido ' . $codigo . ', realizado com sucesso!' . PHP_EOL . PHP_EOL
+            . 'Olá ' . $nome . ', recebemos seu pedido ' . $codigo . ' e estamos processando-o.' . PHP_EOL . PHP_EOL
+            . 'Entre em sua conta para acompanhar o status do seu pedido: ' . site_url('conta');
+    }
+
+    private function montaMensagemAcompanhamentoCodigo(string $codigo): string
+    {
+        $pedido = new \stdClass();
+        $pedido->codigo = $codigo;
+        $pedido->usuario = $this->usuario;
+
+        return $this->montaMensagemAcompanhamento($pedido);
+    }
+
+    private function geraLinkWhatsappAcompanhamento(string $mensagem): string
+    {
+        $numero = preg_replace('/\D/', '', '5535998407525');
+
+        return 'https://wa.me/' . $numero . '?text=' . rawurlencode($mensagem);
     }
     private function enviaEmailPedidoRealizado(object $pedido)
     {

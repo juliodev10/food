@@ -439,7 +439,12 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
                                 <span><i class="fa fa-map-marker" aria-hidden="true"></i> Your country, your city,
                                     12345</span>
                                 <span><i class="fa fa-phone" aria-hidden="true"></i> 123 456 789</span>
-                                <span><i class="fa fa-clock-o" aria-hidden="true"></i> 11:00 - 21:00</span>
+                                <?php $expedienteHoje = expedienteHoje(); ?>
+                                <?php if ($expedienteHoje->situacao == false): ?>
+                                    <span><i class="fa fa-lock" aria-hidden="true"></i> HOJE ESTAMOS FECHADO </span>
+                                <?php else: ?>
+                                    <span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo esc($expedienteHoje->abertura); ?> - <?php echo esc($expedienteHoje->fechamento); ?></span>
+                                <?php endif; ?>
                                 <div class="pull-right search-block">
                                     <i class="fa fa-search" id="search" aria-hidden="true"></i>
                                 </div>
@@ -599,68 +604,26 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
                             <div class="row">
                                 <div class="col-sm-6 col-md-4">
                                     <h4 class="footer_ttl footer_ttl_padd">about us</h4>
-                                    <p class="footer_txt">Lorem Ipsum is simply dummy text of the printing and
-                                        typesetting industry. It has survived not only five centuries but also the leap
-                                        into electronic typesetting. </p>
+                                    <p class="footer_txt">Desde 1999, a Gula Lanches une tradição e excelência. Com ingredientes frescos diários e receitas originais que atravessam gerações, servimos comida de verdade, feita com o coração. Hoje, levamos esse mesmo sabor nostálgico do nosso clássico balcão direto para a sua casa através do nosso delivery. </p>
                                 </div>
                                 <div class="col-sm-6 col-md-5">
-                                    <h4 class="footer_ttl footer_ttl_padd">working hours</h4>
+                                    <?php $expedientes = expedientes(); ?>
+                                    <h4 class="footer_ttl footer_ttl_padd">Nossos expedientes</h4>
                                     <div class="footer_border">
-                                        <div class="week_row clearfix">
-                                            <div class="week_day">Monday</div>
-                                            <div class="week_time text-right">Closed</div>
-                                        </div>
-                                        <div class="week_row clearfix">
-                                            <div class="week_day">Tuesday</div>
-                                            <div class="week_time">
-                                                <span class="week_time_start">10 am</span>
-                                                <span class="week_time_node">-</span>
-                                                <span class="week_time_end">12 am</span>
+                                        <?php foreach ($expedientes as $dia): ?>
+                                            <div class="week_row clearfix">
+                                                <div class="week_day"><?php echo esc($dia->dia_descricao); ?></div>
+                                                <?php if ($dia->situacao == false): ?>
+                                                    <div class="week_time text-right">Fechado </div>
+                                                <?php else: ?>
+                                                    <div class="week_time text-right">
+                                                        <?php echo esc(date('H:i', strtotime($dia->abertura))); ?>
+                                                        -
+                                                        <?php echo esc(date('H:i', strtotime($dia->fechamento))); ?>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
-                                        </div>
-                                        <div class="week_row clearfix">
-                                            <div class="week_day">Wednsday</div>
-                                            <div class="week_time">
-                                                <span class="week_time_start">10 am</span>
-                                                <span class="week_time_node">-</span>
-                                                <span class="week_time_end">12 am</span>
-                                            </div>
-
-                                        </div>
-                                        <div class="week_row clearfix">
-                                            <div class="week_day">Thursday</div>
-                                            <div class="week_time">
-                                                <span class="week_time_start">10 am</span>
-                                                <span class="week_time_node">-</span>
-                                                <span class="week_time_end">12 am</span>
-                                            </div>
-
-                                        </div>
-                                        <div class="week_row clearfix">
-                                            <div class="week_day">Friday</div>
-                                            <div class="week_time">
-                                                <span class="week_time_start">10 am</span>
-                                                <span class="week_time_node">-</span>
-                                                <span class="week_time_end">12 am</span>
-                                            </div>
-
-                                        </div>
-                                        <div class="week_row clearfix">
-                                            <div class="week_day">Saturday</div>
-                                            <div class="week_time">
-                                                <span class="week_time_start">7 am</span>
-                                                <span class="week_time_node">-</span>
-                                                <span class="week_time_end">1 am</span>
-                                            </div>
-                                        </div>
-                                        <div class="week_row clearfix">
-                                            <div class="week_day">Sunday</div>
-                                            <div class="week_time">
-                                                <span class="week_time_start">7 am</span>
-                                                <span class="week_time_node">-</span>
-                                                <span class="week_time_end">1 am</span>
-                                            </div>
-                                        </div>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-3">
@@ -684,127 +647,128 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
                             </div>
                         </div>
                     </div>
-                    <div class="copyright">
-                        <div class="container">
-                            <div class="site-footer">
-                                <div class="footer-content">
-                                    <span class="dev-credits">
-                                        Code by
-                                        <i class="fa-solid fa-star star-icon"></i>
-                                        <a href="https://github.com/JulioDev10" target="_blank" class="dev-link"
-                                            title="Visitar GitHub">
-                                            JulioDev10
-                                        </a>
-                                    </span>
+                </div>
+                <div class="copyright">
+                    <div class="container">
+                        <div class="site-footer">
+                            <div class="footer-content">
+                                <span class="dev-credits">
+                                    Code by
+                                    <i class="fa-solid fa-star star-icon"></i>
+                                    <a href="https://github.com/JulioDev10" target="_blank" class="dev-link"
+                                        title="Visitar GitHub">
+                                        JulioDev10
+                                    </a>
+                                </span>
 
-                                    <span class="separator">|</span>
+                                <span class="separator">|</span>
 
-                                    <div class="footer-right">
-                                        <a href="https://wa.me/5535998407525" target="_blank" class="social-link whatsapp"
-                                            title="WhatsApp">
-                                            <i class="fa-brands fa-whatsapp"></i>
-                                        </a>
+                                <div class="footer-right">
+                                    <a href="https://wa.me/5535998407525" target="_blank" class="social-link whatsapp"
+                                        title="WhatsApp">
+                                        <i class="fa-brands fa-whatsapp"></i>
+                                    </a>
 
-                                        <a href="https://github.com/JulioDev10" target="_blank" class="social-link github"
-                                            title="GitHub">
-                                            <i class="fa-brands fa-github"></i>
-                                        </a>
+                                    <a href="https://github.com/JulioDev10" target="_blank" class="social-link github"
+                                        title="GitHub">
+                                        <i class="fa-brands fa-github"></i>
+                                    </a>
 
-                                        <a href="https://discord.com/users/1375261099724640306" target="_blank"
-                                            class="social-link discord" title="Discord">
-                                            <i class="fa-brands fa-discord"></i>
-                                        </a>
-                                    </div>
+                                    <a href="https://discord.com/users/1375261099724640306" target="_blank"
+                                        class="social-link discord" title="Discord">
+                                        <i class="fa-brands fa-discord"></i>
+                                    </a>
                                 </div>
+                            </div>
 
-                                <div class="footer-copyright">
-                                    &copy; <?= date('Y') ?> Todos os direitos reservados.
-                                </div>
+                            <div class="footer-copyright">
+                                &copy; <?= date('Y') ?> Todos os direitos reservados.
                             </div>
                         </div>
                     </div>
                 </div>
-            </footer>
-        <?php elseif (!$isPaginaCustomizarProduto): ?>
-            <!--  Begin Footer  -->
-            <footer id="footer">
-                <div class="container">
-                    <?= view('footer') ?>
-                </div>
-            </footer>
-        <?php endif; ?>
-
-        <!-- End Footer -->
-
     </div>
-    <!-- END body-wrapper -->
-
-
-    <!-- START mobile right burger menu -->
-
-    <nav class="cd-nav-container right_menu" id="cd-nav">
-        <div class="header__open_menu">
-            <a href="index-2.html" class="rmenu_logo" title="yagmurmebel.az">
-                <img src="<?php echo site_url('web/'); ?>src/assets/img/logo.png" alt="logo" />
-            </a>
+    </footer>
+<?php elseif (!$isPaginaCustomizarProduto): ?>
+    <!--  Begin Footer  -->
+    <footer id="footer">
+        <div class="container">
+            <?= view('footer') ?>
         </div>
-        <div class="right_menu_search">
-            <form method="post">
-                <input type="text" name="q" class="form-control search_input" value="" placeholder="Search anything">
-                <button type="submit" class="search_icon"><i class="fa fa-search"></i></button>
-            </form>
-        </div>
-        <ul class="rmenu_list">
-            <li><a class="page-scroll" href="#header">Home</a></li>
-            <li><a class="page-scroll" href="#about_us">About</a></li>
-            <li><a class="page-scroll" href="#menu">Menus</a></li>
-            <li><a class="page-scroll" href="#gallery">Gallery</a></li>
-            <li><a class="page-scroll" href="#reservation">Reservation</a></li>
-            <li><a class="page-scroll" href="#footer">Contact</a></li>
-            <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
-                <li>
-                    <a href="<?php echo site_url('carrinho'); ?>">
-                        <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
-                        <span style="font-size: 18px; margin-left: 6px;">
-                            <?php echo count(session()->get('carrinho')); ?>
-                        </span>
-                    </a>
-                </li>
-            <?php endif ?>
-        </ul>
-        <div class="right_menu_addr top_addr">
-            <span><i class="fa fa-map-marker" aria-hidden="true"></i> Your country, your city, 12345</span>
-            <span><i class="fa fa-phone" aria-hidden="true"></i> 123 456 789</span>
-            <span><i class="fa fa-clock-o" aria-hidden="true"></i> 11:00 - 21:00</span>
-        </div>
-    </nav>
+    </footer>
+<?php endif; ?>
 
-    <div class="cd-overlay"></div>
-    <!-- /.cd-overlay -->
+<!-- End Footer -->
+
+</div>
+<!-- END body-wrapper -->
 
 
-    <!-- END mobile right burger menu -->
+<!-- START mobile right burger menu -->
 
-    <!-- JavaScript -->
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/jquery-2.1.1.min.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/bootstrap.min.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/jquery.mousewheel.min.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/jquery.easing.min.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/scrolling-nav.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/aos.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/slick.min.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/jquery.touchSwipe.min.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/moment.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/bootstrap-datepicker.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/bootstrap-datetimepicker.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/jquery.fancybox.js"></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/loadMoreResults.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="<?php echo site_url('web/'); ?>src/assets/js/main.js"></script>
+<nav class="cd-nav-container right_menu" id="cd-nav">
+    <div class="header__open_menu">
+        <a href="index-2.html" class="rmenu_logo" title="yagmurmebel.az">
+            <img src="<?php echo site_url('web/'); ?>src/assets/img/logo.png" alt="logo" />
+        </a>
+    </div>
+    <div class="right_menu_search">
+        <form method="post">
+            <input type="text" name="q" class="form-control search_input" value="" placeholder="Search anything">
+            <button type="submit" class="search_icon"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <ul class="rmenu_list">
+        <li><a class="page-scroll" href="#header">Home</a></li>
+        <li><a class="page-scroll" href="#about_us">About</a></li>
+        <li><a class="page-scroll" href="#menu">Menus</a></li>
+        <li><a class="page-scroll" href="#gallery">Gallery</a></li>
+        <li><a class="page-scroll" href="#reservation">Reservation</a></li>
+        <li><a class="page-scroll" href="#footer">Contact</a></li>
+        <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
+            <li>
+                <a href="<?php echo site_url('carrinho'); ?>">
+                    <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
+                    <span style="font-size: 18px; margin-left: 6px;">
+                        <?php echo count(session()->get('carrinho')); ?>
+                    </span>
+                </a>
+            </li>
+        <?php endif ?>
+    </ul>
+    <div class="right_menu_addr top_addr">
+        <span><i class="fa fa-map-marker" aria-hidden="true"></i> Your country, your city, 12345</span>
+        <span><i class="fa fa-phone" aria-hidden="true"></i> 123 456 789</span>
+        <span><i class="fa fa-clock-o" aria-hidden="true"></i> 11:00 - 21:00</span>
+    </div>
+</nav>
 
-    <!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
-    <?= $this->renderSection('scripts') ?>
+<div class="cd-overlay"></div>
+<!-- /.cd-overlay -->
+
+
+<!-- END mobile right burger menu -->
+
+<!-- JavaScript -->
+<script src="<?php echo site_url('web/'); ?>src/assets/js/jquery-2.1.1.min.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/bootstrap.min.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/jquery.mousewheel.min.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/jquery.easing.min.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/scrolling-nav.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/aos.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/slick.min.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/jquery.touchSwipe.min.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/moment.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/bootstrap-datepicker.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/bootstrap-datetimepicker.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/jquery.fancybox.js"></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/loadMoreResults.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="<?php echo site_url('web/'); ?>src/assets/js/main.js"></script>
+
+<!-- Essa section redenderizáos estilos de cada view para ester esse layout-->
+<?= $this->renderSection('scripts') ?>
 
 </body>
 
