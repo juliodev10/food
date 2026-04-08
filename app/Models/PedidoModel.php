@@ -36,4 +36,28 @@ class PedidoModel extends Model
         } while ($this->countAllResults() > 1);
         return $codigoPedido;
     }
+    public function listaTodosOsPedidos()
+    {
+        return $this->select(
+            ['pedidos.*', 'usuarios.nome as cliente']
+        )
+            ->join('usuarios', 'usuarios.id = pedidos.usuario_id')
+            ->orderBy('pedidos.criado_em', 'DESC')
+            ->paginate(10);
+    }
+    public function buscaPedidoOu404(string $codigoPedido)
+    {
+        if (!$codigoPedido) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Pedido não encontrado');
+        }
+        $pedido = $this->select(['pedidos.*', 'usuarios.nome', 'usuarios.email', 'entregadores.nome as entregador'])
+            ->join('entregadores', 'entregadores.id = pedidos.entregador_id', 'left')
+            ->join('usuarios', 'usuarios.id = pedidos.usuario_id')
+            ->where('pedidos.codigo', $codigoPedido)
+            ->first();
+        if (!$pedido) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Pedido não encontrado');
+        }
+        return $pedido;
+    }
 }

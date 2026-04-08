@@ -17,8 +17,8 @@ class Login extends BaseController
     public function criar()
     {
         if ($this->request->getMethod() === 'POST') {
-            $email = $this->request->getPost('email');
-            $password = $this->request->getPost('password');
+            $email = trim((string) $this->request->getPost('email'));
+            $password = (string) $this->request->getPost('password');
 
             $autenticacao = service('autenticacao');
 
@@ -33,6 +33,10 @@ class Login extends BaseController
                 }
                 return redirect()->to(site_url('admin/home'))->with('sucesso', "Seja bem-vindo(a)! $usuario->nome");
             } else {
+                if ($autenticacao->pegaUltimaFalha() === \App\Libraries\Autenticacao::FALHA_CONTA_INATIVA) {
+                    return redirect()->back()->with('atencao', 'Sua conta ainda não foi ativada. Verifique seu e-mail e clique no link de ativação.');
+                }
+
                 return redirect()->back()->with('atencao', 'Não temos suas credenciais de acesso.');
             }
         } else {

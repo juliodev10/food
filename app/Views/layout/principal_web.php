@@ -267,6 +267,8 @@ $isPaginaDetalhesProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment
 $isPaginaCustomizarProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment(2) === 'customizar';
 $isPaginaPrincipal = $uri->getTotalSegments() === 0;
 $isPaginaConta = $uri->getSegment(1) === 'conta';
+$telefoneContato = '+55 35 9105-2828';
+$enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
 ?>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="50"
@@ -436,9 +438,8 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
 
                         <div class="navbar_top hidden-xs">
                             <div class="top_addr">
-                                <span><i class="fa fa-map-marker" aria-hidden="true"></i> Your country, your city,
-                                    12345</span>
-                                <span><i class="fa fa-phone" aria-hidden="true"></i> 123 456 789</span>
+                                <span><i class="fa fa-map-marker" aria-hidden="true"></i> <?= esc($enderecoContato); ?></span>
+                                <span><i class="fa fa-phone" aria-hidden="true"></i> <?= esc($telefoneContato); ?></span>
                                 <?php $expedienteHoje = expedienteHoje(); ?>
                                 <?php if ($expedienteHoje->situacao == false): ?>
                                     <span><i class="fa fa-lock" aria-hidden="true"></i> HOJE ESTAMOS FECHADO </span>
@@ -450,10 +451,10 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
                                 </div>
                             </div>
                             <div id="navbar_search">
-                                <form method="post">
+                                <form method="get" action="<?php echo current_url(); ?>">
                                     <input type="text" name="q" class="form-control pull-left" value=""
                                         placeholder="Search anything">
-                                    <button type="submit" class="pull-right close" id="search_close"><i
+                                    <button type="button" class="pull-right close" id="search_close"><i
                                             class="fa fa-close"></i></button>
                                 </form>
                             </div>
@@ -498,11 +499,8 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
                                     <div class="navbar-right">
                                         <ul class="nav navbar-nav">
                                             <li><a class="page-scroll" href="#header">Home</a></li>
-                                            <li><a class="page-scroll" href="#about_us">About</a></li>
-                                            <li><a class="page-scroll" href="#menu">Menus</a></li>
-                                            <li><a class="page-scroll" href="#gallery">Gallery</a></li>
-                                            <li><a class="page-scroll" href="#reservation">Reservation</a></li>
-                                            <li><a class="page-scroll" href="#footer">Contact</a></li>
+                                            <li><a class="page-scroll" href="#Galeria">Galeria</a></li>
+                                            <li><a class="page-scroll" href="#footer">Contato</a></li>
 
                                             <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
                                                 <li><a class="page-scroll" href="<?php echo site_url('carrinho'); ?>">
@@ -603,7 +601,7 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
                         <div class="footer_content">
                             <div class="row">
                                 <div class="col-sm-6 col-md-4">
-                                    <h4 class="footer_ttl footer_ttl_padd">about us</h4>
+                                    <h4 class="footer_ttl footer_ttl_padd">Sobre Nós</h4>
                                     <p class="footer_txt">Desde 1999, a Gula Lanches une tradição e excelência. Com ingredientes frescos diários e receitas originais que atravessam gerações, servimos comida de verdade, feita com o coração. Hoje, levamos esse mesmo sabor nostálgico do nosso clássico balcão direto para a sua casa através do nosso delivery. </p>
                                 </div>
                                 <div class="col-sm-6 col-md-5">
@@ -627,16 +625,15 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-3">
-                                    <h4 class="footer_ttl footer_ttl_padd">contact us</h4>
+                                    <h4 class="footer_ttl footer_ttl_padd">Contato</h4>
                                     <div class="footer_border">
                                         <div class="footer_cnt">
                                             <i class="fa fa-map-marker"></i>
-                                            <span>Your City, Your streert, 18765, 100 Tenth Avenue, New York City, NY
-                                                1001</span>
+                                            <span><?= esc($enderecoContato); ?></span>
                                         </div>
                                         <div class="footer_cnt">
                                             <i class="fa fa-phone"></i>
-                                            <span>(457) 570 5682; (385) 620 756</span>
+                                            <span><?= esc($telefoneContato); ?></span>
                                         </div>
                                         <div class="footer_cnt">
                                             <i class="fa fa-envelope"></i>
@@ -713,18 +710,16 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
         </a>
     </div>
     <div class="right_menu_search">
-        <form method="post">
+        <form method="get" action="<?php echo current_url(); ?>">
             <input type="text" name="q" class="form-control search_input" value="" placeholder="Search anything">
             <button type="submit" class="search_icon"><i class="fa fa-search"></i></button>
         </form>
     </div>
     <ul class="rmenu_list">
         <li><a class="page-scroll" href="#header">Home</a></li>
-        <li><a class="page-scroll" href="#about_us">About</a></li>
         <li><a class="page-scroll" href="#menu">Menus</a></li>
-        <li><a class="page-scroll" href="#gallery">Gallery</a></li>
-        <li><a class="page-scroll" href="#reservation">Reservation</a></li>
-        <li><a class="page-scroll" href="#footer">Contact</a></li>
+        <li><a class="page-scroll" href="#Galeria">Galeria</a></li>
+        <li><a class="page-scroll" href="#footer">Contato</a></li>
         <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
             <li>
                 <a href="<?php echo site_url('carrinho'); ?>">
@@ -737,8 +732,8 @@ $isPaginaConta = $uri->getSegment(1) === 'conta';
         <?php endif ?>
     </ul>
     <div class="right_menu_addr top_addr">
-        <span><i class="fa fa-map-marker" aria-hidden="true"></i> Your country, your city, 12345</span>
-        <span><i class="fa fa-phone" aria-hidden="true"></i> 123 456 789</span>
+        <span><i class="fa fa-map-marker" aria-hidden="true"></i> <?= esc($enderecoContato); ?></span>
+        <span><i class="fa fa-phone" aria-hidden="true"></i> <?= esc($telefoneContato); ?></span>
         <span><i class="fa fa-clock-o" aria-hidden="true"></i> 11:00 - 21:00</span>
     </div>
 </nav>
