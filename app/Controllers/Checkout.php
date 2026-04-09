@@ -189,6 +189,7 @@ class Checkout extends BaseController
             $pedido->valor_pedido = number_format((float) ($pedido->valor_produtos + $pedido->valor_entrega), 2, '.', '');
             $pedido->endereco_entrega = $bairroDigitado . ' - Número ' . $checkoutPost['numero'];
             $canalAcompanhamento = $checkoutPost['canal_acompanhamento'] ?? 'email';
+            $pedido->canal_acompanhamento = $canalAcompanhamento;
 
             $observacoesBase = 'Ponto de referência: ' . $checkoutPost['referencia'] . ' - Número: ' . $checkoutPost['numero'];
             if ($forma->id == 1) {
@@ -219,7 +220,18 @@ class Checkout extends BaseController
             } else {
                 $pedido->observacoes = $observacoesBase;
             }
-            $this->pedidoModel->save($pedido);
+            if (!$this->pedidoModel->save($pedido)) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('errors_model', $this->pedidoModel->errors())
+                    ->with('atencao', 'Não foi possível finalizar o pedido. Tente novamente.');
+            }
+
+            $pedidoSalvo = $this->pedidoModel->where('codigo', $pedido->codigo)->first();
+            if ($pedidoSalvo !== null) {
+                $this->insereProdutosDoPedido($pedidoSalvo);
+            }
+
             session()->remove('carrinho');
             session()->remove('endereco_entrega');
             $pedido->usuario = $this->usuario;
@@ -302,5 +314,44 @@ class Checkout extends BaseController
         $mensagem = view('Checkout/pedido_email', ['pedido' => $pedido]);
         $email->setMessage($mensagem);
         $email->send();
+    }
+
+    private function insereProdutosDoPedido(object $pedido): void
+    {
+        if (empty($pedido->id)) {
+            return;
+        }
+
+        $pedidoProdutoModel = new \App\Models\PedidoProdutoModel();
+        $pedidoProdutoModel->where('pedido_id', $pedido->id)->delete();
+
+        if (method_exists($pedido, 'getProdutosPedido')) {
+            $produtos = $pedido->getProdutosPedido();
+        } elseif (is_array($pedido->produtos ?? null)) {
+            $produtos = $pedido->produtos;
+        } else {
+            $produtos = @unserialize((string) ($pedido->produtos ?? ''));
+        }
+
+        if (!is_array($produtos) || $produtos === []) {
+            return;
+        }
+
+        $produtosDoPedido = [];
+        foreach ($produtos as $produto) {
+            if (!isset($produto['nome'], $produto['quantidade'])) {
+                continue;
+            }
+
+            $produtosDoPedido[] = [
+                'pedido_id' => $pedido->id,
+                'produto' => $produto['nome'],
+                'quantidade' => (int) $produto['quantidade'],
+            ];
+        }
+
+        if ($produtosDoPedido !== []) {
+            $pedidoProdutoModel->insertBatch($produtosDoPedido);
+        }
     }
 }

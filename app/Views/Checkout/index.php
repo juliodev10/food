@@ -294,8 +294,8 @@
                     <input type="text" name="checkout[referencia]" class="form-control" placeholder="Informe um ponto de referencia" required>
                 </div>
                 <div class="form-group col-md-12" style="padding-left: 0;">
-                    <input type="text" id="forma_id" name="checkout[forma_id]" placeholder="checkout[forma_id]">
-                    <input type="text" id="bairro_slug" name="checkout[bairro_slug]" placeholder="checkout[bairro_slug]">
+                    <input type="hidden" id="forma_id" name="checkout[forma_id]" placeholder="checkout[forma_id]">
+                    <input type="hidden" id="bairro_slug" name="checkout[bairro_slug]" placeholder="checkout[bairro_slug]">
                 </div>
                 <div class="form-group col-md-12" style="padding-left: 0;">
                     <input type="submit" id="btn-checkout" class="btn btn-block" style="background-color: #bf2121; border-color: #bf2121; color: white;" value="Antes, consulte a taxa de entrega">

@@ -128,7 +128,7 @@
 <!--    Gallery    -->
 <div class="container section" id="gallery" data-aos="fade-up">
     <div class="title-block">
-        <h1 class="section-title">Gallery</h1>
+        <h1 class="section-title">Galeria</h1>
     </div>
     <div id="photo_gallery" class="list1">
         <div class="row loadMore">

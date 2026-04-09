@@ -6,4 +6,4 @@
 <hr>
 <p>O entregador responsável por levar o seu pedido é: <strong><?php echo esc($pedido->entregador->nome); ?></strong></p>
 <hr>
-<p>Aproveite pra ver os seus <a href="<?php echo site_url('conta/pedidos') ?>">pedidos</a>!</p>
+<p>Aproveite pra ver os seus <a href="<?php echo site_url('conta') ?>">pedidos</a>!</p>

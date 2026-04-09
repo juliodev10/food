@@ -55,7 +55,14 @@
                                         <td><?= esc($pedido->criado_em->humanize()); ?></td>
                                         <td><?= esc($pedido->cliente); ?></td>
                                         <td>R$&nbsp;<?= esc(number_format($pedido->valor_total, 2, ',', '.')); ?></td>
-                                        <td><?= $pedido->exibeSituacaoDoPedido(); ?></td>
+                                        <td>
+                                            <?= ($pedido->deletado_em === null ? $pedido->exibeSituacaoDoPedido() : '<label class="badge badge-danger">Excluído</label>'); ?>
+                                            <?php if ($pedido->deletado_em !== null): ?>
+                                                <a href="<?= site_url('admin/pedidos/desfazerExclusao/' . $pedido->codigo); ?>"
+                                                    class="btn btn-info btn-sm btn-icon-text ml-2">
+                                                    <i class="mdi mdi-undo btn-icon-prepend"></i> Desfazer</a>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
 
@@ -113,7 +120,7 @@
                     $(this).val("");
                     return false;
                 }
-                window.location.href = "<?= site_url('admin/pedidos/show/') ?>" + ui.item.codigo;
+                window.location.href = "<?= site_url('admin/pedidos/show/') ?>" + ui.item.value;
             }
         });
     });

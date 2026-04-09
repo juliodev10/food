@@ -116,6 +116,8 @@ $routes->group('admin', ['filter' => 'login'], static function ($routes) {
         $routes->match(['get', 'post'], 'usuarios/excluir/(:num)', 'Admin\\Usuarios::excluir/$1');
         $routes->get('usuarios/desfazerExclusao/(:num)', 'Admin\\Usuarios::desfazerExclusao/$1');
 
+        $routes->get('pedidos/desfazerExclusao/(:segment)', 'Admin\\Pedidos::desfazerExclusao/$1');
+
         $routes->get('entregadores', 'Admin\\Entregadores::index');
         $routes->get('entregadores/procurar', 'Admin\\Entregadores::procurar');
     });

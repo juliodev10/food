@@ -102,7 +102,17 @@
             letter-spacing: 0.3px;
             white-space: nowrap;
             position: relative;
-            top: -2px;
+            top: 0;
+        }
+
+        .rmenu_logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rmenu_logo .site-brand-text {
+            top: 0;
         }
 
         .rmenu_logo img {
@@ -189,6 +199,11 @@
             word-break: break-word;
         }
 
+        #footer .footer_border.footer_border-contato {
+            min-height: 0;
+            margin-bottom: 8px;
+        }
+
         @media (max-width: 420px) {
             .mobile-auth-link {
                 font-size: 11px;
@@ -215,18 +230,8 @@
                 padding-right: 12px;
             }
 
-            .navbar-brand.site-brand {
-                position: relative;
-                top: -3px;
-            }
-
-            .navbar-brand.site-brand img {
-                position: relative;
-                top: -2px;
-            }
-
             .site-brand-text {
-                top: -7px;
+                top: 0;
             }
 
             .body-wrapper>.container .alert {
@@ -265,8 +270,10 @@
 $uri = service('uri');
 $isPaginaDetalhesProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment(2) === 'detalhes';
 $isPaginaCustomizarProduto = $uri->getSegment(1) === 'produto' && $uri->getSegment(2) === 'customizar';
+$isPaginaCheckout = $uri->getSegment(1) === 'checkout';
 $isPaginaPrincipal = $uri->getTotalSegments() === 0;
 $isPaginaConta = $uri->getSegment(1) === 'conta';
+$expedienteHoje = expedienteHoje();
 $telefoneContato = '+55 35 9105-2828';
 $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
 ?>
@@ -440,23 +447,11 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                             <div class="top_addr">
                                 <span><i class="fa fa-map-marker" aria-hidden="true"></i> <?= esc($enderecoContato); ?></span>
                                 <span><i class="fa fa-phone" aria-hidden="true"></i> <?= esc($telefoneContato); ?></span>
-                                <?php $expedienteHoje = expedienteHoje(); ?>
                                 <?php if ($expedienteHoje->situacao == false): ?>
                                     <span><i class="fa fa-lock" aria-hidden="true"></i> HOJE ESTAMOS FECHADO </span>
                                 <?php else: ?>
                                     <span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo esc($expedienteHoje->abertura); ?> - <?php echo esc($expedienteHoje->fechamento); ?></span>
                                 <?php endif; ?>
-                                <div class="pull-right search-block">
-                                    <i class="fa fa-search" id="search" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                            <div id="navbar_search">
-                                <form method="get" action="<?php echo current_url(); ?>">
-                                    <input type="text" name="q" class="form-control pull-left" value=""
-                                        placeholder="Search anything">
-                                    <button type="button" class="pull-right close" id="search_close"><i
-                                            class="fa fa-close"></i></button>
-                                </form>
                             </div>
                         </div>
                         <!-- /.navbar_top -->
@@ -498,9 +493,10 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                                 <div class="collapse navbar-collapse" id="navbar">
                                     <div class="navbar-right">
                                         <ul class="nav navbar-nav">
-                                            <li><a class="page-scroll" href="#header">Home</a></li>
-                                            <li><a class="page-scroll" href="#Galeria">Galeria</a></li>
-                                            <li><a class="page-scroll" href="#footer">Contato</a></li>
+                                            <li><?php if ($isPaginaPrincipal): ?><a class="page-scroll" href="#header">Home</a><?php else: ?><a href="<?php echo site_url('/'); ?>">Home</a><?php endif; ?></li>
+                                            <?php if ($isPaginaPrincipal): ?><li><a class="page-scroll" href="#gallery">Galeria</a></li>
+                                                <li><a class="page-scroll" href="#footer">Contato</a></li><?php else: ?><li><a href="<?php echo site_url('/'); ?>#gallery">Galeria</a></li>
+                                                <li><a href="<?php echo site_url('/'); ?>#footer">Contato</a></li><?php endif; ?>
 
                                             <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
                                                 <li><a class="page-scroll" href="<?php echo site_url('carrinho'); ?>">
@@ -626,7 +622,7 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                                 </div>
                                 <div class="col-sm-12 col-md-3">
                                     <h4 class="footer_ttl footer_ttl_padd">Contato</h4>
-                                    <div class="footer_border">
+                                    <div class="footer_border footer_border-contato">
                                         <div class="footer_cnt">
                                             <i class="fa fa-map-marker"></i>
                                             <span><?= esc($enderecoContato); ?></span>
@@ -634,10 +630,6 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                                         <div class="footer_cnt">
                                             <i class="fa fa-phone"></i>
                                             <span><?= esc($telefoneContato); ?></span>
-                                        </div>
-                                        <div class="footer_cnt">
-                                            <i class="fa fa-envelope"></i>
-                                            <span>info@butazzopizza.net</span>
                                         </div>
                                     </div>
                                 </div>
@@ -705,21 +697,17 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
 
 <nav class="cd-nav-container right_menu" id="cd-nav">
     <div class="header__open_menu">
-        <a href="index-2.html" class="rmenu_logo" title="yagmurmebel.az">
-            <img src="<?php echo site_url('web/'); ?>src/assets/img/logo.png" alt="logo" />
+        <a href="<?php echo site_url('/'); ?>" class="rmenu_logo" title="Food delivery">
+            <img src="<?php echo site_url('web/'); ?>src/assets/img/logo.png" alt="logo" /><span class="site-brand-text">Gula Lanches</span>
         </a>
     </div>
-    <div class="right_menu_search">
-        <form method="get" action="<?php echo current_url(); ?>">
-            <input type="text" name="q" class="form-control search_input" value="" placeholder="Search anything">
-            <button type="submit" class="search_icon"><i class="fa fa-search"></i></button>
-        </form>
-    </div>
     <ul class="rmenu_list">
-        <li><a class="page-scroll" href="#header">Home</a></li>
-        <li><a class="page-scroll" href="#menu">Menus</a></li>
-        <li><a class="page-scroll" href="#Galeria">Galeria</a></li>
-        <li><a class="page-scroll" href="#footer">Contato</a></li>
+        <li><?php if ($isPaginaPrincipal): ?><a class="page-scroll" href="#header">Home</a><?php else: ?><a href="<?php echo site_url('/'); ?>">Home</a><?php endif; ?></li>
+        <?php if ($isPaginaPrincipal): ?><li><a class="page-scroll" href="#menu">Menus</a></li>
+            <li><a class="page-scroll" href="#gallery">Galeria</a></li>
+            <li><a class="page-scroll" href="#footer">Contato</a></li><?php else: ?><li><a href="<?php echo site_url('/'); ?>#menu">Menus</a></li>
+            <li><a href="<?php echo site_url('/'); ?>#gallery">Galeria</a></li>
+            <li><a href="<?php echo site_url('/'); ?>#footer">Contato</a></li><?php endif; ?>
         <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
             <li>
                 <a href="<?php echo site_url('carrinho'); ?>">
@@ -734,7 +722,11 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
     <div class="right_menu_addr top_addr">
         <span><i class="fa fa-map-marker" aria-hidden="true"></i> <?= esc($enderecoContato); ?></span>
         <span><i class="fa fa-phone" aria-hidden="true"></i> <?= esc($telefoneContato); ?></span>
-        <span><i class="fa fa-clock-o" aria-hidden="true"></i> 11:00 - 21:00</span>
+        <?php if ($expedienteHoje->situacao == false): ?>
+            <span><i class="fa fa-lock" aria-hidden="true"></i> HOJE ESTAMOS FECHADO </span>
+        <?php else: ?>
+            <span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo esc($expedienteHoje->abertura); ?> - <?php echo esc($expedienteHoje->fechamento); ?></span>
+        <?php endif; ?>
     </div>
 </nav>
 
