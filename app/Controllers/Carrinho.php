@@ -185,6 +185,7 @@ class Carrinho extends BaseController
             $this->validacao->setRules([
                 'primeira_metade' => ['label' => 'Primeiro_produto', 'rules' => 'required|greater_than[0]|integer'],
                 'segunda_metade' => ['label' => 'Segundo_produto', 'rules' => 'required|greater_than[0]|integer'],
+                'observacao' => ['label' => 'Observação', 'rules' => 'permit_empty|max_length[200]'],
             ]);
 
             if (!$this->validacao->withRequest($this->request)->run()) {
@@ -245,17 +246,21 @@ class Carrinho extends BaseController
                 + ((float) $precoSegundaMetade->preco / 2)
                 + (isset($extra) ? (float) $extra->preco : 0.0);
 
+            $observacao = trim((string) ($valorProduto['observacao'] ?? ''));
+            $observacao = preg_replace('/\s+/', ' ', $observacao ?? '');
+
             $produto = [
                 'id' => null,
-                'nome' => $primeiroProduto['nome'] . ' / ' . $segundoProduto['nome'] . (isset($extra) ? ' Com extra ' . $extra->nome : ''),
+                'nome' => $primeiroProduto['nome'] . ' / ' . $segundoProduto['nome'] . (isset($extra) ? ' Com extra ' . $extra->nome : '') . ($observacao !== '' ? ' | Obs: ' . $observacao : ''),
                 'slug' => mb_url_title(
-                    'custom-' . $primeiroProduto['slug'] . '-' . $segundoProduto['slug'] . (isset($extra) ? '-extra-' . $extra->id : ''),
+                    'custom-' . $primeiroProduto['slug'] . '-' . $segundoProduto['slug'] . (isset($extra) ? '-extra-' . $extra->id : '') . ($observacao !== '' ? '-obs-' . substr(md5($observacao), 0, 10) : ''),
                     '-',
                     true
                 ),
                 'preco' => number_format($preco, 2),
                 'quantidade' => 1,
                 'tamanho' => 'Customizado',
+                'observacao' => $observacao,
             ];
 
             if (session()->has('carrinho')) {

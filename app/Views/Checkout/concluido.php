@@ -187,23 +187,27 @@
 
                 <div class="opcoes">
                     <div class="opcao">
-                        <h3>E-mail</h3>
-                        <p>
-                            Receba as mensagens de acompanhamento no e-mail cadastrado e acompanhe o pedido pela sua conta.
-                        </p>
-                        <a class="btn btn-email" href="<?= site_url('conta'); ?>">
-                            Acompanhar por e-mail
-                        </a>
-                    </div>
-
-                    <div class="opcao">
                         <h3>WhatsApp</h3>
                         <p>
                             Abra a conversa com a mensagem pronta usando o padrão do acompanhamento do pedido.
                         </p>
-                        <a class="btn btn-whatsapp" href="<?= esc($whatsapp_link ?? '#'); ?>" target="_blank" rel="noopener">
-                            Acompanhar por WhatsApp
-                        </a>
+                        <form action="<?= site_url('checkout/atualizarcanal/' . $codigo_pedido); ?>" method="post">
+                            <?= csrf_field(); ?>
+                            <input type="hidden" name="canal_acompanhamento" value="whatsapp">
+                            <button type="submit" class="btn btn-whatsapp">Acompanhar por WhatsApp</button>
+                        </form>
+                    </div>
+
+                    <div class="opcao">
+                        <h3>E-mail</h3>
+                        <p>
+                            Receba as mensagens de acompanhamento no e-mail cadastrado e acompanhe o pedido pela sua conta.
+                        </p>
+                        <form action="<?= site_url('checkout/atualizarcanal/' . $codigo_pedido); ?>" method="post">
+                            <?= csrf_field(); ?>
+                            <input type="hidden" name="canal_acompanhamento" value="email">
+                            <button type="submit" class="btn btn-email">Acompanhar por E-mail</button>
+                        </form>
                     </div>
                 </div>
 

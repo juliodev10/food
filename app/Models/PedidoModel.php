@@ -83,4 +83,22 @@ class PedidoModel extends Model
         }
         return $pedido;
     }
+    public function valorPedidosEntregues()
+    {
+        return $this->select('count(*) as total')->selectSum('valor_pedido')->where('situacao', 2)->first();
+    }
+    public function valorPedidosCancelados()
+    {
+        return $this->select('count(*) as total')->selectSum('valor_pedido')->where('situacao', 3)->first();
+    }
+    public function recuperaClientesMaisAssiduos(int $quantidade)
+    {
+        return $this->select('usuarios.nome, COUNT(*) AS pedidos')
+            ->join('usuarios', 'usuarios.id = pedidos.usuario_id')
+            ->where('situacao', 2) //entregues
+            ->limit($quantidade)
+            ->groupBy('usuarios.nome')
+            ->orderBy('pedidos', 'DESC')
+            ->find();
+    }
 }

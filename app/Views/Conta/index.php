@@ -132,6 +132,11 @@
                                                     <strong id="endereco"><?php echo esc($pedido->endereco_entrega); ?></strong>
                                                 </li>
                                             </ul>
+                                            <div class="text-right" style="margin-top: 15px;">
+                                                <a href="<?php echo site_url('conta/refazerpedido/' . $pedido->codigo); ?>" class="btn btn-success">
+                                                    Refazer pedido
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

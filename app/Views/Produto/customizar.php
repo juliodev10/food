@@ -136,6 +136,20 @@
                 </div>
             </div>
 
+            <div class="col-md-12" style="margin-top: 10px;">
+                <div class="form-group">
+                    <label for="observacao">Observação do pedido</label>
+                    <textarea
+                        id="observacao"
+                        name="observacao"
+                        class="form-control"
+                        rows="3"
+                        maxlength="200"
+                        placeholder="Ex.: sem cebola, retirar tomate, molho separado..."><?php echo esc(old('observacao')); ?></textarea>
+                    <small class="text-muted">Essa observação será salva junto ao pedido.</small>
+                </div>
+            </div>
+
             <div class="col-md-12" style="margin-top: 15px;">
                 <div class="row" style="display: flex; flex-wrap: wrap; gap: 2px; margin: 0;">
                     <div style="padding: 0;">

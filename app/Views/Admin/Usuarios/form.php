@@ -46,18 +46,20 @@
             <?php endif; ?>
         </select>
     </div>
-    <div class="form-group col-md-3">
-        <label for="email">Ativo</label>
-        <select class="form-control" name="ativo" id="ativo">
-            <?php if ($usuario->id): ?>
-                <option value="1" <?= ($usuario->ativo ? 'selected' : ''); ?><?= set_select('ativo', '1') ?>>Sim</option>
-                <option value="0" <?= (!$usuario->ativo ? 'selected' : ''); ?><?= set_select('ativo', '0') ?>>Não</option>
-            <?php else: ?>
-                <option value="1" <?= set_select('ativo', '1') ?>>Sim</option>
-                <option value="0" <?= set_select('ativo', '0') ?>>Não</option>
-            <?php endif; ?>
-        </select>
-    </div>
+    <?php if (usuario_logado()->is_admin && usuario_logado()->id != $usuario->id): ?>
+        <div class="form-group col-md-3">
+            <label for="email">Ativo</label>
+            <select class="form-control" name="ativo" id="ativo">
+                <?php if ($usuario->id): ?>
+                    <option value="1" <?= ($usuario->ativo ? 'selected' : ''); ?><?= set_select('ativo', '1') ?>>Sim</option>
+                    <option value="0" <?= (!$usuario->ativo ? 'selected' : ''); ?><?= set_select('ativo', '0') ?>>Não</option>
+                <?php else: ?>
+                    <option value="1" <?= set_select('ativo', '1') ?>>Sim</option>
+                    <option value="0" <?= set_select('ativo', '0') ?>>Não</option>
+                <?php endif; ?>
+            </select>
+        </div>
+    <?php endif; ?>
 
     <div class="form-check form-check-flat form-check-primary mr-2">
         <label class="form-check-label">

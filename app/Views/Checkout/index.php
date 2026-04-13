@@ -247,25 +247,6 @@
                     </div>
                 <?php endforeach; ?>
                 <hr>
-                <p class="mt-2 font-weight-bold" style="font-size: 18px;">
-                    Como deseja acompanhar seu pedido?
-                </p>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="checkout[canal_acompanhamento]" value="email" <?php echo old('checkout.canal_acompanhamento', 'email') === 'email' ? 'checked' : ''; ?>>
-                        <span style="font-size: 15px;">E-mail</span>
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="checkout[canal_acompanhamento]" value="whatsapp" <?php echo old('checkout.canal_acompanhamento') === 'whatsapp' ? 'checked' : ''; ?>>
-                        <span style="font-size: 15px;">WhatsApp</span>
-                    </label>
-                </div>
-                <p class="text-muted" style="font-size: 13px; margin-top: 6px;">
-                    No WhatsApp, a mensagem vai abrir pronta com o resumo do pedido.
-                </p>
-                <hr>
                 <div id="troco" class="hidden">
                     <div class="form-group col-md-12" style="padding-left: 0;">
                         <label>Troco para</label>

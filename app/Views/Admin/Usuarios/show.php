@@ -65,7 +65,7 @@
                                 <i class="mdi mdi-arrow-left btn-icon-prepend"></i> Voltar
                             </a>
                             <a href="<?= site_url("admin/usuarios/editar/$usuario->id"); ?>"
-                                class="btn btn-warning btn-sm btn-icon-text mr-">
+                                class="btn btn-warning btn-sm btn-icon-text mr-2">
                                 <i class="mdi mdi-pencil btn-icon-prepend"></i> Editar
                             </a>
                             <a href="<?= site_url("admin/usuarios/excluir/$usuario->id"); ?>"
@@ -83,7 +83,7 @@
                             </a>
                         <?php endif; ?>
 
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>

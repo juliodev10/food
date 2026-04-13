@@ -64,7 +64,6 @@ class UsuarioModel extends Model
         }
         return $data;
     }
-
     public function procurar($term)
     {
         if ($term === null || trim($term) === '') {
@@ -86,12 +85,10 @@ class UsuarioModel extends Model
     {
         unset($this->validationRules['telefone']);
     }
-
     public function desabilitaObrigatoriedadeCpf()
     {
         $this->validationRules['cpf'] = 'permit_empty|exact_length[14]|validaCpf|is_unique[usuarios.cpf]';
     }
-
     public function desfazerExclusao(int $id)
     {
         return $this->protect(false)->where('id', $id)->set('deletado_em', null)->update();
@@ -122,5 +119,9 @@ class UsuarioModel extends Model
             return $this->protect(false)->save($usuario);
         }
         return false;
+    }
+    public function recuperaTotalClientesAtivos()
+    {
+        return $this->where('is_admin', false)->where('ativo', true)->countAllResults();
     }
 }

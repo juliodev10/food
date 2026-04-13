@@ -31,8 +31,10 @@ $routes->group('', ['filter' => 'login'], static function ($routes) {
     $routes->get('conta/autenticar', 'Conta::autenticar');
     $routes->post('conta/processaautenticacao', 'Conta::processaAutenticacao');
     $routes->get('conta/editar', 'Conta::editar');
+    $routes->get('conta/refazerpedido/(:segment)', 'Conta::refazerPedido/$1');
 
     $routes->get('checkout/concluido/(:num)', 'Checkout::concluido/$1');
+    $routes->post('checkout/atualizarcanal/(:num)', 'Checkout::atualizarCanalAcompanhamento/$1');
 });
 
 $routes->group('admin', ['filter' => 'login'], static function ($routes) {

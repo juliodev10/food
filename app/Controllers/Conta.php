@@ -36,6 +36,60 @@ class Conta extends BaseController
         }
         return view('Conta/index', $data);
     }
+    public function refazerPedido(string $codigo)
+    {
+        $pedido = $this->pedidoModel
+            ->where('codigo', $codigo)
+            ->where('usuario_id', $this->usuario->id)
+            ->first();
+
+        if ($pedido === null) {
+            return redirect()->back()->with('atencao', 'Pedido não encontrado.');
+        }
+
+        $produtosPedido = $pedido->getProdutosPedido();
+        if ($produtosPedido === []) {
+            return redirect()->back()->with('atencao', 'Não foi possível refazer este pedido.');
+        }
+
+        $carrinho = $this->normalizaProdutosParaCarrinho($produtosPedido);
+        if ($carrinho === []) {
+            return redirect()->back()->with('atencao', 'Não foi possível refazer este pedido.');
+        }
+
+        session()->set('carrinho', $carrinho);
+        session()->remove(['endereco_entrega', 'valor_entrega']);
+
+        return redirect()->to(site_url('checkout'))
+            ->with('sucesso', 'Pedido carregado novamente no carrinho. Revise e finalize para salvar no sistema.');
+    }
+
+    private function normalizaProdutosParaCarrinho(array $produtos): array
+    {
+        $carrinho = [];
+
+        foreach ($produtos as $produto) {
+            if (!is_array($produto) || !isset($produto['nome'])) {
+                continue;
+            }
+
+            $nome = trim((string) $produto['nome']);
+            if ($nome === '') {
+                continue;
+            }
+
+            $carrinho[] = [
+                'id' => $produto['id'] ?? null,
+                'slug' => (string) ($produto['slug'] ?? mb_url_title($nome, '-', true)),
+                'nome' => $nome,
+                'preco' => (string) ($produto['preco'] ?? 0),
+                'quantidade' => max(1, (int) ($produto['quantidade'] ?? 1)),
+                'tamanho' => (string) ($produto['tamanho'] ?? ''),
+            ];
+        }
+
+        return $carrinho;
+    }
     public function show()
     {
         $data = [
