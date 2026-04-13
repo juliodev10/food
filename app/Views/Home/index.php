@@ -1,6 +1,5 @@
 <?= $this->extend('layout/principal_web'); ?>
 
-
 <?= $this->section('titulo'); ?>
 <?= $titulo; ?>
 <?= $this->endSection() ?>
@@ -67,64 +66,76 @@
     <!--    Menus filter    -->
     <div class="menu_filter text-center">
         <ul class="list-unstyled list-inline d-inline-block">
-            <li id="todas" class="item active">
-                <a href="javascript:;" class="filter-button" data-filter="todas">
-                    Todas
-                </a>
-            </li>
-            <?php foreach ($categorias as $categoria): ?>
-                <li class="item">
-                    <a href="javascript:;" class="filter-button" data-filter="<?= $categoria->slug; ?>">
-                        <?= esc($categoria->nome); ?>
+            <?php if (empty($categorias)): ?>
+                <li class="item active">
+                    <a href="javascript:;" class="filter-button">Não há categorias cadastradas
                     </a>
                 </li>
-            <?php endforeach; ?>
+            <?php else: ?>
+                <li id="todas" class="item active">
+                    <a href="javascript:;" class="filter-button" data-filter="todas">
+                        Todas
+                    </a>
+                </li>
+                <?php foreach ($categorias as $categoria): ?>
+                    <li class="item">
+                        <a href="javascript:;" class="filter-button" data-filter="<?= $categoria->slug; ?>">
+                            <?= esc($categoria->nome); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </ul>
     </div>
     <!--    Menus items     -->
     <div id="menu_items">
         <div class="row">
-            <?php foreach ($produtos as $produto): ?>
-                <?php
-                $caminhoImagemProduto = WRITEPATH . 'uploads/produtos/' . $produto->imagem;
-                $temImagemValida = !empty($produto->imagem) && is_file($caminhoImagemProduto);
-                $imagemProduto = $temImagemValida
-                    ? site_url("produto/imagem/{$produto->id}")
-                    : site_url('admin/images/Produto-sem-imagem.png');
-                $urlDetalhesProduto = site_url("produto/detalhes/{$produto->slug}");
-                ?>
-                <div class="col-sm-6 filtr-item image filter active <?= $produto->categoria_slug; ?>">
-                    <div class="content" style="cursor: pointer;"
-                        onclick="window.location.href='<?= $urlDetalhesProduto; ?>';">
-                        <a href="<?= $imagemProduto; ?>" class="block fancybox" data-fancybox-group="fancybox"
-                            onclick="event.stopPropagation();">
-                            <div class="filter_item_img">
-                                <i class="fa fa-search-plus"></i>
-                                <img src="<?= $imagemProduto; ?>" alt="<?= esc($produto->nome); ?>" />
+            <?php if (empty($produtos)): ?>
+                <div class="col-sm-12">
+                    <p class="text-center">Não há produtos cadastrados.</p>
+                </div>
+            <?php else: ?>
+                <?php foreach ($produtos as $produto): ?>
+                    <?php
+                    $caminhoImagemProduto = WRITEPATH . 'uploads/produtos/' . $produto->imagem;
+                    $temImagemValida = !empty($produto->imagem) && is_file($caminhoImagemProduto);
+                    $imagemProduto = $temImagemValida
+                        ? site_url("produto/imagem/{$produto->id}")
+                        : site_url('admin/images/Produto-sem-imagem.png');
+                    $urlDetalhesProduto = site_url("produto/detalhes/{$produto->slug}");
+                    ?>
+                    <div class="col-sm-6 filtr-item image filter active <?= $produto->categoria_slug; ?>">
+                        <div class="content" style="cursor: pointer;"
+                            onclick="window.location.href='<?= $urlDetalhesProduto; ?>';">
+                            <a href="<?= $imagemProduto; ?>" class="block fancybox" data-fancybox-group="fancybox"
+                                onclick="event.stopPropagation();">
+                                <div class="filter_item_img">
+                                    <i class="fa fa-search-plus"></i>
+                                    <img src="<?= $imagemProduto; ?>" alt="<?= esc($produto->nome); ?>" />
+                                </div>
+                            </a>
+                            <div class="info">
+                                <div class="name">
+                                    <?= esc($produto->nome) ?>
+                                </div>
+                                <div class="short">
+                                    <?= word_limiter($produto->ingredientes, 5) ?>
+                                </div>
+                                <span class="filter_item_price">A partir de R$
+                                    <?= esc(number_format($produto->preco, 2, ',', '.')) ?></span>
+                                </span>
                             </div>
-                        </a>
-                        <div class="info">
-                            <div class="name">
-                                <?= esc($produto->nome) ?>
-                            </div>
-                            <div class="short">
-                                <?= word_limiter($produto->ingredientes, 5) ?>
-                            </div>
-                            <span class="filter_item_price">A partir de R$
-                                <?= esc(number_format($produto->preco, 2, ',', '.')) ?></span>
-                            </span>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
         </div>
         <div class="text-center menu-pagination">
             <?= $pager->links('produtos', 'default_full'); ?>
         </div>
-
     </div>
 </div>
-
 <!--    Gallery    -->
 <div class="container section" id="gallery" data-aos="fade-up">
     <div class="title-block">

@@ -3,6 +3,7 @@
 namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
+
 class ExpedienteSeeder extends Seeder
 {
     public function run()
@@ -55,6 +56,5 @@ class ExpedienteSeeder extends Seeder
         foreach ($expedientes as $expediente) {
             $expedienteModel->protect(false)->insert($expediente);
         }
-        dd($expedienteModel->errors());
     }
 }

@@ -16,21 +16,7 @@ class BairrosSeeder extends Seeder
                 'nome' => 'Centro',
                 'slug' => 'centro',
                 'cidade' => 'Pratápolis',
-                'valor_entrega' => 5.00,
-                'ativo' => true
-            ],
-            [
-                'nome' => 'Jardim Botânico',
-                'slug' => 'jardim-botanico',
-                'cidade' => 'Pratápolis',
-                'valor_entrega' => 7.00,
-                'ativo' => true
-            ],
-            [
-                'nome' => 'Vila Nova',
-                'slug' => 'vila-nova',
-                'cidade' => 'Pratápolis',
-                'valor_entrega' => 8.00,
+                'valor_entrega' => 2.00,
                 'ativo' => true
             ],
             [
@@ -38,13 +24,6 @@ class BairrosSeeder extends Seeder
                 'slug' => 'morro-verde',
                 'cidade' => 'Pratápolis',
                 'valor_entrega' => 15.00,
-                'ativo' => true
-            ],
-            [
-                'nome' => 'Zona Industrial',
-                'slug' => 'zona-industrial',
-                'cidade' => 'Pratápolis',
-                'valor_entrega' => 10.00,
                 'ativo' => true
             ],
         ];

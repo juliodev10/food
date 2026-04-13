@@ -36,44 +36,49 @@
                     btn-icon-text float-right mb-4">
                     <i class="mdi mdi-plus btn-icon-prepend"></i> Cadastrar</a>
 
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Preço</th>
-                                <th>Data de criação</th>
-                                <th>Ativo</th>
-                                <th>Situação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($extras as $extra): ?>
+                <?php if (empty($extras)): ?>
+                    <p>Nenhuma extra encontrada.</p>
+                <?php else: ?>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <a
-                                            href="<?= site_url('admin/extras/show/' . $extra->id); ?>"><?= $extra->nome; ?></a>
-                                    </td>
-                                    <td>R$&nbsp;<?= esc(number_format($extra->preco, 2, ',', '.')); ?></td>
-                                    <td><?= esc($extra->criado_em->humanize()); ?></td>
-                                    <td><?= ($extra->ativo && $extra->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
-                                    </td>
-                                    <td><?= ($extra->deletado_em === null ? '<label class="badge badge-success">Disponível</label>' : '<label class="badge badge-danger">Excluído</label>'); ?>
-                                        <?php if ($extra->deletado_em !== null): ?>
-                                            <a href="<?= site_url("admin/extras/desfazerExclusao/$extra->id"); ?>"
-                                                class="btn btn-info btn-sm btn-icon-text ml-2">
-                                                <i class=" mdi mdi-undo btn-icon-prepend"></i> Desfazer</a>
-                                        <?php endif; ?>
-                                    </td>
+                                    <th>Nome</th>
+                                    <th>Preço</th>
+                                    <th>Data de criação</th>
+                                    <th>Ativo</th>
+                                    <th>Situação</th>
                                 </tr>
-                            <?php endforeach; ?>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($extras as $extra): ?>
+                                    <tr>
+                                        <td>
+                                            <a
+                                                href="<?= site_url('admin/extras/show/' . $extra->id); ?>"><?= $extra->nome; ?></a>
+                                        </td>
+                                        <td>R$&nbsp;<?= esc(number_format($extra->preco, 2, ',', '.')); ?></td>
+                                        <td><?= esc($extra->criado_em->humanize()); ?></td>
+                                        <td><?= ($extra->ativo && $extra->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
+                                        </td>
+                                        <td><?= ($extra->deletado_em === null ? '<label class="badge badge-success">Disponível</label>' : '<label class="badge badge-danger">Excluído</label>'); ?>
+                                            <?php if ($extra->deletado_em !== null): ?>
+                                                <a href="<?= site_url("admin/extras/desfazerExclusao/$extra->id"); ?>"
+                                                    class="btn btn-info btn-sm btn-icon-text ml-2">
+                                                    <i class=" mdi mdi-undo btn-icon-prepend"></i> Desfazer</a>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
 
-                        </tbody>
-                    </table>
-                    <div class="mt-3">
-                        <?= $pager->links(); ?>
+                            </tbody>
+                        </table>
+                        <div class="mt-3">
+                            <?= $pager->links(); ?>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
+
             </div>
         </div>
     </div>
@@ -86,11 +91,11 @@
 <script src="<?php echo site_url('admin/vendors/auto-complete/jquery-ui.js'); ?>"></script>
 
 <script>
-    jQuery(function ($) {
+    jQuery(function($) {
         $("#query").autocomplete({
             appendTo: "body",
             minLength: 1,
-            source: function (request, response) {
+            source: function(request, response) {
                 $.ajax({
                     url: "<?= site_url('admin/extras/procurar') ?>",
                     dataType: "json",
@@ -100,7 +105,7 @@
                     data: {
                         term: request.term
                     },
-                    success: function (data) {
+                    success: function(data) {
                         if (!data || data.length < 1) {
                             response([{
                                 label: "Extra não encontrada",
@@ -110,13 +115,13 @@
                         }
                         response(data);
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error("Erro na requisição:", status, error);
                         response([]);
                     }
                 });
             },
-            select: function (event, ui) {
+            select: function(event, ui) {
                 if (ui.item.value == -1) {
                     $(this).val("");
                     return false;

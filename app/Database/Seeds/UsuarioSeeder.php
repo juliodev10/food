@@ -12,23 +12,15 @@ class UsuarioSeeder extends Seeder
 
         $usuario =
             [
-                'nome' => 'João Silva',
-                'email' => 'joao@exemplo.com',
-                'telefone' => '(11) 98765-4321',
+                'nome' => 'Júlio César França Rodrigues',
+                'email' => 'jcking0@hotmail.com',
+                'cpf' => '380.440.580-01',
+                'password' => '123456',
+                'telefone' => '(35) 99840-7525',
+                'is_admin' => true,
+                'ativo' => true
             ];
 
-        $usuarioModel->protect(false)->insert($usuario);
-
-        $usuario =
-            [
-                'nome' => 'Maria Santos',
-                'email' => 'maria@exemplo.com',
-                'telefone' => '(21) 99876-5432',
-            ];
-
-        // Inserir dados na tabela usuarios
-        $usuarioModel->protect(false)->insert($usuario);
-
-        dd($usuarioModel->errors());
+        $usuarioModel->skipValidation(true)->protect(false)->insert($usuario);
     }
 }

@@ -31,7 +31,7 @@
                     <input id="query" name="query" class="form-control bg-light mb-4"
                         placeholder="Pesquise por um código de pedido" />
                 </div>
-                <?php if (!isset($pedidos)): ?>
+                <?php if (empty($pedidos)): ?>
                     <p>Nenhum pedido encontrado.</p>
                 <?php else: ?>
                     <div class="table-responsive">

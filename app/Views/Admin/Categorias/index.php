@@ -36,42 +36,46 @@
                     btn-icon-text float-right mb-4">
                     <i class="mdi mdi-plus btn-icon-prepend"></i> Cadastrar</a>
 
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Data de criação</th>
-                                <th>Ativo</th>
-                                <th>Situação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($categorias as $categoria): ?>
+                <?php if (empty($categorias)): ?>
+                    <p>Nenhuma categoria encontrada.</p>
+                <?php else: ?>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <a
-                                            href="<?= site_url('admin/categorias/show/' . $categoria->id); ?>"><?= $categoria->nome; ?></a>
-                                    </td>
-                                    <td><?= $categoria->criado_em->humanize(); ?></td>
-                                    <td><?= ($categoria->ativo && $categoria->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
-                                    </td>
-                                    <td><?= ($categoria->deletado_em === null ? '<label class="badge badge-success">Disponível</label>' : '<label class="badge badge-danger">Excluído</label>'); ?>
-                                        <?php if ($categoria->deletado_em !== null): ?>
-                                            <a href="<?= site_url("admin/categorias/desfazerExclusao/$categoria->id"); ?>"
-                                                class="btn btn-info btn-sm btn-icon-text ml-2">
-                                                <i class=" mdi mdi-undo btn-icon-prepend"></i> Desfazer</a>
-                                        <?php endif; ?>
-                                    </td>
+                                    <th>Nome</th>
+                                    <th>Data de criação</th>
+                                    <th>Ativo</th>
+                                    <th>Situação</th>
                                 </tr>
-                            <?php endforeach; ?>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($categorias as $categoria): ?>
+                                    <tr>
+                                        <td>
+                                            <a
+                                                href="<?= site_url('admin/categorias/show/' . $categoria->id); ?>"><?= $categoria->nome; ?></a>
+                                        </td>
+                                        <td><?= $categoria->criado_em->humanize(); ?></td>
+                                        <td><?= ($categoria->ativo && $categoria->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
+                                        </td>
+                                        <td><?= ($categoria->deletado_em === null ? '<label class="badge badge-success">Disponível</label>' : '<label class="badge badge-danger">Excluído</label>'); ?>
+                                            <?php if ($categoria->deletado_em !== null): ?>
+                                                <a href="<?= site_url("admin/categorias/desfazerExclusao/$categoria->id"); ?>"
+                                                    class="btn btn-info btn-sm btn-icon-text ml-2">
+                                                    <i class=" mdi mdi-undo btn-icon-prepend"></i> Desfazer</a>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
 
-                        </tbody>
-                    </table>
-                    <div class="mt-3">
-                        <?= $pager->links(); ?>
+                            </tbody>
+                        </table>
+                        <div class="mt-3">
+                            <?= $pager->links(); ?>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -84,11 +88,11 @@
 <script src="<?php echo site_url('admin/vendors/auto-complete/jquery-ui.js'); ?>"></script>
 
 <script>
-    jQuery(function ($) {
+    jQuery(function($) {
         $("#query").autocomplete({
             appendTo: "body",
             minLength: 1,
-            source: function (request, response) {
+            source: function(request, response) {
                 $.ajax({
                     url: "<?= site_url('admin/categorias/procurar') ?>",
                     dataType: "json",
@@ -98,7 +102,7 @@
                     data: {
                         term: request.term
                     },
-                    success: function (data) {
+                    success: function(data) {
                         if (!data || data.length < 1) {
                             response([{
                                 label: "Categoria não encontrada",
@@ -108,13 +112,13 @@
                         }
                         response(data);
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error("Erro na requisição:", status, error);
                         response([]);
                     }
                 });
             },
-            select: function (event, ui) {
+            select: function(event, ui) {
                 if (ui.item.value == -1) {
                     $(this).val("");
                     return false;
