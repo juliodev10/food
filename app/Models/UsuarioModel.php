@@ -20,8 +20,8 @@ class UsuarioModel extends Model
     //Validações
     protected $validationRules = [
         'nome' => 'required|min_length[3]|max_length[120]',
-        'email' => 'required|valid_email|is_unique[usuarios.email]',
-        'cpf' => 'required|exact_length[14]|validaCpf|is_unique[usuarios.cpf]',
+        'email' => 'required|valid_email|is_unique[usuarios.email,id,{id}]',
+        'cpf' => 'required|exact_length[14]|validaCpf|is_unique[usuarios.cpf,id,{id}]',
         'telefone' => 'required|exact_length[15]',
         'password' => 'required|min_length[6]',
         'confirmation_password' => 'required_with[password]|matches[password]',
@@ -87,7 +87,7 @@ class UsuarioModel extends Model
     }
     public function desabilitaObrigatoriedadeCpf()
     {
-        $this->validationRules['cpf'] = 'permit_empty|exact_length[14]|validaCpf|is_unique[usuarios.cpf]';
+        $this->validationRules['cpf'] = 'permit_empty|exact_length[14]|validaCpf|is_unique[usuarios.cpf,id,{id}]';
     }
     public function desfazerExclusao(int $id)
     {

@@ -54,7 +54,7 @@ class ExpedienteSeeder extends Seeder
             ],
         ];
         foreach ($expedientes as $expediente) {
-            $expedienteModel->protect(false)->insert($expediente);
+            $expedienteModel->skipValidation(true)->protect(false)->insert($expediente);
         }
     }
 }

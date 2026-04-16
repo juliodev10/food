@@ -84,8 +84,8 @@
             <h2 class="section-title pull-left"><?php echo esc($titulo) ?></h2>
         </div>
         <div class="col-md-12">
-            <?php if (!empty($pedidos)): ?>
-                <h4 class="text-info">Nessa área aparecerá o seu histórico de pedidos realizados.</h4>
+            <?php if (empty($pedidos)): ?>
+                <h4 class="text-info">Você ainda não possui pedidos no histórico.</h4>
             <?php else: ?>
                 <?php foreach ($pedidos as $key => $pedido): ?>
                     <div class="card mb-3">
@@ -103,8 +103,8 @@
                                     <div id="collapse<?php echo $key; ?>" class="panel-collapse collapse">
                                         <div class="panel-body">
                                             <h5>Situação do pedido: <?php echo $pedido->exibeSituacaoDoPedido(); ?></h5>
+                                            <?php $produtos = method_exists($pedido, 'getProdutosPedido') ? $pedido->getProdutosPedido() : []; ?>
                                             <ul class="list-group">
-                                                <?php $produtos = unserialize($pedido->produtos); ?>
                                                 <?php foreach ($produtos as $produto) : ?>
                                                     <li class="list-group-item">
                                                         <div>

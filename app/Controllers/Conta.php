@@ -20,24 +20,39 @@ class Conta extends BaseController
     {
         $data = [
             'titulo' => 'Meus pedidos',
+            'pedidos' => [],
         ];
+
         $pedidos = $this->pedidoModel->orderBy('criado_em', 'DESC')->where('usuario_id', $this->usuario->id)->findAll();
-        if ($pedidos != null) {
+
+        if (!empty($pedidos)) {
             // Calcula o total para cada pedido
             foreach ($pedidos as &$pedido) {
-                $produtos = unserialize($pedido->produtos);
+                $produtos = method_exists($pedido, 'getProdutosPedido') ? $pedido->getProdutosPedido() : [];
                 $total = 0;
+
                 foreach ($produtos as $produto) {
+                    if (!isset($produto['preco'], $produto['quantidade'])) {
+                        continue;
+                    }
+
                     $total += $produto['preco'] * $produto['quantidade'];
                 }
+
                 $pedido->total = $total;
             }
+
             $data['pedidos'] = $pedidos;
         }
+
         return view('Conta/index', $data);
     }
     public function refazerPedido(string $codigo)
     {
+        if (!$this->empresaAbertaAgora()) {
+            return redirect()->back()->with('info', 'Não é possível fazer pedidos fora do horário de funcionamento.');
+        }
+
         $pedido = $this->pedidoModel
             ->where('codigo', $codigo)
             ->where('usuario_id', $this->usuario->id)
@@ -90,6 +105,38 @@ class Conta extends BaseController
 
         return $carrinho;
     }
+
+    private function empresaAbertaAgora(): bool
+    {
+        helper('empresa');
+        $expedienteHoje = expedienteHoje();
+
+        if ($expedienteHoje === null) {
+            return false;
+        }
+
+        if (!isset($expedienteHoje->situacao) || (int) $expedienteHoje->situacao !== 1) {
+            return false;
+        }
+
+        $abertura = $expedienteHoje->abertura ?? null;
+        $fechamento = $expedienteHoje->fechamento ?? null;
+
+        if (empty($abertura) || empty($fechamento)) {
+            return false;
+        }
+
+        $horaAtual = date('H:i:s');
+        $horaAbertura = date('H:i:s', strtotime((string) $abertura));
+        $horaFechamento = date('H:i:s', strtotime((string) $fechamento));
+
+        if ($horaAbertura <= $horaFechamento) {
+            return $horaAtual >= $horaAbertura && $horaAtual <= $horaFechamento;
+        }
+
+        return $horaAtual >= $horaAbertura || $horaAtual <= $horaFechamento;
+    }
+
     public function show()
     {
         $data = [

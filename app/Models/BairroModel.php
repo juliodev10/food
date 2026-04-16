@@ -20,7 +20,6 @@ class BairroModel extends Model
     protected $validationRules = [
         'nome' => 'required|min_length[2]|max_length[120]|bairroCidadeUnico[cidade,id,{id}]',
         'cidade' => 'required|min_length[2]|max_length[20]',
-        'estado' => 'equals[MG]',
         'valor_entrega' => 'required',
     ];
     protected $validationMessages = [
@@ -36,9 +35,6 @@ class BairroModel extends Model
         'valor_entrega' => [
             'required' => 'O campo Valor de Entrega é obrigatório.',
             'decimal' => 'O campo Valor de Entrega deve conter um valor decimal válido.',
-        ],
-        'estado' => [
-            'equals' => 'Por favor, cadastre estados de MG.',
         ],
     ];
     //Eventos callbacks

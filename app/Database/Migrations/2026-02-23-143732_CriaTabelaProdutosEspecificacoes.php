@@ -32,7 +32,7 @@ class CriaTabelaProdutosEspecificacoes extends Migration
             'customizavel' => [
                 'type' => 'BOOLEAN',
                 'null' => false,
-                'true' => true,
+                'default' => true,
             ],
         ]);
 

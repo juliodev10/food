@@ -8,7 +8,7 @@ class ExpedienteModel extends Model
 {
     protected $table = 'expediente';
     protected $returnType = 'object';
-    protected $allowedFields = ['abertura', 'fechamento', 'situacao'];
+    protected $allowedFields = ['dia_descricao', 'abertura', 'fechamento', 'situacao'];
     protected $validationRules = [
         'abertura' => 'required',
         'fechamento' => 'required',

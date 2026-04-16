@@ -24,7 +24,7 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-                <?php echo form_open("admin/expedientes/expedientes", ["class" => "form-row"]); ?>
+                <?php echo form_open("admin/expedientes", ["class" => "form-row"]); ?>
                 <?= csrf_field() ?>
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -40,6 +40,7 @@
                             <?php foreach ($expedientes as $dia): ?>
                                 <tr>
                                     <td class="form-group col-md-3">
+                                        <input type="hidden" name="id[]" value="<?= esc($dia->id); ?>">
                                         <input type="text" name="dia_descricao[]" class="form-control"
                                             value="<?= esc($dia->dia_descricao); ?>" readonly="">
                                     </td>
@@ -88,11 +89,11 @@
 <script src="<?php echo site_url('admin/vendors/auto-complete/jquery-ui.js'); ?>"></script>
 
 <script>
-    jQuery(function ($) {
+    jQuery(function($) {
         $("#query").autocomplete({
             appendTo: "body",
             minLength: 1,
-            source: function (request, response) {
+            source: function(request, response) {
                 $.ajax({
                     url: "<?= site_url('admin/bairros/procurar') ?>",
                     dataType: "json",
@@ -102,7 +103,7 @@
                     data: {
                         term: request.term
                     },
-                    success: function (data) {
+                    success: function(data) {
                         if (!data || data.length < 1) {
                             response([{
                                 label: "Bairro de Pratápolis não encontrado",
@@ -112,13 +113,13 @@
                         }
                         response(data);
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error("Erro na requisição:", status, error);
                         response([]);
                     }
                 });
             },
-            select: function (event, ui) {
+            select: function(event, ui) {
                 if (ui.item.value == -1) {
                     $(this).val("");
                     return false;

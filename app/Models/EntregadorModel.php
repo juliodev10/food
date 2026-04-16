@@ -31,13 +31,13 @@ class EntregadorModel extends Model
     // Validation
     protected $validationRules = [
         'nome' => 'required|min_length[3]|max_length[120]',
-        'email' => 'required|valid_email|is_unique[entregadores.email]',
-        'cpf' => 'required|exact_length[14]|validaCpf|is_unique[entregadores.cpf]',
-        'cnh' => 'required|exact_length[11]|is_unique[entregadores.cnh]',
-        'telefone' => 'required|exact_length[15]|is_unique[entregadores.telefone]',
+        'email' => 'required|valid_email|is_unique[entregadores.email,id,{id}]',
+        'cpf' => 'required|exact_length[14]|validaCpf|is_unique[entregadores.cpf,id,{id}]',
+        'cnh' => 'required|exact_length[11]|is_unique[entregadores.cnh,id,{id}]',
+        'telefone' => 'required|exact_length[15]|is_unique[entregadores.telefone,id,{id}]',
         'endereco' => 'required|max_length[230]',
         'veiculo' => 'required|max_length[230]',
-        'placa' => 'required|min_length[7]|max_length[8]|is_unique[entregadores.placa]',
+        'placa' => 'required|min_length[7]|max_length[8]|is_unique[entregadores.placa,id,{id}]',
     ];
     protected $validationMessages = [
         'nome' => [

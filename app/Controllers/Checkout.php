@@ -123,6 +123,11 @@ class Checkout extends BaseController
     public function processar()
     {
         if ($this->request->is('post')) {
+            if (!$this->empresaAbertaAgora()) {
+                return redirect()->back()
+                    ->with('info', 'Não é possível fazer pedidos fora do horário de funcionamento.');
+            }
+
             $checkoutPost = (array) $this->request->getPost('checkout');
 
             $bairroSlug = trim((string) ($checkoutPost['bairro_slug'] ?? ''));
@@ -443,5 +448,36 @@ class Checkout extends BaseController
         if ($produtosDoPedido !== []) {
             $pedidoProdutoModel->insertBatch($produtosDoPedido);
         }
+    }
+
+    private function empresaAbertaAgora(): bool
+    {
+        helper('empresa');
+        $expedienteHoje = expedienteHoje();
+
+        if ($expedienteHoje === null) {
+            return false;
+        }
+
+        if (!isset($expedienteHoje->situacao) || (int) $expedienteHoje->situacao !== 1) {
+            return false;
+        }
+
+        $abertura = $expedienteHoje->abertura ?? null;
+        $fechamento = $expedienteHoje->fechamento ?? null;
+
+        if (empty($abertura) || empty($fechamento)) {
+            return false;
+        }
+
+        $horaAtual = date('H:i:s');
+        $horaAbertura = date('H:i:s', strtotime((string) $abertura));
+        $horaFechamento = date('H:i:s', strtotime((string) $fechamento));
+
+        if ($horaAbertura <= $horaFechamento) {
+            return $horaAtual >= $horaAbertura && $horaAtual <= $horaFechamento;
+        }
+
+        return $horaAtual >= $horaAbertura || $horaAtual <= $horaFechamento;
     }
 }

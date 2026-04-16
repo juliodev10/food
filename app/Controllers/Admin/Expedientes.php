@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Controllers\Admin;
+
 use App\Controllers\BaseController;
+
 class Expedientes extends BaseController
 {
     private $expedienteModel;
@@ -13,16 +16,21 @@ class Expedientes extends BaseController
         if ($this->request->getMethod() === 'POST') {
             $postExpedientes = $this->request->getPost();
             $arrayExpedientes = [];
-            for ($contador = 0; $contador < count($postExpedientes['dia_descricao']); $contador++) {
+
+            if (!isset($postExpedientes['id']) || !is_array($postExpedientes['id'])) {
+                return redirect()->back()->with('atencao', 'Não foi possível identificar os registros de expediente para atualização.');
+            }
+
+            for ($contador = 0; $contador < count($postExpedientes['id']); $contador++) {
                 array_push($arrayExpedientes, [
-                    'dia_descricao' => $postExpedientes['dia_descricao'][$contador],
+                    'id' => (int) $postExpedientes['id'][$contador],
                     'abertura' => $postExpedientes['abertura'][$contador],
                     'fechamento' => $postExpedientes['fechamento'][$contador],
                     'situacao' => $postExpedientes['situacao'][$contador],
                 ]);
-            }//fim do for
+            } //fim do for
 
-            $this->expedienteModel->updateBatch($arrayExpedientes, 'dia_descricao');
+            $this->expedienteModel->updateBatch($arrayExpedientes, 'id');
             return redirect()->back()->with('sucesso', 'Horário de funcionamento atualizado com sucesso!');
         }
         $data = [
