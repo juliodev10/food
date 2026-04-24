@@ -217,6 +217,22 @@
             bottom: 10px;
         }
 
+        #main-carousel .item_img.item_img-suco {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 320px;
+        }
+
+        #main-carousel .item_img.item_img-suco img {
+            width: auto;
+            max-width: 100%;
+            max-height: 310px;
+            object-fit: contain;
+            background: transparent;
+            filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.20));
+        }
+
         @media (max-width: 420px) {
             .mobile-auth-link {
                 font-size: 11px;
@@ -379,7 +395,7 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
 
                             <div class="item">
                                 <div class="carousel-caption">
-                                    <div class="fadeUp item_img">
+                                    <div class="fadeUp item_img item_img-suco">
                                         <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/suco.png"
                                             alt="sample" />
                                         <div class="item_badge">

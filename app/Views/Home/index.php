@@ -15,6 +15,31 @@
     .menu-pagination .pagination {
         margin: 0;
     }
+
+    #photo_gallery .item .content {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 1 / 1;
+    }
+
+    #photo_gallery .item .content img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    #photo_gallery .item .content.produto-suco-natural {
+        isolation: isolate;
+    }
+
+    #photo_gallery .item .content.produto-suco-natural img {
+        object-fit: contain;
+        padding: 10px;
+        background: transparent;
+        mix-blend-mode: multiply;
+        filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.16));
+    }
 </style>
 <?= $this->endSection() ?>
 
@@ -153,10 +178,13 @@
 
                 $temFotosGaleria = true;
                 $imagemProduto = site_url("produto/imagem/{$produto->id}");
+                $classeSucoNatural = stripos((string) $produto->nome, 'suco natural') !== false
+                    ? ' produto-suco-natural'
+                    : '';
                 ?>
                 <div class="col-sm-4 col-md-3 item">
                     <a href="<?= $imagemProduto; ?>" class="block fancybox" data-fancybox-group="fancybox">
-                        <div class="content">
+                        <div class="content<?= $classeSucoNatural; ?>">
                             <img src="<?= $imagemProduto; ?>" alt="<?= esc($produto->nome); ?>" />
                             <div class="zoom">
                                 <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
