@@ -96,9 +96,6 @@
                         <dt>Telefone:</dt>
                         <dd><?php echo esc($usuario->telefone) ?></dd>
                         <hr>
-                        <dt>CPF:</dt>
-                        <dd><?php echo esc($usuario->cpf) ?></dd>
-                        <hr>
                         <dt>Cliente desde:</dt>
                         <dd><?php echo $usuario->criado_em->humanize(); ?></dd>
                     </dl>

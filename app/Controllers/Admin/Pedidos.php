@@ -6,10 +6,12 @@ class Pedidos extends \App\Controllers\AdminPedidos
 {
     private $pedidoModel;
     private $entregadorModel;
+    private $usuarioModel;
     public function __construct()
     {
         $this->pedidoModel = new \App\Models\PedidoModel();
         $this->entregadorModel = new \App\Models\EntregadorModel();
+        $this->usuarioModel = new \App\Models\UsuarioModel();
     }
     public function index()
     {
@@ -202,17 +204,9 @@ class Pedidos extends \App\Controllers\AdminPedidos
     }
     private function geraLinkWhatsappPedidoSaiuEntrega(object $pedido): ?string
     {
-        $telefone = preg_replace('/\D/', '', (string) ($pedido->telefone ?? ''));
+        $telefone = $this->resolveTelefoneClienteWhatsapp($pedido);
 
-        if ($telefone === '') {
-            return null;
-        }
-
-        if (strlen($telefone) === 11) {
-            $telefone = '55' . $telefone;
-        }
-
-        if (strlen($telefone) < 12) {
+        if ($telefone === null) {
             return null;
         }
 
@@ -277,17 +271,9 @@ class Pedidos extends \App\Controllers\AdminPedidos
     }
     private function geraLinkWhatsappPedidoFoiEntregue(object $pedido): ?string
     {
-        $telefone = preg_replace('/\D/', '', (string) ($pedido->telefone ?? ''));
+        $telefone = $this->resolveTelefoneClienteWhatsapp($pedido);
 
-        if ($telefone === '') {
-            return null;
-        }
-
-        if (strlen($telefone) === 11) {
-            $telefone = '55' . $telefone;
-        }
-
-        if (strlen($telefone) < 12) {
+        if ($telefone === null) {
             return null;
         }
 
@@ -297,17 +283,9 @@ class Pedidos extends \App\Controllers\AdminPedidos
     }
     private function geraLinkWhatsappPedidoFoiCancelado(object $pedido): ?string
     {
-        $telefone = preg_replace('/\D/', '', (string) ($pedido->telefone ?? ''));
+        $telefone = $this->resolveTelefoneClienteWhatsapp($pedido);
 
-        if ($telefone === '') {
-            return null;
-        }
-
-        if (strlen($telefone) === 11) {
-            $telefone = '55' . $telefone;
-        }
-
-        if (strlen($telefone) < 12) {
+        if ($telefone === null) {
             return null;
         }
 
@@ -332,6 +310,33 @@ class Pedidos extends \App\Controllers\AdminPedidos
             . 'Ola ' . $nomeCliente . ', seu pedido foi cancelado.' . PHP_EOL
             . 'Lamentamos que isso tenha acontecido e estamos aqui para ajudar.';
     }
+
+    private function resolveTelefoneClienteWhatsapp(object $pedido): ?string
+    {
+        $telefoneCadastro = '';
+
+        if (!empty($pedido->usuario_id)) {
+            $usuario = $this->usuarioModel->withDeleted(true)->find((int) $pedido->usuario_id);
+            $telefoneCadastro = (string) ($usuario->telefone ?? '');
+        }
+
+        $telefone = preg_replace('/\D/', '', $telefoneCadastro !== '' ? $telefoneCadastro : (string) ($pedido->telefone ?? ''));
+
+        if ($telefone === '') {
+            return null;
+        }
+
+        if (strlen($telefone) === 11) {
+            $telefone = '55' . $telefone;
+        }
+
+        if (strlen($telefone) < 12) {
+            return null;
+        }
+
+        return $telefone;
+    }
+
     private function insereProdutosDoPedido(object $pedido)
     {
         $pedidoProdutoModel = new \App\Models\PedidoProdutoModel();

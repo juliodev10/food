@@ -102,9 +102,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label>CPF (opcional)</label>
-                                <input type="text" name="cpf" class="cpf form-control form-control-lg" placeholder="Digite seu CPF" autocomplete="cpf"
-                                    value="<?php echo old('cpf'); ?>">
+                                <label>Telefone</label>
+                                <input type="tel" name="telefone" class="form-control form-control-lg sp_celphones" placeholder="Digite seu telefone" autocomplete="tel"
+                                    value="<?php echo old('telefone'); ?>">
                             </div>
 
                             <div class="form-group">

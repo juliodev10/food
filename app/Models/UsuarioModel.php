@@ -9,7 +9,7 @@ class UsuarioModel extends Model
 {
     protected $table = 'usuarios';
     protected $returnType = 'App\Entities\Usuario';
-    protected $allowedFields = ['nome', 'email', 'cpf', 'telefone', 'password', 'reset_hash', 'reset_expira_em', 'ativacao_hash'];
+    protected $allowedFields = ['nome', 'email', 'telefone', 'password', 'reset_hash', 'reset_expira_em', 'ativacao_hash'];
     //Datas
     protected $useTimestamps = true;
     protected $createdField = 'criado_em'; // Nome da coluna no banco de dados
@@ -21,7 +21,6 @@ class UsuarioModel extends Model
     protected $validationRules = [
         'nome' => 'required|min_length[3]|max_length[120]',
         'email' => 'required|valid_email|is_unique[usuarios.email,id,{id}]',
-        'cpf' => 'required|exact_length[14]|validaCpf|is_unique[usuarios.cpf,id,{id}]',
         'telefone' => 'required|exact_length[15]',
         'password' => 'required|min_length[6]',
         'confirmation_password' => 'required_with[password]|matches[password]',
@@ -36,12 +35,6 @@ class UsuarioModel extends Model
             'required' => 'O campo email é obrigatório.',
             'valid_email' => 'O campo email deve conter um endereço de email válido.',
             'is_unique' => 'O email informado já está em uso por outro usuário.',
-        ],
-        'cpf' => [
-            'required' => 'O campo CPF é obrigatório.',
-            'is_unique' => 'O CPF informado já está em uso por outro usuário.',
-            'exact_length' => 'O campo CPF deve conter exatamente 14 caracteres.',
-            'validaCpf' => 'Por favor digite um CPF válido.',
         ],
         'password' => [
             'required' => 'O campo senha é obrigatório.',
@@ -85,10 +78,6 @@ class UsuarioModel extends Model
     {
         unset($this->validationRules['telefone']);
     }
-    public function desabilitaObrigatoriedadeCpf()
-    {
-        $this->validationRules['cpf'] = 'permit_empty|exact_length[14]|validaCpf|is_unique[usuarios.cpf,id,{id}]';
-    }
     public function desfazerExclusao(int $id)
     {
         return $this->protect(false)->where('id', $id)->set('deletado_em', null)->update();
@@ -115,8 +104,12 @@ class UsuarioModel extends Model
         $token_hash = $token->getHash();
         $usuario = $this->where('ativacao_hash', $token_hash)->first();
         if ($usuario != null) {
-            $usuario->ativar();
-            return $this->protect(false)->save($usuario);
+            return $this->skipValidation(true)
+                ->protect(false)
+                ->update($usuario->id, [
+                    'ativo' => true,
+                    'ativacao_hash' => null,
+                ]);
         }
         return false;
     }

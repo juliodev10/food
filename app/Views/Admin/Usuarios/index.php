@@ -42,7 +42,6 @@
                             <tr>
                                 <th>Nome</th>
                                 <th>E-mail</th>
-                                <th>CPF</th>
                                 <th>Ativo</th>
                                 <th>Situação</th>
                             </tr>
@@ -55,7 +54,6 @@
                                             href="<?= site_url('admin/usuarios/show/' . $usuario->id); ?>"><?= $usuario->nome; ?></a>
                                     </td>
                                     <td><?= $usuario->email; ?></td>
-                                    <td><?= $usuario->cpf; ?></td>
 
                                     <td><?= ($usuario->ativo && $usuario->deletado_em === null ? '<label class="badge badge-primary">Sim</label>' : '<label class="badge badge-danger">Não</label>'); ?>
                                     </td>
@@ -87,11 +85,11 @@
 <script src="<?php echo site_url('admin/vendors/auto-complete/jquery-ui.js'); ?>"></script>
 
 <script>
-    jQuery(function ($) {
+    jQuery(function($) {
         $("#query").autocomplete({
             appendTo: "body",
             minLength: 1,
-            source: function (request, response) {
+            source: function(request, response) {
                 $.ajax({
                     url: "<?= site_url('admin/usuarios/procurar') ?>",
                     dataType: "json",
@@ -101,7 +99,7 @@
                     data: {
                         term: request.term
                     },
-                    success: function (data) {
+                    success: function(data) {
                         if (!data || data.length < 1) {
                             response([{
                                 label: "Usuário não encontrado",
@@ -111,13 +109,13 @@
                         }
                         response(data);
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error("Erro na requisição:", status, error);
                         response([]);
                     }
                 });
             },
-            select: function (event, ui) {
+            select: function(event, ui) {
                 if (ui.item.value == -1) {
                     $(this).val("");
                     return false;

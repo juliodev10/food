@@ -91,6 +91,19 @@ class ProdutoModel extends Model
             ->orderBy('categorias.nome', 'ASC')
             ->paginate($quantidade_paginacao, 'produtos');
     }
+
+    public function buscaProdutosWebGaleria()
+    {
+        return $this->select([
+            'produtos.id',
+            'produtos.nome',
+            'produtos.slug',
+            'produtos.imagem',
+        ])
+            ->where('produtos.ativo', true)
+            ->orderBy('produtos.nome', 'ASC')
+            ->findAll();
+    }
     public function exibeOpcoesProdutosParaCustomizar(int $categoria_id)
     {
         return $this->select(['produtos.id', 'produtos.nome'])

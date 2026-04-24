@@ -143,138 +143,34 @@
     </div>
     <div id="photo_gallery" class="list1">
         <div class="row loadMore">
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-1.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-1.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
+            <?php $temFotosGaleria = false; ?>
+            <?php foreach ($produtosGaleria as $produto): ?>
+                <?php
+                $caminhoImagemProduto = WRITEPATH . 'uploads/produtos/' . $produto->imagem;
+                if (empty($produto->imagem) || !is_file($caminhoImagemProduto)) {
+                    continue;
+                }
+
+                $temFotosGaleria = true;
+                $imagemProduto = site_url("produto/imagem/{$produto->id}");
+                ?>
+                <div class="col-sm-4 col-md-3 item">
+                    <a href="<?= $imagemProduto; ?>" class="block fancybox" data-fancybox-group="fancybox">
+                        <div class="content">
+                            <img src="<?= $imagemProduto; ?>" alt="<?= esc($produto->nome); ?>" />
+                            <div class="zoom">
+                                <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-2.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-2.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-3.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-3.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-4.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-4.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-5.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-5.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-6.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-6.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-7.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-7.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-8.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-8.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-1.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-1.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-2.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-2.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-3.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-3.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-4 col-md-3 item">
-                <a href="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-4.jpg" class="block fancybox"
-                    data-fancybox-group="fancybox">
-                    <div class="content">
-                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gallery-4.jpg" alt="sample" />
-                        <div class="zoom">
-                            <span class="zoom_icon"><i class="fa fa-search-plus"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+
+            <?php if (!$temFotosGaleria): ?>
+                <div class="col-12">
+                    <p class="text-center">Não há fotos de produtos cadastradas.</p>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

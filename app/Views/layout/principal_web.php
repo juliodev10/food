@@ -41,16 +41,16 @@
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180"
-        href="<?php echo site_url('web/'); ?>src/assets/img/favicon/apple-touch-icon.png" />
+        href="<?php echo site_url('web/'); ?>src/assets/img/logo.png" />
     <link rel="icon" type="image/png" sizes="256x256"
-        href="<?php echo site_url('web/'); ?>src/assets/img/favicon/android-chrome-256x256.png">
+        href="<?php echo site_url('web/'); ?>src/assets/img/logo.png">
     <link rel="icon" type="image/png" sizes="192x192"
-        href="<?php echo site_url('web/'); ?>src/assets/img/favicon/android-chrome-192x192.png">
+        href="<?php echo site_url('web/'); ?>src/assets/img/logo.png">
     <link rel="icon" type="image/png" sizes="32x32"
-        href="<?php echo site_url('web/'); ?>src/assets/img/favicon/favicon-32x32.png" />
+        href="<?php echo site_url('web/'); ?>src/assets/img/logo.png" />
     <link rel="icon" type="image/png" sizes="16x16"
-        href="<?php echo site_url('web/'); ?>src/assets/img/favicon/favicon-16x16.png" />
-    <link rel="icon" type="image/png" href="<?php echo site_url('web/'); ?>src/assets/img/favicon/favicon.ico" />
+        href="<?php echo site_url('web/'); ?>src/assets/img/logo.png" />
+    <link rel="icon" type="image/png" href="<?php echo site_url('web/'); ?>src/assets/img/logo.png" />
     <link rel="manifest" href="<?php echo site_url('web/'); ?>src/assets/img/site.html" />
     <link rel="mask-icon" href="<?php echo site_url('web/'); ?>src/assets/img/favicon/safari-pinned-tab.svg"
         color="#5bbad5" />
@@ -95,7 +95,8 @@
         }
 
         .site-brand-text {
-            font-family: 'Montserrat-Bold';
+            font-family: 'ChunkFiveEx';
+            font-weight: normal;
             font-size: 24px;
             line-height: 1;
             color: #ffffff;
@@ -204,6 +205,18 @@
             margin-bottom: 8px;
         }
 
+        #main-carousel .carousel-indicators li {
+            width: 14px;
+            height: 14px;
+            margin: 0 6px;
+            border-width: 2px;
+            cursor: pointer;
+        }
+
+        #main-carousel .carousel-indicators {
+            bottom: 10px;
+        }
+
         @media (max-width: 420px) {
             .mobile-auth-link {
                 font-size: 11px;
@@ -274,6 +287,7 @@ $isPaginaCheckout = $uri->getSegment(1) === 'checkout';
 $isPaginaPrincipal = $uri->getTotalSegments() === 0;
 $isPaginaConta = $uri->getSegment(1) === 'conta';
 $expedienteHoje = expedienteHoje();
+$expedienteFechado = $expedienteHoje === null || !isset($expedienteHoje->situacao) || (int) $expedienteHoje->situacao !== 1;
 $telefoneContato = '+55 35 9105-2828';
 $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
 ?>
@@ -309,8 +323,6 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                             <li data-target="#main-carousel" data-slide-to="0" class="active"></li>
                             <li data-target="#main-carousel" data-slide-to="1"></li>
                             <li data-target="#main-carousel" data-slide-to="2"></li>
-                            <li data-target="#main-carousel" data-slide-to="3"></li>
-                            <li data-target="#main-carousel" data-slide-to="4"></li>
                         </ol>
 
                         <!-- Controls -->
@@ -328,48 +340,6 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                             <div class="item active">
                                 <div class="carousel-caption">
                                     <div class="fadeUp item_img">
-                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/pizza.png"
-                                            alt="sample" />
-                                        <div class="item_badge">
-                                            <span class="badge_btext">20%</span>
-                                            <span class="badge_stext">OFF</span>
-                                        </div>
-                                    </div>
-                                    <div class="fadeUp fade-slow item_details">
-                                        <h4 class="item_name">Delicious Food</h4>
-                                        <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                        <div class="item_link_box">
-                                            <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="carousel-caption">
-                                    <div class="fadeUp item_img">
-                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/tortilla.png"
-                                            alt="sample" />
-                                        <div class="item_badge">
-                                            <span class="badge_btext">20%</span>
-                                            <span class="badge_stext">OFF</span>
-                                        </div>
-                                    </div>
-                                    <div class="fadeUp fade-slow item_details">
-                                        <h4 class="item_name">Delicious Food</h4>
-                                        <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                        <div class="item_link_box">
-                                            <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="carousel-caption">
-                                    <div class="fadeUp item_img">
                                         <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/burger.png"
                                             alt="sample" />
                                         <div class="item_badge">
@@ -378,12 +348,11 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                                         </div>
                                     </div>
                                     <div class="fadeUp fade-slow item_details">
-                                        <h4 class="item_name">Delicious Food</h4>
-                                        <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                        <div class="item_link_box">
-                                            <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
-                                        </div>
+                                        <h4 class="item_name">X-Salada</h4>
+                                        <p class="item_info">Você merece um lanche delicioso hoje!🍔
+                                            Sabor incrível, entrega rápida e preço que cabe no bolso.
+                                            Garanta seu desconto pedindo agora mesmo.🤤
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -391,7 +360,7 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                             <div class="item">
                                 <div class="carousel-caption">
                                     <div class="fadeUp item_img">
-                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/pizza.png"
+                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/gula.png"
                                             alt="sample" />
                                         <div class="item_badge">
                                             <span class="badge_btext">20%</span>
@@ -399,12 +368,11 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                                         </div>
                                     </div>
                                     <div class="fadeUp fade-slow item_details">
-                                        <h4 class="item_name">Delicious Food</h4>
-                                        <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                        <div class="item_link_box">
-                                            <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
-                                        </div>
+                                        <h4 class="item_name">X-Gula %</h4>
+                                        <p class="item_info">🍔 X-Gula Customizado: Feito para a sua fome! 🤤
+                                        <p>✅ Turbinar com mais hambúrguer? Pode!</p>
+                                        <p>✅ Tirar a ovo/salada? Claro!</p>
+                                        <p>✅ Adicionar muuuito cheddar e bacon? Com certeza!</p>
                                     </div>
                                 </div>
                             </div>
@@ -412,7 +380,7 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                             <div class="item">
                                 <div class="carousel-caption">
                                     <div class="fadeUp item_img">
-                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/burger.png"
+                                        <img src="<?php echo site_url('web/'); ?>src/assets/img/photos/suco.png"
                                             alt="sample" />
                                         <div class="item_badge">
                                             <span class="badge_btext">20%</span>
@@ -420,17 +388,15 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                                         </div>
                                     </div>
                                     <div class="fadeUp fade-slow item_details">
-                                        <h4 class="item_name">Delicious Food</h4>
-                                        <p class="item_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                            eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                        <div class="item_link_box">
-                                            <a href="#reservation" class="item_link page-scroll">Make Reservation</a>
-                                        </div>
+                                        <h4 class="item_name">Suco Natural</h4>
+                                        <p class="item_info">Refresque seu dia com o verdadeiro sabor da fruta! 🍊🧊
+                                            Nosso Suco de Laranja no Gula Lanches é 100% natural, espremido na hora e a companhia perfeita para o seu lanche. Sem conservantes, só o melhor da laranja bem geladinha!
+                                        </p>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
-
                     </div>
                     <!-- /.container -->
                 </div>
@@ -447,7 +413,7 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                             <div class="top_addr">
                                 <span><i class="fa fa-map-marker" aria-hidden="true"></i> <?= esc($enderecoContato); ?></span>
                                 <span><i class="fa fa-phone" aria-hidden="true"></i> <?= esc($telefoneContato); ?></span>
-                                <?php if ($expedienteHoje->situacao == false): ?>
+                                <?php if ($expedienteFechado): ?>
                                     <span><i class="fa fa-lock" aria-hidden="true"></i> HOJE ESTAMOS FECHADO </span>
                                 <?php else: ?>
                                     <span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo esc($expedienteHoje->abertura); ?> - <?php echo esc($expedienteHoje->fechamento); ?></span>
@@ -487,40 +453,39 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
                                             <span><i class="fa fa-bars" aria-hidden="true"></i></span>
                                         </a>
                                     </div>
-                                </div>
 
-                                <!-- Collect the nav links, forms, and other content for toggling -->
-                                <div class="collapse navbar-collapse" id="navbar">
-                                    <div class="navbar-right">
-                                        <ul class="nav navbar-nav">
-                                            <li><?php if ($isPaginaPrincipal): ?><a class="page-scroll" href="#header">Home</a><?php else: ?><a href="<?php echo site_url('/'); ?>">Home</a><?php endif; ?></li>
-                                            <?php if ($isPaginaPrincipal): ?><li><a class="page-scroll" href="#gallery">Galeria</a></li>
-                                                <li><a class="page-scroll" href="#footer">Contato</a></li><?php else: ?><li><a href="<?php echo site_url('/'); ?>#gallery">Galeria</a></li>
-                                                <li><a href="<?php echo site_url('/'); ?>#footer">Contato</a></li><?php endif; ?>
+                                    <!-- Collect the nav links, forms, and other content for toggling -->
+                                    <div class="collapse navbar-collapse" id="navbar">
+                                        <div class="navbar-right">
+                                            <ul class="nav navbar-nav">
+                                                <li><?php if ($isPaginaPrincipal): ?><a class="page-scroll" href="#header">Home</a><?php else: ?><a href="<?php echo site_url('/'); ?>">Home</a><?php endif; ?></li>
+                                                <?php if ($isPaginaPrincipal): ?><li><a class="page-scroll" href="#gallery">Galeria</a></li>
+                                                    <li><a class="page-scroll" href="#footer">Contato</a></li><?php else: ?><li><a href="<?php echo site_url('/'); ?>#gallery">Galeria</a></li>
+                                                    <li><a href="<?php echo site_url('/'); ?>#footer">Contato</a></li><?php endif; ?>
 
-                                            <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
-                                                <li><a class="page-scroll" href="<?php echo site_url('carrinho'); ?>">
-                                                        <i class="fa fa-shopping-cart fa fa-2x" aria-hidden="true"></i>
-                                                        <span style="font-size: 25px !important;">
-                                                            <?php echo count(session()->get('carrinho')); ?>
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                            <?php endif ?>
-                                            <?php if (usuario_logado()): ?>
-                                                <li><a class="page-scroll" href="<?php echo site_url('conta'); ?>">Minha conta</a></li>
-                                                <li><a class="page-scroll" href="<?php echo site_url('login/logout'); ?>">Sair</a></li>
+                                                <?php if (session()->has('carrinho') && count(session()->get('carrinho')) > 0): ?>
+                                                    <li><a class="page-scroll" href="<?php echo site_url('carrinho'); ?>">
+                                                            <i class="fa fa-shopping-cart fa fa-2x" aria-hidden="true"></i>
+                                                            <span style="font-size: 25px !important;">
+                                                                <?php echo count(session()->get('carrinho')); ?>
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                <?php endif ?>
+                                                <?php if (usuario_logado()): ?>
+                                                    <li><a class="page-scroll" href="<?php echo site_url('conta'); ?>">Minha conta</a></li>
+                                                    <li><a class="page-scroll" href="<?php echo site_url('login/logout'); ?>">Sair</a></li>
 
-                                            <?php else: ?>
-                                                <li><a class="page-scroll" href="<?php echo site_url('login'); ?>">Entrar</a></li>
-                                                <li><a class="page-scroll" href="<?php echo site_url('registrar'); ?>">Registre-se</a></li>
-                                            <?php endif ?>
+                                                <?php else: ?>
+                                                    <li><a class="page-scroll" href="<?php echo site_url('login'); ?>">Entrar</a></li>
+                                                    <li><a class="page-scroll" href="<?php echo site_url('registrar'); ?>">Registre-se</a></li>
+                                                <?php endif ?>
 
-                                        </ul>
+                                            </ul>
+                                        </div>
                                     </div>
+                                    <!-- /.navbar-collapse -->
                                 </div>
-                                <!-- /.navbar-collapse -->
-                            </div>
                         </nav>
                     </div>
                     <!-- END navbar -->
@@ -722,7 +687,7 @@ $enderecoContato = 'Tv. Lemos, 86 - Pratápolis';
     <div class="right_menu_addr top_addr">
         <span><i class="fa fa-map-marker" aria-hidden="true"></i> <?= esc($enderecoContato); ?></span>
         <span><i class="fa fa-phone" aria-hidden="true"></i> <?= esc($telefoneContato); ?></span>
-        <?php if ($expedienteHoje->situacao == false): ?>
+        <?php if ($expedienteFechado): ?>
             <span><i class="fa fa-lock" aria-hidden="true"></i> HOJE ESTAMOS FECHADO </span>
         <?php else: ?>
             <span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo esc($expedienteHoje->abertura); ?> - <?php echo esc($expedienteHoje->fechamento); ?></span>

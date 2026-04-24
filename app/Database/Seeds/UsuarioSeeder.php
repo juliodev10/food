@@ -14,7 +14,6 @@ class UsuarioSeeder extends Seeder
             [
                 'nome' => 'Júlio César França Rodrigues',
                 'email' => 'jcking0@hotmail.com',
-                'cpf' => '380.440.580-01',
                 'password' => '123456',
                 'telefone' => '(35) 99840-7525',
                 'is_admin' => true,

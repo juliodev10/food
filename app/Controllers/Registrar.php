@@ -21,9 +21,7 @@ class Registrar extends BaseController
     public function criar()
     {
         if ($this->request->is('post')) {
-            $this->usuarioModel->desabilitaObrigatoriedadeCpf();
             $usuario = new Usuario($this->request->getPost());
-            $this->usuarioModel->desabilitaValidacaoTelefone();
             $usuario->iniciaAtivacao();
 
             if ($this->usuarioModel->insert($usuario)) {
@@ -50,8 +48,6 @@ class Registrar extends BaseController
         if ($token === null) {
             return redirect()->to(site_url('login'))->with('atencao', 'Link de ativação inválido');
         }
-
-        $this->usuarioModel->desabilitaObrigatoriedadeCpf();
 
         if (! $this->usuarioModel->ativarContaPeloToken($token)) {
             return redirect()->to(site_url('login'))->with('atencao', 'Link de ativação inválido ou expirado');

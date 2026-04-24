@@ -23,12 +23,6 @@ class CriaTabelaUsuarios extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '100'
             ],
-            'cpf' => [
-                'type' => 'VARCHAR',
-                'constraint' => '15',
-                'null' => true,
-                'unique' => true
-            ],
             'telefone' => [
                 'type' => 'VARCHAR',
                 'constraint' => '20',

@@ -11,7 +11,7 @@
         <span class="separator">|</span>
 
         <div class="footer-right">
-            <a href="https://wa.me/5535998407525" target="_blank" class="social-link whatsapp" title="WhatsApp">
+            <a href="https://wa.me/5535991052828" target="_blank" class="social-link whatsapp" title="WhatsApp">
                 <i class="fa-brands fa-whatsapp"></i>
             </a>
 

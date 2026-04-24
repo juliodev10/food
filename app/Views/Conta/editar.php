@@ -106,10 +106,6 @@
                         <label>Telefone:</label>
                         <input type="tel" name="telefone" value="<?php echo old('telefone', esc($usuario->telefone)) ?>" class="form-control sp_celphones">
                     </div>
-                    <div>
-                        <label>CPF: <i class="fa fa-lock text-warning"></i></label>
-                        <div class="well well-sm"><?php echo esc($usuario->cpf) ?></div>
-                    </div>
                 </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-success">Atualizar</button>

@@ -11,7 +11,6 @@ class EntregadorModel extends Model
     protected $useSoftDeletes = true;
     protected $allowedFields = [
         'nome',
-        'cpf',
         'cnh',
         'email',
         'telefone',
@@ -32,7 +31,6 @@ class EntregadorModel extends Model
     protected $validationRules = [
         'nome' => 'required|min_length[3]|max_length[120]',
         'email' => 'required|valid_email|is_unique[entregadores.email,id,{id}]',
-        'cpf' => 'required|exact_length[14]|validaCpf|is_unique[entregadores.cpf,id,{id}]',
         'cnh' => 'required|exact_length[11]|is_unique[entregadores.cnh,id,{id}]',
         'telefone' => 'required|exact_length[15]|is_unique[entregadores.telefone,id,{id}]',
         'endereco' => 'required|max_length[230]',
@@ -49,12 +47,6 @@ class EntregadorModel extends Model
             'required' => 'O campo email é obrigatório.',
             'valid_email' => 'O campo email deve conter um endereço de email válido.',
             'is_unique' => 'O email informado já está em uso por outro usuário.',
-        ],
-        'cpf' => [
-            'required' => 'O campo CPF é obrigatório.',
-            'is_unique' => 'O CPF informado já está em uso por outro usuário.',
-            'exact_length' => 'O campo CPF deve conter exatamente 14 caracteres.',
-            'validaCpf' => 'Por favor digite um CPF válido.',
         ],
         'password' => [
             'required' => 'O campo senha é obrigatório.',

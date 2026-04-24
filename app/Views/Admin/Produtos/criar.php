@@ -36,7 +36,7 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-                <?php echo form_open("admin/produtos/cadastrar"); ?>
+                <?php echo form_open_multipart("admin/produtos/cadastrar"); ?>
                 <?php echo $this->include('Admin/Produtos/form'); ?>
                 <div class="card-footer bg-primary d-flex justify-content-start mt-3">
                     <button type="submit" class="btn btn-primary btn-sm btn-icon-text mr-2">

@@ -391,7 +391,7 @@ class Checkout extends BaseController
 
     private function geraLinkWhatsappAcompanhamento(string $mensagem): string
     {
-        $numero = preg_replace('/\D/', '', '5535998407525');
+        $numero = preg_replace('/\D/', '', '5535991052828');
 
         return 'https://wa.me/' . $numero . '?text=' . rawurlencode($mensagem);
     }

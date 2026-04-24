@@ -1,20 +1,15 @@
 <div class="form-row">
-    <div class="form-group col-md-4">
+    <div class="form-group col-md-5">
         <label for="nome">Nome</label>
         <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome"
             value="<?php echo old('nome', esc($usuario->nome)) ?>">
-    </div>
-    <div class="form-group col-md-2">
-        <label for="cpf">CPF</label>
-        <input type="text" class="form-control cpf" name="cpf" id="cpf" placeholder="CPF"
-            value="<?php echo old('cpf', esc($usuario->cpf)) ?>">
     </div>
     <div class="form-group col-md-3">
         <label for="telefone">Telefone</label>
         <input type="text" class="form-control sp_celphones" name="telefone" id="telefone" placeholder="Telefone"
             value="<?php echo old('telefone', esc($usuario->telefone)) ?>">
     </div>
-    <div class="form-group col-md-3">
+    <div class="form-group col-md-4">
         <label for="email">Email</label>
         <input type="text" class="form-control" name="email" id="email" placeholder="Email"
             value="<?php echo old('email', esc($usuario->email)) ?>">

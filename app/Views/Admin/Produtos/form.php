@@ -24,7 +24,7 @@
             <?php endforeach; ?>
         </select>
     </div>
-    <?php if (usuario_logado()->is_admin && usuario_logado()->id != $usuario->id): ?>
+    <?php if (usuario_logado() && usuario_logado()->is_admin): ?>
         <div class="form-group col-md-3">
             <label for="ativo">Ativo</label>
             <select class="form-control" name="ativo" id="ativo">
@@ -32,6 +32,14 @@
                 <option value="1" <?= set_select('ativo', '1', (string) $ativoSelecionado === '1') ?>>Sim</option>
                 <option value="0" <?= set_select('ativo', '0', (string) $ativoSelecionado === '0') ?>>Não</option>
             </select>
+        </div>
+    <?php endif; ?>
+
+    <?php if (empty($produto->id)): ?>
+        <div class="form-group col-md-5">
+            <label for="foto_produto">Imagem do produto</label>
+            <input type="file" class="form-control" name="foto_produto" id="foto_produto" accept="image/*">
+            <small class="form-text text-muted">Opcional. Se não enviar, será usada a imagem padrão.</small>
         </div>
     <?php endif; ?>
 

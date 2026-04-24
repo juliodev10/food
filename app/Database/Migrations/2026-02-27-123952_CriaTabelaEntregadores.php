@@ -19,11 +19,6 @@ class CriaTabelaEntregadores extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '128'
             ],
-            'cpf' => [
-                'type' => 'VARCHAR',
-                'constraint' => '20',
-                'unique' => true
-            ],
             'cnh' => [
                 'type' => 'VARCHAR',
                 'constraint' => '20',

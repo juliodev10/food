@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Entities\Produto;
 use CodeIgniter\Files\FileSizeUnit;
+
 helper("number");
 
 class Produtos extends BaseController
@@ -65,8 +66,27 @@ class Produtos extends BaseController
     {
         if ($this->request->getMethod() === 'POST') {
             $produto = new Produto($this->request->getPost());
+            $produto->imagem = 'Produto-sem-imagem.png';
+
+            $imagem = $this->request->getFile('foto_produto');
+            $deveProcessarUpload = $imagem !== null && $imagem->getError() !== UPLOAD_ERR_NO_FILE;
+
+            if ($deveProcessarUpload) {
+                $mensagemErroUpload = $this->validaImagemUpload($imagem);
+                if ($mensagemErroUpload !== null) {
+                    return redirect()->back()->with('atencao', $mensagemErroUpload)->withInput();
+                }
+            }
+
             if ($this->produtoModel->save($produto)) {
-                return redirect()->to(site_url("admin/produtos/show/" . $this->produtoModel->getInsertID()))->with('sucesso', "Produto $produto->nome cadastrado com sucesso!");
+                $produtoId = (int) $this->produtoModel->getInsertID();
+
+                if ($deveProcessarUpload) {
+                    $nomeImagem = $this->salvaImagemUpload($imagem, $produtoId);
+                    $this->produtoModel->update($produtoId, ['imagem' => $nomeImagem]);
+                }
+
+                return redirect()->to(site_url("admin/produtos/show/" . $produtoId))->with('sucesso', "Produto $produto->nome cadastrado com sucesso!");
             } else {
                 return redirect()->back()
                     ->with('errors_model', $this->produtoModel->errors())
@@ -181,26 +201,46 @@ class Produtos extends BaseController
         if ($largura < "400" || $altura < "400") {
             return redirect()->back()->with('atencao', 'A imagem selecionada é muito pequena. Mínimo permitido é 400x400 pixels.');
         }
-        /*Fazendo o store da imagem e recuperando o caminho da mesma*/
-        $imagemCaminho = $imagem->store('produtos');
-        $imagemCaminho = WRITEPATH . 'uploads/' . $imagemCaminho;
-        /** Fazendo o resize da mesma Imagem*/
-        service('image')
-            ->withFile($imagemCaminho)
-            ->fit(400, 400, 'center')
-            ->save($imagemCaminho);
+
+        $extensao = strtolower((string) ($imagem->getClientExtension() ?: $imagem->guessExtension() ?: 'jpg'));
+        $nomeImagem = 'produto_' . $produto->id . '.' . $extensao;
+        $diretorioDestino = WRITEPATH . 'uploads/produtos';
+
+        /* Move com sobrescrita para manter nome previsível por produto */
+        $imagem->move($diretorioDestino, $nomeImagem, true);
+        $imagemCaminho = $diretorioDestino . '/' . $nomeImagem;
+
+        /**
+         * Evita processamento agressivo: redimensiona proporcionalmente
+         * apenas quando a imagem for muito grande.
+         */
+        if ($largura > 1400 || $altura > 1400) {
+            service('image')
+                ->withFile($imagemCaminho)
+                ->resize(1400, 1400, true, 'auto')
+                ->save($imagemCaminho);
+        }
 
         /* Recuperando a imagem antiga para exluí-la*/
         $imagemAntiga = $produto->imagem;
 
         /*Atribuindo a nova imagem*/
-        $produto->imagem = $imagem->getName();
-        $this->produtoModel->save($produto);
+        $produto->imagem = $nomeImagem;
+
+        // Se o nome final da imagem for o mesmo, o CI4 considera que nao houve
+        // alteracao de dados e lancaria DataException no update.
+        if ($produto->hasChanged('imagem')) {
+            if (!$this->produtoModel->save($produto)) {
+                return redirect()->back()
+                    ->with('errors_model', $this->produtoModel->errors())
+                    ->with('atencao', 'Nao foi possivel atualizar a imagem do produto.');
+            }
+        }
 
         /**Definindo o caminho da imagem antiga */
         $caminhoImagem = WRITEPATH . 'uploads/produtos/' . $imagemAntiga;
 
-        if (is_file($caminhoImagem)) {
+        if ($imagemAntiga !== $nomeImagem && is_file($caminhoImagem)) {
             unlink($caminhoImagem);
         }
         return redirect()->to(site_url("admin/produtos/show/$produto->id"))->with('sucesso', 'Imagem do produto atualizada com sucesso!');
@@ -234,6 +274,67 @@ class Produtos extends BaseController
             'k' => $numero * 1024,
             default => (int) $valor,
         };
+    }
+
+    private function validaImagemUpload($imagem): ?string
+    {
+        if (!$imagem->isValid()) {
+            $codigoErro = $imagem->getError();
+            if ($codigoErro === UPLOAD_ERR_INI_SIZE || $codigoErro === UPLOAD_ERR_FORM_SIZE) {
+                return 'O arquivo selecionado é muito grande. Máximo permitido é 9MB.';
+            }
+
+            return 'Não foi possível validar a imagem enviada.';
+        }
+
+        $tamanhoImagem = $imagem->getSizeByMetricUnit(FileSizeUnit::MB, 2);
+        if ($tamanhoImagem > 9) {
+            return 'O arquivo selecionado é muito grande. Máximo permitido é 9MB.';
+        }
+
+        $tipoImagem = $imagem->getMimeType();
+        $tipoImagemLimpo = explode('/', (string) $tipoImagem);
+        $tipoPermitidos = ['jpeg', 'png', 'gif', 'webp'];
+
+        if (count($tipoImagemLimpo) < 2 || !in_array($tipoImagemLimpo[1], $tipoPermitidos, true)) {
+            return 'Tipo de imagem não permitido. Apenas: ' . implode(', ', $tipoPermitidos);
+        }
+
+        $dimensoes = @getimagesize($imagem->getPathname());
+        if ($dimensoes === false) {
+            return 'Não foi possível ler as dimensões da imagem enviada.';
+        }
+
+        [$largura, $altura] = $dimensoes;
+        if ($largura < 400 || $altura < 400) {
+            return 'A imagem selecionada é muito pequena. Mínimo permitido é 400x400 pixels.';
+        }
+
+        return null;
+    }
+
+    private function salvaImagemUpload($imagem, int $produtoId): string
+    {
+        $extensao = strtolower((string) ($imagem->getClientExtension() ?: $imagem->guessExtension() ?: 'jpg'));
+        $nomeImagem = 'produto_' . $produtoId . '.' . $extensao;
+        $diretorioDestino = WRITEPATH . 'uploads/produtos';
+
+        $imagem->move($diretorioDestino, $nomeImagem, true);
+
+        $imagemCaminho = $diretorioDestino . '/' . $nomeImagem;
+        $dimensoes = @getimagesize($imagemCaminho);
+        if (is_array($dimensoes)) {
+            [$largura, $altura] = $dimensoes;
+
+            if ($largura > 1400 || $altura > 1400) {
+                service('image')
+                    ->withFile($imagemCaminho)
+                    ->resize(1400, 1400, true, 'auto')
+                    ->save($imagemCaminho);
+            }
+        }
+
+        return $nomeImagem;
     }
     public function excluirExtra($id_principal = null, $id = null)
     {
@@ -408,7 +509,6 @@ class Produtos extends BaseController
                     ->with('atencao', 'Por favor, verifique os erros abaixo!')
                     ->withInput();
             }
-
         } else {
             return redirect()->back();
         }
