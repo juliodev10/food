@@ -124,10 +124,9 @@ class Produto extends BaseController
             return $this->response->setJSON([]);
         }
         $extrasSegundoProduto = $this->produtoExtraModel->BuscaExtrasDoProdutoDetalhes($segundoProduto->id) ?? [];
-        $extrasCombinados = $segundoProduto->combinaExtrasDosProdutos($extrasPrimeiroProduto, $extrasSegundoProduto);
-        if ($extrasCombinados != null) {
-            $data['extras'] = $extrasCombinados;
-        }
+        $data['extrasPrimeiro'] = $extrasPrimeiroProduto;
+        $data['extrasSegundo'] = $extrasSegundoProduto;
+        $data['extras'] = array_merge($extrasPrimeiroProduto, $extrasSegundoProduto);
         $medidasEmComum = $segundoProduto->recuperaMedidasEmComum($especificacoesPrimeiroProduto, $especificacoesSegundoProduto);
         $medidas = [];
         if (!empty($medidasEmComum)) {

@@ -18,7 +18,7 @@ class ProdutoExtraModel extends Model
             'required' => 'O campo Extra é obrigatório.',
         ],
     ];
-    public function buscaExtrasDoProduto(?int $produto_id = null, int $quantidade_paginacao)
+    public function buscaExtrasDoProduto(?int $produto_id = null, int $quantidade_paginacao = 10)
     {
         return $this->select('extras.nome AS extra, extras.preco, produtos_extras.*')
             ->join('extras', 'extras.id = produtos_extras.extra_id')

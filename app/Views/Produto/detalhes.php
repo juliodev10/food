@@ -135,21 +135,21 @@
                     <?php if (isset($extras) && !empty($extras)): ?>
                         <hr>
                         <p class="small">Extras do produto</p>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" class="extra" name="extra" checked="">Sem extra
-                            </label>
-                        </div>
                         <?php foreach ($extras as $extra): ?>
-                            <div class="radio">
+                            <div class="checkbox">
                                 <label>
-                                    <input type="radio" class="extra" data-extra="<?php echo $extra->id; ?>" name="extra"
-                                        value="<?php echo $extra->preco; ?>">
-                                    <?php echo esc($extra->nome); ?>
-                                    <?php echo esc(number_format($extra->preco, 2)); ?>
+                                    <input type="checkbox" class="extra"
+                                        data-extra="<?php echo $extra->id; ?>"
+                                        data-nome="<?php echo esc($extra->nome, 'attr'); ?>"
+                                        data-preco="<?php echo esc(number_format($extra->preco, 2, '.', '')); ?>"
+                                        name="produto[extra_ids][]"
+                                        value="<?php echo $extra->id; ?>">
+                                    <?php echo esc($extra->nome); ?> - R$ <?php echo esc(number_format($extra->preco, 2, ',', '.')); ?>
                                 </label>
                             </div>
                         <?php endforeach; ?>
+                        <div id="extras-selecionados" class="small" style="margin-top: 10px;"></div>
+                        <div id="valor_total_produto" class="small" style="margin-top: 6px;"></div>
                     <?php endif; ?>
                 </h3>
 
@@ -191,7 +191,6 @@
                         value="<?= esc($produto->slug); ?>">
                     <input type="hidden" id="especificacao_id" name="produto[especificacao_id]"
                         placeholder="Especificação ID">
-                    <input type="hidden" id="extra_id" name="produto[extra_id]" placeholder="produto[extra_id]">
                 </div>
 
                 <div class="row">
@@ -226,6 +225,8 @@
 <script>
     $(document).ready(function() {
         var $quantidade = $('#quantidade');
+        var precoBaseAtual = 0;
+        var totalExtrasAtual = 0;
 
         function ajustaQuantidade(delta) {
             var atual = parseInt($quantidade.val(), 10);
@@ -245,6 +246,47 @@
             }
 
             $quantidade.val(proximo);
+        }
+
+        function formatarMoeda(valor) {
+            return (parseFloat(valor) || 0).toFixed(2).replace('.', ',');
+        }
+
+        function atualizarResumoTotal() {
+            if (!precoBaseAtual) {
+                $('#valor_total_produto').html('');
+                return;
+            }
+
+            var totalUnitario = precoBaseAtual + totalExtrasAtual;
+            var htmlResumo = '<strong>Total por unidade</strong> - R$: ' + formatarMoeda(totalUnitario);
+
+            if (totalExtrasAtual > 0) {
+                htmlResumo += '<br><span>Extras selecionados: R$ ' + formatarMoeda(totalExtrasAtual) + '</span>';
+            }
+
+            $('#valor_total_produto').html(htmlResumo);
+        }
+
+        function atualizarExtrasSelecionados() {
+            var nomesSelecionados = [];
+            totalExtrasAtual = 0;
+
+            $('.extra:checked').each(function() {
+                var preco = parseFloat($(this).attr('data-preco')) || 0;
+                var nome = $(this).attr('data-nome') || 'Extra';
+
+                totalExtrasAtual += preco;
+                nomesSelecionados.push(nome + ' - R$ ' + formatarMoeda(preco));
+            });
+
+            if (nomesSelecionados.length > 0) {
+                $('#extras-selecionados').html('<strong>Selecionados</strong><br>' + nomesSelecionados.join('<br>'));
+            } else {
+                $('#extras-selecionados').html('<span class="text-muted">Nenhum extra selecionado.</span>');
+            }
+
+            atualizarResumoTotal();
         }
 
         $('.quantidade-up').on('click', function() {
@@ -267,15 +309,18 @@
         $(".especificacao").on('click', function() {
             especificacao_id = $(this).attr('data-especificacao');
             $("#especificacao_id").val(especificacao_id);
+            precoBaseAtual = parseFloat($(this).val()) || 0;
+            atualizarResumoTotal();
 
             $('#btn-adiciona').prop('disabled', false);
             $('#btn-adiciona').prop('value', 'Adicionar');
         });
 
-        $(".extra").on('click', function() {
-            var extra_id = $(this).attr('data-extra');
-            $("#extra_id").val(extra_id);
+        $(document).on('change', '.extra', function() {
+            atualizarExtrasSelecionados();
         });
+
+        atualizarExtrasSelecionados();
     });
 </script>
 

@@ -175,8 +175,8 @@
                                     <td>
                                         <?php
                                         $nomeProduto = (string) $produto->nome;
-                                        if (mb_stripos($nomeProduto, ' Com extra ') !== false) {
-                                            $nomeProduto = preg_replace('/\s+Com extra\s+/iu', "\nCom extra ", $nomeProduto, 1);
+                                        if (mb_stripos($nomeProduto, ' Com extra ') !== false || mb_stripos($nomeProduto, ' Com extras ') !== false) {
+                                            $nomeProduto = preg_replace('/\s+Com extras?\s+/iu', "\nCom extras ", $nomeProduto, 1);
                                         }
                                         ?>
                                         <span class="produto-nome"><?php echo esc($nomeProduto); ?></span>

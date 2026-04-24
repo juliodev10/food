@@ -91,7 +91,6 @@ class Carrinho extends BaseController
                 'produto.especificacao_id' => ['label' => 'Valor do produto', 'rules' => 'required|greater_than[0]|integer'],
                 'produto.preco' => ['label' => 'Valor do produto', 'rules' => 'required|greater_than[0]'],
                 'produto.quantidade' => ['label' => 'Quantidade', 'rules' => 'required|greater_than[0]'],
-                'produto.extra_id' => ['label' => 'Extra', 'rules' => 'permit_empty|greater_than[0]|integer'],
             ]);
 
             if (!$validation->withRequest($this->request)->run()) {
@@ -112,13 +111,38 @@ class Carrinho extends BaseController
                     ->with('fraude', 'Não foi possível adicionar o produto ao carrinho. Por favor,  entre em contato conosco para resolver o problema e informe o código de erro <strong>ERRO-ADD-PROD-1001</strong>'); //FRAUDE NO FORM
             }
 
-            $extraId = $valorProduto['extra_id'] ?? null;
-            if ($extraId !== null && $extraId !== '') {
-                $extra = $this->extraModel->where('id', $extraId)->first();
-                if ($extra === null) {
-                    return redirect()->back()
-                        ->with('fraude', 'Não foi possível adicionar o produto ao carrinho. Por favor,  entre em contato conosco para resolver o problema e informe o código de erro <strong>ERRO-ADD-PROD-2002</strong>'); //FRAUDE NO FORM... chave valorProduto[extra_id] 
+            $extraIds = $valorProduto['extra_ids'] ?? [];
+            if (!is_array($extraIds)) {
+                $extraIds = [$extraIds];
+            }
+
+            $extraIds = array_values(array_unique(array_filter(array_map(static function ($extraId) {
+                return (int) $extraId;
+            }, $extraIds), static function ($extraId) {
+                return $extraId > 0;
+            })));
+
+            $extrasSelecionados = [];
+            $extra = null;
+
+            if (!empty($extraIds)) {
+                $extrasEncontrados = $this->extraModel->whereIn('id', $extraIds)->findAll();
+                $extrasPorId = [];
+
+                foreach ($extrasEncontrados as $extraEncontrado) {
+                    $extrasPorId[(int) $extraEncontrado->id] = $extraEncontrado;
                 }
+
+                foreach ($extraIds as $extraId) {
+                    if (!isset($extrasPorId[$extraId])) {
+                        return redirect()->back()
+                            ->with('fraude', 'Não foi possível adicionar o produto ao carrinho. Por favor,  entre em contato conosco para resolver o problema e informe o código de erro <strong>ERRO-ADD-PROD-2002</strong>'); //FRAUDE NO FORM... chave valorProduto[extra_id]
+                    }
+
+                    $extrasSelecionados[] = $extrasPorId[$extraId];
+                }
+
+                $extra = $extrasSelecionados[0] ?? null;
             }
 
             $produto = $this->produtoModel
@@ -136,13 +160,27 @@ class Carrinho extends BaseController
             $medidaEhInteiro = mb_strtolower($especificacaoProduto->nome) === 'inteiro';
             $deveExibirInteiro = !$medidaEhInteiro || $this->categoriaEhLanche($produto['categoria_slug'] ?? null);
 
-            $produto['slug'] = mb_url_title($especificacaoProduto->nome . '-' . $produto['slug'] . '-' . (isset($extra) ? 'com extra-' . $extra->nome : ''), '-', true);
+            $nomesExtras = [];
+            $precoExtras = 0.0;
+            foreach ($extrasSelecionados as $extraSelecionado) {
+                $nomesExtras[] = $extraSelecionado->nome;
+                $precoExtras += (float) $extraSelecionado->preco;
+            }
+
+            $textoExtras = '';
+            $sufixoSlugExtras = '';
+            if (!empty($nomesExtras)) {
+                $textoExtras = ' Com ' . (count($nomesExtras) === 1 ? 'extra ' : 'extras ') . implode(', ', $nomesExtras);
+                $sufixoSlugExtras = '-com-extras-' . implode('-', $extraIds);
+            }
+
+            $produto['slug'] = mb_url_title($especificacaoProduto->nome . '-' . $produto['slug'] . $sufixoSlugExtras, '-', true);
 
             $produto['nome'] = $produto['nome']
                 . ($deveExibirInteiro ? ' - ' . $especificacaoProduto->nome : '')
-                . (isset($extra) ? ' Com extra ' . $extra->nome : '');
+                . $textoExtras;
 
-            $preco = $especificacaoProduto->preco + (isset($extra) ? $extra->preco : 0);
+            $preco = $especificacaoProduto->preco + $precoExtras;
             $produto['preco'] = number_format($preco, 2);
             $produto['quantidade'] = (int) $valorProduto['quantidade'];
             $produto['tamanho'] = $especificacaoProduto->nome;
@@ -209,13 +247,33 @@ class Carrinho extends BaseController
             $primeiroProduto = $primeiroProduto->toArray();
             $segundoProduto = $segundoProduto->toArray();
 
-            $extra = null;
+            $extraIds = $valorProduto['extra_ids'] ?? [];
+            if (!is_array($extraIds)) {
+                $extraIds = [$extraIds];
+            }
 
-            if (!empty($valorProduto['extra_id'])) {
-                $extra = $this->extraModel->where('id', $valorProduto['extra_id'])->first();
-                if ($extra === null) {
-                    return redirect()->back()
-                        ->with('fraude', 'Não foi possível processar a solicitação. Por favor,  entre em contato conosco para resolver o problema e informe o código de erro <strong>ERRO-ADD-CUSTOM-3003</strong>'); //FRAUDE NO FORM na chave valorProduto[extra_id]
+            $extraIds = array_values(array_unique(array_filter(array_map(static function ($extraId) {
+                return (int) $extraId;
+            }, $extraIds), static function ($extraId) {
+                return $extraId > 0;
+            })));
+
+            $extrasSelecionados = [];
+            if (!empty($extraIds)) {
+                $extrasEncontrados = $this->extraModel->whereIn('id', $extraIds)->findAll();
+                $extrasPorId = [];
+
+                foreach ($extrasEncontrados as $extraEncontrado) {
+                    $extrasPorId[(int) $extraEncontrado->id] = $extraEncontrado;
+                }
+
+                foreach ($extraIds as $extraId) {
+                    if (!isset($extrasPorId[$extraId])) {
+                        return redirect()->back()
+                            ->with('fraude', 'Não foi possível processar a solicitação. Por favor,  entre em contato conosco para resolver o problema e informe o código de erro <strong>ERRO-ADD-CUSTOM-3003</strong>'); //FRAUDE NO FORM na chave valorProduto[extra_id]
+                    }
+
+                    $extrasSelecionados[] = $extrasPorId[$extraId];
                 }
             }
 
@@ -242,18 +300,32 @@ class Carrinho extends BaseController
                     ->with('fraude', 'Não foi possível processar a solicitação. Por favor,  entre em contato conosco para resolver o problema e informe o código de erro <strong>ERRO-ADD-CUSTOM-5005</strong>');
             }
 
+            $precoExtras = 0.0;
+            $nomesExtras = [];
+            foreach ($extrasSelecionados as $extraSelecionado) {
+                $precoExtras += (float) $extraSelecionado->preco;
+                $nomesExtras[] = $extraSelecionado->nome;
+            }
+
             $preco = ((float) $precoPrimeiraMetade->preco / 2)
                 + ((float) $precoSegundaMetade->preco / 2)
-                + (isset($extra) ? (float) $extra->preco : 0.0);
+                + $precoExtras;
 
             $observacao = trim((string) ($valorProduto['observacao'] ?? ''));
             $observacao = preg_replace('/\s+/', ' ', $observacao ?? '');
 
+            $textoExtras = '';
+            $sufixoSlugExtras = '';
+            if (!empty($nomesExtras)) {
+                $textoExtras = ' Com ' . (count($nomesExtras) === 1 ? 'extra ' : 'extras ') . implode(', ', $nomesExtras);
+                $sufixoSlugExtras = '-extras-' . implode('-', $extraIds);
+            }
+
             $produto = [
                 'id' => null,
-                'nome' => $primeiroProduto['nome'] . ' / ' . $segundoProduto['nome'] . (isset($extra) ? ' Com extra ' . $extra->nome : '') . ($observacao !== '' ? ' | Obs: ' . $observacao : ''),
+                'nome' => $primeiroProduto['nome'] . ' / ' . $segundoProduto['nome'] . $textoExtras . ($observacao !== '' ? ' | Obs: ' . $observacao : ''),
                 'slug' => mb_url_title(
-                    'custom-' . $primeiroProduto['slug'] . '-' . $segundoProduto['slug'] . (isset($extra) ? '-extra-' . $extra->id : '') . ($observacao !== '' ? '-obs-' . substr(md5($observacao), 0, 10) : ''),
+                    'custom-' . $primeiroProduto['slug'] . '-' . $segundoProduto['slug'] . $sufixoSlugExtras . ($observacao !== '' ? '-obs-' . substr(md5($observacao), 0, 10) : ''),
                     '-',
                     true
                 ),

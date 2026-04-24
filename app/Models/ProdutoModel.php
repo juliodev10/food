@@ -71,9 +71,9 @@ class ProdutoModel extends Model
     {
         return $this->protect(false)->where('id', $id)->set('deletado_em', null)->update();
     }
-    public function buscaProdutosWebHome(int $quantidade_paginacao = 8)
+    public function buscaProdutosWebHome(int $quantidade_paginacao = 8, ?string $categoria_slug = null)
     {
-        return $this->select([
+        $builder = $this->select([
             'produtos.id',
             'produtos.nome',
             'produtos.slug',
@@ -87,8 +87,14 @@ class ProdutoModel extends Model
             ->join('categorias', 'categorias.id = produtos.categoria_id')
             ->join('produtos_especificacoes', 'produtos_especificacoes.produto_id = produtos.id')
             ->where('produtos.ativo', true)
-            ->groupBy('produtos.id')
-            ->orderBy('categorias.nome', 'ASC')
+            ->groupBy('produtos.id');
+
+        if ($categoria_slug !== null && $categoria_slug !== '') {
+            $builder->where('categorias.slug', $categoria_slug);
+        }
+
+        return $builder
+            ->orderBy('produtos.nome', 'ASC')
             ->paginate($quantidade_paginacao, 'produtos');
     }
 

@@ -16,10 +16,16 @@ class Home extends BaseController
         $this->categoriaModel = new \App\Models\CategoriaModel();
         $this->produtoModel = new \App\Models\ProdutoModel();
 
+        $categoriaSlug = trim((string) $this->request->getGet('categoria'));
+        if ($categoriaSlug === '') {
+            $categoriaSlug = null;
+        }
+
         $data = [
             'titulo' => 'Seja muito bem vindo(a)!',
             'categorias' => $this->categoriaModel->BuscaCategoriasWebHome(),
-            'produtos' => $this->produtoModel->BuscaProdutosWebHome(8),
+            'categoriaSelecionada' => $categoriaSlug,
+            'produtos' => $this->produtoModel->BuscaProdutosWebHome(8, $categoriaSlug),
             'produtosGaleria' => $this->produtoModel->buscaProdutosWebGaleria(),
             'pager' => $this->produtoModel->pager,
         ];

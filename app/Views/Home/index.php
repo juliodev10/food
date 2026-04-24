@@ -97,14 +97,14 @@
                     </a>
                 </li>
             <?php else: ?>
-                <li id="todas" class="item active">
-                    <a href="javascript:;" class="filter-button" data-filter="todas">
+                <li id="todas" class="item <?= empty($categoriaSelecionada) ? 'active' : ''; ?>">
+                    <a href="<?= site_url('/') . '#menu'; ?>" class="filter-button" data-filter="todas">
                         Todas
                     </a>
                 </li>
                 <?php foreach ($categorias as $categoria): ?>
-                    <li class="item">
-                        <a href="javascript:;" class="filter-button" data-filter="<?= $categoria->slug; ?>">
+                    <li class="item <?= (($categoriaSelecionada ?? null) === $categoria->slug) ? 'active' : ''; ?>">
+                        <a href="<?= site_url('/?categoria=' . urlencode($categoria->slug)) . '#menu'; ?>" class="filter-button" data-filter="<?= $categoria->slug; ?>">
                             <?= esc($categoria->nome); ?>
                         </a>
                     </li>

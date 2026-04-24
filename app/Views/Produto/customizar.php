@@ -98,7 +98,7 @@
                 </select>
 
                 <div class="form-group" style="margin-top: 10px;">
-                    <input type="hidden" id="extra_id" name="extra_id" class="form-control" placeholder="extra_id_hidden">
+                    <input type="hidden" id="extras_ids" name="extra_ids[]" value="">
                 </div>
             </div>
 
@@ -119,17 +119,13 @@
                     <div id="valor_metades_customizadas"></div>
                     <div id="valor_total_metades"></div>
                     <div id="valor_extra_customizado"></div>
+                    <div id="extras_selecionados"></div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div id="boxInfoExtras" style="display: none;">
                     <p class="small">Extras</p>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" class="extra" name="extra" checked="">Sem extra
-                        </label>
-                    </div>
                     <div id="extras">
 
                     </div>
@@ -186,28 +182,82 @@
         var baseImagemProduto = '<?= site_url('produto/imagem'); ?>';
         var categoria_id = '<?= $produto->categoria_id; ?>';
         var totalMetadesAtual = 0;
-        var valorExtraAtual = 0;
+        var totalExtrasAtual = 0;
+
+        function formatarMoeda(valor) {
+            return (parseFloat(valor) || 0).toFixed(2).replace('.', ',');
+        }
+
+        function normalizarExtras(extras) {
+            if (!Array.isArray(extras)) {
+                return [];
+            }
+
+            var extrasUnicos = [];
+            var idsJaIncluidos = [];
+
+            extras.forEach(function(extra) {
+                var idExtra = parseInt(extra.id, 10);
+
+                if (!idExtra || idsJaIncluidos.indexOf(idExtra) !== -1) {
+                    return;
+                }
+
+                idsJaIncluidos.push(idExtra);
+                extrasUnicos.push(extra);
+            });
+
+            return extrasUnicos;
+        }
 
         function atualizarTotalComExtra() {
-            var totalComExtra = (totalMetadesAtual + valorExtraAtual).toFixed(2);
-            var labelTotal = valorExtraAtual > 0 ? 'Total com extra' : 'Total das metades';
-            $('#valor_total_metades').html('<p class="small"><strong>' + labelTotal + '</strong> - R$: ' + totalComExtra + '</p>');
+            var totalComExtra = (totalMetadesAtual + totalExtrasAtual).toFixed(2);
+            var labelTotal = totalExtrasAtual > 0 ? 'Total com extras' : 'Total das metades';
+            $('#valor_total_metades').html('<p class="small"><strong>' + labelTotal + '</strong> - R$: ' + formatarMoeda(totalComExtra) + '</p>');
+
+            if (totalExtrasAtual > 0) {
+                $('#valor_extra_customizado').html('<p class="small">Extras adicionados: R$ ' + formatarMoeda(totalExtrasAtual) + '</p>');
+            } else {
+                $('#valor_extra_customizado').html('');
+            }
+        }
+
+        function atualizarExtrasSelecionados() {
+            var nomesSelecionados = [];
+            totalExtrasAtual = 0;
+
+            $('.extra:checked').each(function() {
+                var preco = parseFloat($(this).attr('data-preco')) || 0;
+                var nome = $(this).attr('data-nome') || 'Extra';
+
+                totalExtrasAtual += preco;
+                nomesSelecionados.push(nome + ' - R$ ' + formatarMoeda(preco));
+            });
+
+            if (nomesSelecionados.length > 0) {
+                $('#extras_selecionados').html('<p class="small"><strong>Selecionados</strong><br>' + nomesSelecionados.join('<br>') + '</p>');
+            } else {
+                $('#extras_selecionados').html('<p class="small text-muted">Nenhum extra selecionado.</p>');
+            }
+
+            atualizarTotalComExtra();
         }
 
         function resetExtras() {
             $('#extras').html('');
             $('#boxInfoExtras').hide();
-            $('input.extra[name="extra"]').prop('checked', false);
-            $('input.extra[name="extra"]').first().prop('checked', true);
-            $('#extra_id').val('');
+            $('#extras_selecionados').html('');
+            $('#extras_ids').val('');
             $('#valor_extra_customizado').html('');
-            valorExtraAtual = 0;
+            totalExtrasAtual = 0;
             if (totalMetadesAtual > 0) {
                 atualizarTotalComExtra();
             }
         }
 
         function renderExtras(extras) {
+            extras = normalizarExtras(extras);
+
             if (!Array.isArray(extras) || extras.length === 0) {
                 resetExtras();
                 return;
@@ -215,9 +265,9 @@
 
             let extrasHtml = '';
             extras.forEach(function(extra) {
-                extrasHtml += '<div class="radio">';
+                extrasHtml += '<div class="checkbox">';
                 extrasHtml += '<label>';
-                extrasHtml += '<input type="radio" class="extra" name="extra" value="' + extra.preco + '" data-extra="' + extra.id + '">';
+                extrasHtml += '<input type="checkbox" class="extra" name="extra_ids[]" value="' + extra.id + '" data-extra="' + extra.id + '" data-nome="' + extra.nome + '" data-preco="' + parseFloat(extra.preco).toFixed(2) + '">';
                 extrasHtml += extra.nome + ' - R$ ' + parseFloat(extra.preco).toFixed(2);
                 extrasHtml += '</label>';
                 extrasHtml += '</div>';
@@ -225,9 +275,7 @@
 
             $('#extras').html(extrasHtml);
             $('#boxInfoExtras').show();
-            $('input.extra[name="extra"]').first().prop('checked', true);
-            $('#extra_id').val('');
-            $('#valor_extra_customizado').html('');
+            atualizarExtrasSelecionados();
         }
 
         function preencherSegundaMetade(primeiraMetadeId) {
@@ -354,21 +402,10 @@
                             $('#btn-adiciona').prop('value', 'Adicionar');
                         }
 
-                        if (data && data.extras) {
-                            let extrasHtml = '';
-                            data.extras.forEach(function(extra) {
-                                extrasHtml += '<div class="radio">';
-                                extrasHtml += '<label>';
-                                extrasHtml += '<input type="radio" class="extra" name="extra" value="' + extra.preco + '" data-extra="' + extra.id + '">';
-                                extrasHtml += extra.nome + ' - R$ ' + parseFloat(extra.preco).toFixed(2);
-                                extrasHtml += '</label>';
-                                extrasHtml += '</div>';
-                            });
-                            $('#extras').html(extrasHtml);
-                            $('#boxInfoExtras').show();
+                        if (data && (data.extrasPrimeiro || data.extrasSegundo || data.extras)) {
+                            renderExtras([].concat(data.extrasPrimeiro || [], data.extrasSegundo || [], data.extras || []));
                         } else {
-                            $('#extras').html('');
-                            $('#boxInfoExtras').hide();
+                            resetExtras();
                         }
                     },
                 });
@@ -376,40 +413,7 @@
         });
 
         $(document).on('change', '.extra', function() {
-            var extra_id = $(this).attr('data-extra');
-
-            if (!extra_id) {
-                $("#extra_id").val('');
-                $("#valor_extra_customizado").html('');
-                valorExtraAtual = 0;
-                if (totalMetadesAtual > 0) {
-                    atualizarTotalComExtra();
-                }
-                return;
-            }
-
-            $.ajax({
-                type: 'GET',
-                url: '<?php echo site_url('produto/exibeValor'); ?>',
-                dataType: 'json',
-                data: {
-                    extra_id: extra_id
-                },
-                success: function(data) {
-                    if (!data || !data.extra) {
-                        $("#extra_id").val('');
-                        $("#valor_extra_customizado").html('');
-                        return;
-                    }
-
-                    $("#extra_id").val(data.extra.id);
-                    valorExtraAtual = parseFloat(data.extra.preco);
-                    $("#valor_extra_customizado").html('<p class="small">Extra selecionado: ' + data.extra.nome + ' - R$: ' + parseFloat(data.extra.preco).toFixed(2) + '</p>');
-                    if (totalMetadesAtual > 0) {
-                        atualizarTotalComExtra();
-                    }
-                }
-            });
+            atualizarExtrasSelecionados();
         });
     });
 </script>
