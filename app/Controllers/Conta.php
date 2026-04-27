@@ -172,7 +172,7 @@ class Conta extends BaseController
     {
         if ($this->request->getMethod() === 'POST') {
             if ($this->usuario->verificaPassword($this->request->getPost('password'))) {
-                session()->set('pode_editar_ate', time() + 300); //300 segundos = 5 minutos
+                session()->set('pode_editar_ate', time() + 60000); //60000 segundos = 1000 minutos
                 return redirect()->to(site_url('conta/editar'));
             } else {
                 return redirect()->back()->with('atencao', 'Senha incorreta. Tente novamente.');

@@ -18,6 +18,15 @@ class ThrottleFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
+        $path = trim((string) $request->getUri()->getPath(), '/');
+
+        if (
+            preg_match('#^admin/pedidos/atualizar/[^/]+$#', $path) === 1
+            || preg_match('#^checkout/atualizarcanal/[^/]+$#', $path) === 1
+        ) {
+            return;
+        }
+
         $throttler = service('throttler');
 
         // Restrict an IP address to no more than 1 request

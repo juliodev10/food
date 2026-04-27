@@ -326,15 +326,17 @@ class Pedidos extends \App\Controllers\AdminPedidos
             return null;
         }
 
-        if (strlen($telefone) === 11) {
-            $telefone = '55' . $telefone;
-        }
+        // Entrega somente no Brasil: normaliza para sempre ficar exatamente um DDI 55.
+        $telefone = ltrim($telefone, '0');
+        $telefoneSemDdi = preg_replace('/^(55)+/', '', $telefone);
+        $telefoneSemDdi = ltrim((string) $telefoneSemDdi, '0');
 
-        if (strlen($telefone) < 12) {
+        $tamanhoNacional = strlen($telefoneSemDdi);
+        if ($tamanhoNacional !== 10 && $tamanhoNacional !== 11) {
             return null;
         }
 
-        return $telefone;
+        return '55' . $telefoneSemDdi;
     }
 
     private function insereProdutosDoPedido(object $pedido)

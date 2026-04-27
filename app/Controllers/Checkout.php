@@ -219,7 +219,17 @@ class Checkout extends BaseController
                             ->with('atencao', 'Corrija os erros abaixo e tente novamente.');
                     }
 
-                    $pedido->observacoes = $observacoesBase . ' - Troco para R$ ' . number_format((float) $trocoParaNormalizado, 2, ',', '.');
+                    $valorTrocoPara = (float) $trocoParaNormalizado;
+                    $valorTotalPedido = (float) $pedido->valor_pedido;
+
+                    if ($valorTrocoPara <= $valorTotalPedido) {
+                        return redirect()->back()
+                            ->withInput()
+                            ->with('errors_model', ['checkout.troco_para' => 'O valor informado em "Troco para" deve ser maior que o total do pedido.'])
+                            ->with('atencao', 'Corrija os erros abaixo e tente novamente.');
+                    }
+
+                    $pedido->observacoes = $observacoesBase . ' - Troco para R$ ' . number_format($valorTrocoPara, 2, ',', '.');
                 }
             } else {
                 $pedido->observacoes = $observacoesBase;

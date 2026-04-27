@@ -251,6 +251,7 @@
                     <div class="form-group col-md-12" style="padding-left: 0;">
                         <label>Troco para</label>
                         <input type="text" class="form-control" id="troco_para" name="checkout[troco_para]" placeholder="Troco para">
+                        <small id="troco_erro" class="text-danger" style="display: none;"></small>
                         <label>
                             <input type="checkbox" id="sem_troco" name="checkout[sem_troco]">
                             Não quero troco
@@ -294,6 +295,77 @@
 <script src="<?php echo site_url('/admin/vendors/mask/app.js'); ?>"></script>
 <script>
     $("#btn-checkout").prop('disabled', true);
+    var trocoErroTimeoutId = null;
+
+    function ocultarErroTroco() {
+        if (trocoErroTimeoutId !== null) {
+            clearTimeout(trocoErroTimeoutId);
+            trocoErroTimeoutId = null;
+        }
+
+        $('#troco_erro').stop(true, true).hide().text('');
+    }
+
+    function exibirErroTroco(mensagem) {
+        ocultarErroTroco();
+        $('#troco_erro').text(mensagem).fadeIn(150);
+
+        trocoErroTimeoutId = setTimeout(function() {
+            $('#troco_erro').fadeOut(200, function() {
+                $(this).text('');
+            });
+            trocoErroTimeoutId = null;
+        }, 3200);
+    }
+
+    function parseMoedaParaNumero(valor) {
+        if (!valor) {
+            return 0;
+        }
+
+        var texto = String(valor)
+            .replace(/R\$/gi, '')
+            .replace(/\s+/g, '')
+            .replace(/\./g, '')
+            .replace(',', '.');
+
+        var numero = parseFloat(texto);
+        return isNaN(numero) ? 0 : numero;
+    }
+
+    function valorTotalPedidoAtual() {
+        return parseMoedaParaNumero($('#total').text());
+    }
+
+    function validarTrocoMaiorQueTotal(exibirAlerta) {
+        var formaId = $.trim($('#forma_id').val() || '');
+        var semTroco = $('#sem_troco').is(':checked');
+
+        if (formaId !== '1' || semTroco) {
+            ocultarErroTroco();
+            return true;
+        }
+
+        var trocoInformado = $.trim($('#troco_para').val() || '');
+        if (trocoInformado === '') {
+            ocultarErroTroco();
+            return true;
+        }
+
+        var trocoPara = parseMoedaParaNumero(trocoInformado);
+        var totalPedido = valorTotalPedidoAtual();
+
+        if (trocoPara <= totalPedido) {
+            if (exibirAlerta) {
+                exibirErroTroco('O valor de "Troco para" deve ser maior que o total do pedido.');
+            }
+            $('#troco_para').focus();
+            return false;
+        }
+
+        ocultarErroTroco();
+        return true;
+    }
 
     function liberarCamposEndereco() {
         $('#rua, #numero')
@@ -341,6 +413,7 @@
             $("#troco").removeClass('hidden');
         } else {
             $("#troco").addClass('hidden');
+            ocultarErroTroco();
         }
     });
     $("#sem_troco").on('click', function() {
@@ -348,12 +421,28 @@
             $("#troco_para").prop('disabled', true);
             $("#troco_para").val('Sem troco');
             $("#troco_para").attr('placeholder', 'Sem troco');
+            ocultarErroTroco();
         } else {
             $("#troco_para").prop('disabled', false);
             $("#troco_para").attr('placeholder', 'Troco para');
             $("#troco_para").val('');
         }
     }); //fim #sem_troco
+
+    $('#troco_para').on('input', function() {
+        ocultarErroTroco();
+    });
+
+    $('#troco_para').on('blur', function() {
+        validarTrocoMaiorQueTotal(true);
+    });
+
+    $('#form-checkout').on('submit', function(e) {
+        if (!validarTrocoMaiorQueTotal(true)) {
+            e.preventDefault();
+            return false;
+        }
+    });
 
     function atualizarResumoEndereco() {
         var rua = $.trim($('#rua').val() || '');
